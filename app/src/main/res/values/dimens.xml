@@ -1,0 +1,14 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Buttons sizes -->
+    <dimen name="button_login_width">230dp</dimen>
+    <dimen name="button_login_height">1dp</dimen>
+    <dimen name="button_login_margin">5dp</dimen>
+
+    <dimen name="row_workmate_height">80dp</dimen>
+    <dimen name="row_restaurant_height">100dp</dimen>
+    <dimen name="margin_row_text">1dp</dimen>
+</resources>
