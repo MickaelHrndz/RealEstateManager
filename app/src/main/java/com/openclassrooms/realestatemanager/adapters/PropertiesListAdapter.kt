@@ -39,6 +39,15 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         // Profile image
         //Glide.with(mContext).load(item.photoUrl).into(holder.itemView.findViewById(R.id.image_workmate))
 
+        // Type
+        holder.typeTextView.text = item.type
+
+        // Location
+        holder.locationTextView.text = item.location
+
+        // Price
+        holder.priceTextView.text = "$" + item.price
+
         // Item click listener
         holder.itemView.setOnClickListener {
 
@@ -48,7 +57,7 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val typeTextView = itemView.prop_type!!
         val locationTextView = itemView.prop_location!!
-        val articleTextView = itemView.prop_price!!
+        val priceTextView = itemView.prop_price!!
     }
 
 }
