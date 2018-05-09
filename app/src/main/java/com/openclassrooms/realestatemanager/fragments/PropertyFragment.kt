@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_property.*
@@ -26,7 +29,17 @@ class PropertyFragment : Fragment() {
             property_location.text = prop.location
             property_surface.text = getString(R.string.square_meters, prop.surface)
             property_type.text = prop.type
+            property_rooms.text = prop.roomsCount.toString()
+            for(url in prop.picturesList){
+                val img = ImageView(context)
+                pictures_layout.addView(img)
+                Glide.with(context!!).load(url).into(img)
+            }
         }
+        overlay.setOnClickListener {
+                activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+        }
+        card_view.setOnClickListener {  }
     }
     fun newInstance(prop: Property): PropertyFragment {
         val myFragment = PropertyFragment()

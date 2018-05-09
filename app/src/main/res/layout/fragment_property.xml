@@ -15,38 +15,83 @@
             android:layout_gravity="center"
             card_view:cardCornerRadius="4dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="50dp"
+            card_view:cardElevation="8sp"
+            card_view:cardUseCompatPadding="true">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-
-            <TextView
-                android:id="@+id/property_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/property_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:id="@+id/property_header_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/property_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/margin_row_text"
+                        android:paddingEnd="5dp"
+                        android:textSize="18sp"
+                        android:text="location"/>
+                    <TextView
+                        android:id="@+id/property_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_row_text"
+                        android:paddingStart="5dp"
+                        android:layout_gravity="center"
+                        android:textSize="18sp"
+                        android:text="type"/>
+                </LinearLayout>
+                <GridLayout
+                    android:id="@+id/pictures_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/row_prop_height">
+                </GridLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_row_text"
+                android:textStyle="bold"
                 android:text="Description"/>
             <TextView
                 android:id="@+id/property_desc"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_row_text"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"
+                    android:textStyle="bold"
+                    android:text="Surface"/>
             <TextView
                 android:id="@+id/property_surface"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_row_text"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"
+                    android:textStyle="bold"
+                    android:text="Rooms"/>
             <TextView
                 android:id="@+id/property_rooms"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_row_text"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>

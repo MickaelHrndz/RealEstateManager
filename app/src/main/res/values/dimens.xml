@@ -9,6 +9,6 @@
     <dimen name="button_login_margin">5dp</dimen>
 
     <dimen name="row_workmate_height">80dp</dimen>
-    <dimen name="row_prop_height">80dp</dimen>
-    <dimen name="margin_row_text">1dp</dimen>
+    <dimen name="row_prop_height">100dp</dimen>
+    <dimen name="margin_row_text">2dp</dimen>
 </resources>
