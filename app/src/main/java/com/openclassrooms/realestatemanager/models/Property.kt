@@ -12,10 +12,11 @@ import java.util.*
  */
 @Parcelize
 data class Property(
+            var pid: String, // Property ID generated randomly
             var type: String, // Type (apartment, loft, mansion, etc...)
             var location: String, // Location identifier (City, neighbourhood...)
-            var price: Double, // Price (in US Dollars)
-            var surface: Double, // Surface (in square meters)
+            var price: Int, // Price (in US Dollars)
+            var surface: Int, // Surface (in square meters)
             var roomsCount: Int, // Rooms count
             var description: String, // Full description of the property
             var picturesList: ArrayList<String>, // List of pictures urls
@@ -25,5 +26,5 @@ data class Property(
             var salesmanUid: String? // Salesman Firebase uid, if sold
             //var poiList: ArrayList<MarkerOptions> // List of nearby points of interest
         ) : Parcelable {
-    constructor() : this("", "", .0, .0, 0, "", arrayListOf<String>(), false, Calendar.getInstance().time, null, null)
+    constructor() : this("", "", "", 0, 0, 0, "", arrayListOf<String>(), false, Calendar.getInstance().time, null, null)
 }
