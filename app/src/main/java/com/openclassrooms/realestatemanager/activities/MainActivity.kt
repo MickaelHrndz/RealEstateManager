@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
 
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
@@ -49,7 +51,7 @@ open class MainActivity : AppCompatActivity() {
         // Row separator
         mRecyclerView.addItemDecoration(DividerItemDecoration(mRecyclerView.context, llm.orientation))
 
-        colRef.get().addOnCompleteListener {
+        /*colRef.get().addOnCompleteListener {
             if(it.isSuccessful) {
                 val res = it.result.documents
                 for(doc in res){
@@ -60,7 +62,23 @@ open class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
+        }*/
+        colRef.addSnapshotListener(object: EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
+            override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                if(p0 != null){
+                    propertiesList.clear()
+                    val res = p0.documents
+                    for(doc in res){
+                        val prop = doc.toObject(Property::class.java)
+                        if(prop != null){
+                            propertiesList.add(prop)
+                            mAdapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+            }
+
+        })
 
         // Drawer configuration
         val toggle = ActionBarDrawerToggle(
@@ -85,7 +103,6 @@ open class MainActivity : AppCompatActivity() {
             // and add the transaction to the back stack so the user can navigate back
             transaction.replace(R.id.fragment_container, firstFragment)
             transaction.addToBackStack(null)
-
             // Commit the transaction
             transaction.commit()
 

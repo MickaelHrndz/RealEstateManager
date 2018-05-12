@@ -3,4 +3,7 @@
     <string name="navigation_drawer_close">Drawer Closed</string>
     <string name="app_name">Real Estate Manager</string>
     <string name="square_meters">%1$d square meters</string>
+    <string name="price"> - $%1$d</string>
+    <string name="available">Available</string>
+    <string name="unavailable">Unavailable</string>
 </resources>

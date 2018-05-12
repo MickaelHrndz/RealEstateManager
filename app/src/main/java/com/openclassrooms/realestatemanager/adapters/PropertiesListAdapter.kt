@@ -1,21 +1,17 @@
 package com.openclassrooms.realestatemanager.adapters
 
 import android.content.Context
-import android.content.res.Configuration
-import android.graphics.Typeface
-import android.provider.Settings.System.getConfiguration
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.row_property.view.*
-import android.content.Intent.getIntent
-import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 
 
 /**
@@ -52,9 +48,18 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         // Location
         holder.locationTextView.text = item.location
 
+        // Status
+        if(item.status){
+            holder.statusTextView.text = mContext.getString(R.string.available)
+            holder.statusTextView.setTextColor(Color.parseColor("#4caf50"))
+        } else {
+            holder.statusTextView.text = mContext.getString(R.string.unavailable)
+            holder.statusTextView.setTextColor(Color.RED)
+        }
+        
         // Price
-        holder.priceTextView.text = "$" + item.price
-
+        holder.priceTextView.text = mContext.getString(R.string.price, item.price)
+        
         // Item click listener
         holder.itemView.setOnClickListener {
             (mContext as MainActivity).displayProperty(item)
@@ -65,6 +70,7 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         val typeTextView = itemView.prop_type!!
         val locationTextView = itemView.prop_location!!
         val priceTextView = itemView.prop_price!!
+        val statusTextView = itemView.prop_status!!
     }
 
 }

@@ -40,8 +40,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="@dimen/margin_row_text"
                         android:paddingEnd="5dp"
-                        android:textSize="18sp"
-                        android:text="location"/>
+                        android:textSize="18sp"/>
                     <TextView
                         android:id="@+id/property_type"
                         android:layout_width="wrap_content"
@@ -49,14 +48,33 @@
                         android:layout_margin="@dimen/margin_row_text"
                         android:paddingStart="5dp"
                         android:layout_gravity="center"
-                        android:textSize="18sp"
-                        android:text="type"/>
+                        android:textSize="18sp"/>
                 </LinearLayout>
                 <GridLayout
                     android:id="@+id/pictures_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/row_prop_height">
+                    android:layout_height="@dimen/row_prop_height"
+                    android:columnCount="5"
+                    android:rowCount="1">
                 </GridLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:id="@+id/property_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_row_text"
+                        android:textColor="@color/colorPrimaryDark"/>
+                    <TextView
+                        android:id="@+id/property_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_row_text"
+                        android:textColor="@color/colorPrimaryDark"/>
+                </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,6 +110,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_row_text"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"
+                    android:textStyle="bold"
+                    android:text="Entry date"/>
+                <TextView
+                    android:id="@+id/property_entryDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"
+                    />
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
