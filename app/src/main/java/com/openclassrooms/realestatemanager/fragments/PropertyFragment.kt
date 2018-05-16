@@ -48,7 +48,7 @@ class PropertyFragment : Fragment() {
                 property_status.setTextColor(Color.RED)
             }
 
-            for(url in prop.picturesList){
+            for(url in prop.pictures!!){
                 val img = ImageView(context)
                 pictures_layout.addView(img)
                 Glide.with(context!!).load(url).into(img)

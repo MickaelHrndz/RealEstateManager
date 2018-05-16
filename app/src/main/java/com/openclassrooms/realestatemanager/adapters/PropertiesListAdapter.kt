@@ -40,7 +40,9 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         val item = mList[position]
 
         // Profile image
-        Glide.with(mContext).load(item.picturesList[0]).into(holder.itemView.findViewById(R.id.prop_image))
+        if(item.pictures.isNotEmpty()){
+            Glide.with(mContext).load(item.pictures[0]).into(holder.itemView.findViewById(R.id.prop_image))
+        }
 
         // Type
         holder.typeTextView.text = item.type

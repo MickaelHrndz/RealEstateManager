@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.activities
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -8,8 +7,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.MotionEvent
-import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -20,8 +17,17 @@ import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import com.openclassrooms.realestatemanager.database.AppDatabase
+import android.arch.persistence.room.Room
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
+
 
 open class MainActivity : AppCompatActivity() {
+
+    companion object {
+        lateinit var instance: AppDatabase
+    }
 
     /** List of workmates */
     private var propertiesList = ArrayList<Property>()
@@ -40,6 +46,10 @@ open class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val db = Room.databaseBuilder(applicationContext,
+                AppDatabase::class.java, "database-name").build()
+
         mAdapter = PropertiesListAdapter(this, R.layout.row_property, propertiesList)
         val llm = LinearLayoutManager(this)
         llm.orientation = LinearLayoutManager.VERTICAL
@@ -47,6 +57,7 @@ open class MainActivity : AppCompatActivity() {
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView.layoutManager = llm
         mRecyclerView.adapter = mAdapter
+
 
         // Row separator
         mRecyclerView.addItemDecoration(DividerItemDecoration(mRecyclerView.context, llm.orientation))
@@ -63,6 +74,7 @@ open class MainActivity : AppCompatActivity() {
                 }
             }
         }*/
+        
         colRef.addSnapshotListener(object: EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
             override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                 if(p0 != null){
@@ -71,8 +83,18 @@ open class MainActivity : AppCompatActivity() {
                     for(doc in res){
                         val prop = doc.toObject(Property::class.java)
                         if(prop != null){
+                            // Add properties to the list
                             propertiesList.add(prop)
                             mAdapter.notifyDataSetChanged()
+
+                            Observable.just(db)
+                                    .subscribeOn(Schedulers.io())
+                                    .subscribe {
+                                        it.userDao().insertAll(prop)
+                                    }.dispose()
+
+                            // Add properties to the database
+                            //MainActivity.instance.userDao().insertAll(prop)
                         }
                     }
                 }

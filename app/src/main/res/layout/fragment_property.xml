@@ -50,13 +50,12 @@
                         android:layout_gravity="center"
                         android:textSize="18sp"/>
                 </LinearLayout>
-                <GridLayout
+                <LinearLayout
                     android:id="@+id/pictures_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/row_prop_height"
-                    android:columnCount="5"
-                    android:rowCount="1">
-                </GridLayout>
+                    android:orientation="horizontal">
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
