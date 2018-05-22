@@ -21,13 +21,17 @@
             android:layout_marginTop="50dp"
             android:layout_marginBottom="50dp"
             card_view:cardElevation="5sp"
-            card_view:cardUseCompatPadding="true"
-            android:padding="2dp">
+            card_view:cardUseCompatPadding="true">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
+                <LinearLayout
+                    android:id="@+id/pictures_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/row_prop_height"
+                    android:orientation="horizontal">
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/property_header_layout"
                     android:layout_width="match_parent"
@@ -52,12 +56,6 @@
                         android:textSize="18sp"/>
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/pictures_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/row_prop_height"
-                    android:orientation="horizontal">
-                </LinearLayout>
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -75,10 +73,25 @@
                         android:layout_margin="@dimen/margin_row_text"
                         android:textColor="@color/colorPrimaryDark"/>
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" 
+                    android:layout_marginStart="2dp"
+                    android:textStyle="bold"
+                    android:text="Address"/>
+                <TextView
+                    android:id="@+id/property_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_row_text"
+                android:layout_marginTop="8dp" 
+                    android:layout_marginStart="2dp"
                 android:textStyle="bold"
                 android:text="@string/description"/>
             <TextView
@@ -90,7 +103,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_row_text"
+                    android:layout_marginTop="8dp" 
+                    android:layout_marginStart="2dp"
                     android:textStyle="bold"
                     android:text="@string/surface"/>
             <TextView
@@ -102,7 +116,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_row_text"
+                    android:layout_marginTop="8dp" 
+                    android:layout_marginStart="2dp"
                     android:textStyle="bold"
                     android:text="@string/rooms"/>
             <TextView
@@ -114,7 +129,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_row_text"
+                    android:layout_marginTop="8dp" 
+                    android:layout_marginStart="2dp"
                     android:textStyle="bold"
                     android:text="@string/entry_date"/>
                 <TextView

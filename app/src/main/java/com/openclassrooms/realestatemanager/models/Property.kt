@@ -17,6 +17,7 @@ data class Property(
         @PrimaryKey var pid: String, // Property ID generated randomly
         var type: String, // Type (apartment, loft, mansion, etc...)
         var location: String, // Location identifier (City, neighbourhood...)
+        var address: String, // Full address of the property
         var price: Int, // Price (in US Dollars)
         var surface: Int, // Surface (in square meters)
         var roomsCount: Int, // Rooms count
@@ -28,5 +29,5 @@ data class Property(
         var salesmanUid: String // Salesman Firebase uid, if sold
             //var poiList: ArrayList<MarkerOptions> // List of nearby points of interest
         ) : Parcelable {
-    constructor() : this("", "", "", 0, 0, 0, "", arrayListOf<String>(), false, Calendar.getInstance().time, Date(), "")
+    constructor() : this("", "", "", "", 0, 0, 0, "", arrayListOf<String>(), false, Calendar.getInstance().time, Date(), "")
 }

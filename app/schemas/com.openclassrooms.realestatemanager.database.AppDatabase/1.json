@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0a22b923fb11929c46bfb9c881958544",
+    "identityHash": "5d83a716c284f7325128b6be3265661a",
     "entities": [
       {
         "tableName": "Property",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pid` TEXT NOT NULL, `type` TEXT NOT NULL, `location` TEXT NOT NULL, `price` INTEGER NOT NULL, `surface` INTEGER NOT NULL, `roomsCount` INTEGER NOT NULL, `description` TEXT NOT NULL, `status` INTEGER NOT NULL, `entryDate` INTEGER NOT NULL, `saleDate` INTEGER NOT NULL, `salesmanUid` TEXT NOT NULL, PRIMARY KEY(`pid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pid` TEXT NOT NULL, `type` TEXT NOT NULL, `location` TEXT NOT NULL, `address` TEXT NOT NULL, `price` INTEGER NOT NULL, `surface` INTEGER NOT NULL, `roomsCount` INTEGER NOT NULL, `description` TEXT NOT NULL, `status` INTEGER NOT NULL, `entryDate` INTEGER NOT NULL, `saleDate` INTEGER NOT NULL, `salesmanUid` TEXT NOT NULL, PRIMARY KEY(`pid`))",
         "fields": [
           {
             "fieldPath": "pid",
@@ -23,6 +23,12 @@
           {
             "fieldPath": "location",
             "columnName": "location",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -87,7 +93,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0a22b923fb11929c46bfb9c881958544\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5d83a716c284f7325128b6be3265661a\")"
     ]
   }
 }

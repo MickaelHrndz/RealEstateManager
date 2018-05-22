@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import com.openclassrooms.realestatemanager.database.AppDatabase
 import android.arch.persistence.room.Room
+import android.support.transition.Transition
 import android.view.Menu
 import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
 import io.reactivex.Observable
@@ -37,13 +38,13 @@ open class MainActivity : AppCompatActivity() {
     /** Adapter between workmates list and ListView */
     private lateinit var mAdapter: PropertiesListAdapter
 
-    /** RecyclerView */
-    private lateinit var mRecyclerView: RecyclerView
-
     /** Firestore instance */
     private val firestore = FirebaseFirestore.getInstance()
 
     private var colRef = firestore.collection("properties")
+
+    /** RecyclerView */
+    private lateinit var mRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

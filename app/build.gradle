@@ -61,6 +61,8 @@ dependencies {
     //implementation "androidx.room:room-runtime:$room_version"
     //annotationProcessor "androidx.room:room-compiler:$room_version"
 
+    implementation 'com.github.dmallcott:DismissibleImageView:1.0.1'
+
     // Test helpers
     testImplementation'android.arch.persistence.room:testing:1.1.0'
     //testImplementation "androidx.room:room-testing:$room_version"

@@ -75,8 +75,22 @@
                     android:id="@+id/editpictures_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/row_prop_height"
+                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:orientation="horizontal">
                 </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"
+                    android:textStyle="bold"
+                    android:text="@string/address"/>
+                <EditText
+                    android:id="@+id/editprop_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
