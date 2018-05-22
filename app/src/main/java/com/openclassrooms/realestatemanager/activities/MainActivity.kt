@@ -19,6 +19,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import com.openclassrooms.realestatemanager.database.AppDatabase
 import android.arch.persistence.room.Room
+import android.view.Menu
+import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
@@ -26,7 +28,7 @@ import io.reactivex.schedulers.Schedulers
 open class MainActivity : AppCompatActivity() {
 
     companion object {
-        lateinit var instance: AppDatabase
+        //lateinit var instance: AppDatabase
     }
 
     /** List of workmates */
@@ -46,9 +48,6 @@ open class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val db = Room.databaseBuilder(applicationContext,
-                AppDatabase::class.java, "database-name").build()
 
         mAdapter = PropertiesListAdapter(this, R.layout.row_property, propertiesList)
         val llm = LinearLayoutManager(this)
@@ -74,7 +73,7 @@ open class MainActivity : AppCompatActivity() {
                 }
             }
         }*/
-        
+
         colRef.addSnapshotListener(object: EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
             override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                 if(p0 != null){
@@ -86,12 +85,6 @@ open class MainActivity : AppCompatActivity() {
                             // Add properties to the list
                             propertiesList.add(prop)
                             mAdapter.notifyDataSetChanged()
-
-                            Observable.just(db)
-                                    .subscribeOn(Schedulers.io())
-                                    .subscribe {
-                                        it.userDao().insertAll(prop)
-                                    }.dispose()
 
                             // Add properties to the database
                             //MainActivity.instance.userDao().insertAll(prop)
@@ -108,9 +101,44 @@ open class MainActivity : AppCompatActivity() {
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
     }
+
+    // Creates the toolbar menu
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    // Displays a PropertyFragment over the activity
     fun displayProperty(prop: Property){
         // Create a new Fragment to be placed in the activity layout
         val firstFragment = PropertyFragment().newInstance(prop)
+
+        if((resources.configuration.screenLayout
+                        .and(Configuration.SCREENLAYOUT_SIZE_MASK)) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE) {
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit()
+        } else {
+            val transaction = supportFragmentManager.beginTransaction()
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack so the user can navigate back
+            transaction.replace(R.id.fragment_container, firstFragment)
+            transaction.addToBackStack(null)
+            // Commit the transaction
+            transaction.commit()
+
+            /*if(mRecyclerView.visibility == View.VISIBLE){
+                mRecyclerView.visibility = View.GONE
+            }*/
+        }
+    }
+
+    // Displays an EditPropertyFragment over the activity
+    fun displayEditProperty(prop: Property){
+        // Create a new Fragment to be placed in the activity layout
+        val firstFragment = EditPropertyFragment().newInstance(prop)
 
         if((resources.configuration.screenLayout
                         .and(Configuration.SCREENLAYOUT_SIZE_MASK)) ==

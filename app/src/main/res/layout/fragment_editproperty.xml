@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        android:id="@+id/overlay"
+        android:id="@+id/editoverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:background="#4D000000">
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view"
+            android:id="@+id/card_view_edit"
             android:layout_gravity="center"
             card_view:cardCornerRadius="4dp"
             android:layout_width="match_parent"
@@ -20,22 +20,24 @@
             android:layout_marginEnd="25dp"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="50dp"
-            card_view:cardElevation="5sp"
-            card_view:cardUseCompatPadding="true"
-            android:padding="2dp">
+            card_view:cardElevation="8sp"
+            card_view:cardUseCompatPadding="true">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/property_header_layout"
+                    android:id="@+id/editprop_header_layout"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/property_location"
+                        android:id="@+id/editprop_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -43,7 +45,7 @@
                         android:paddingEnd="5dp"
                         android:textSize="18sp"/>
                     <TextView
-                        android:id="@+id/property_type"
+                        android:id="@+id/editprop_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_row_text"
@@ -52,40 +54,40 @@
                         android:textSize="18sp"/>
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/pictures_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/row_prop_height"
-                    android:orientation="horizontal">
-                </LinearLayout>
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_horizontal">
                     <TextView
-                        android:id="@+id/property_status"
+                        android:id="@+id/editprop_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_row_text"
                         android:textColor="@color/colorPrimaryDark"/>
                     <TextView
-                        android:id="@+id/property_price"
+                        android:id="@+id/editprop_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_row_text"
                         android:textColor="@color/colorPrimaryDark"/>
                 </LinearLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_row_text"
-                android:textStyle="bold"
-                android:text="@string/description"/>
-            <TextView
-                android:id="@+id/property_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_row_text"/>
+                <LinearLayout
+                    android:id="@+id/editpictures_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/row_prop_height"
+                    android:orientation="horizontal">
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"
+                    android:textStyle="bold"
+                    android:text="@string/description"/>
+                <EditText
+                    android:id="@+id/editprop_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -93,11 +95,12 @@
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
                     android:text="@string/surface"/>
-            <TextView
-                android:id="@+id/property_surface"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_row_text"/>
+                <EditText
+                    android:id="@+id/editprop_surface"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:layout_margin="@dimen/margin_row_text"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -105,11 +108,12 @@
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
                     android:text="@string/rooms"/>
-            <TextView
-                android:id="@+id/property_rooms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_row_text"/>
+                <EditText
+                    android:id="@+id/editprop_rooms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:layout_margin="@dimen/margin_row_text"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -117,28 +121,40 @@
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
                     android:text="@string/entry_date"/>
-                <TextView
-                    android:id="@+id/property_entryDate"
+                <EditText
+                    android:id="@+id/editprop_entryDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:inputType="date"
                     android:layout_margin="@dimen/margin_row_text"
                     />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:gravity="end">
-                <Button
-                    android:id="@+id/prop_edit"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="EDIT"
-                    android:drawableLeft="@drawable/ic_edit"
-                    android:drawableTint="#fff"
-                    android:textColor="#fff"
-                    android:backgroundTint="#1976d2"/>
+                    android:layout_gravity="bottom"
+                    android:gravity="end">
+                    <Button
+                        android:id="@+id/prop_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CANCEL"
+                        android:drawableLeft="@drawable/ic_cancel"
+                        android:drawableTint="#fff"
+                        android:textColor="#fff"
+                        android:backgroundTint="#d32f2f"/>
+                    <Button
+                        android:id="@+id/prop_done"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DONE"
+                        android:drawableLeft="@drawable/ic_done"
+                        android:drawableTint="#fff"
+                        android:textColor="#fff"
+                        android:backgroundTint="#43a047"/>
+                </LinearLayout>
             </LinearLayout>
+            </ScrollView>
         </android.support.v7.widget.CardView>
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

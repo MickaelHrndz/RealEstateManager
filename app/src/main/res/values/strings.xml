@@ -6,4 +6,9 @@
     <string name="price"> - $%1$d</string>
     <string name="available">Available</string>
     <string name="unavailable">Unavailable</string>
+    <string name="action_edit">Edit</string>
+    <string name="description">Description</string>
+    <string name="surface">Surface</string>
+    <string name="rooms">Rooms</string>
+    <string name="entry_date">Entry date</string>
 </resources>

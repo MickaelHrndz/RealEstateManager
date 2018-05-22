@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_property.*
 import java.text.DateFormat
@@ -48,7 +49,7 @@ class PropertyFragment : Fragment() {
                 property_status.setTextColor(Color.RED)
             }
 
-            for(url in prop.pictures!!){
+            for(url in prop.picturesList){
                 val img = ImageView(context)
                 pictures_layout.addView(img)
                 Glide.with(context!!).load(url).into(img)
@@ -58,6 +59,11 @@ class PropertyFragment : Fragment() {
                 activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
         }
         card_view.setOnClickListener {  }
+
+        prop_edit.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+            (activity as MainActivity).displayEditProperty(prop!!)
+        }
     }
     fun newInstance(prop: Property): PropertyFragment {
         val myFragment = PropertyFragment()

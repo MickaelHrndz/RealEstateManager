@@ -21,7 +21,7 @@ data class Property(
         var surface: Int, // Surface (in square meters)
         var roomsCount: Int, // Rooms count
         var description: String, // Full description of the property
-        @Ignore var pictures: List<String>, // List of pictures urls
+        @Ignore var picturesList: List<String>, // List of pictures urls
         var status: Boolean, // Status (True is available, False is sold)
         var entryDate: Date, // Date of entry on the market
         var saleDate: Date, // Date of sale, if sold

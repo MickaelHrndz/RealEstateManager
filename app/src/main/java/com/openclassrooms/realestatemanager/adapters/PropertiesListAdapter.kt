@@ -39,9 +39,9 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         // Item (row)
         val item = mList[position]
 
-        // Profile image
-        if(item.pictures.isNotEmpty()){
-            Glide.with(mContext).load(item.pictures[0]).into(holder.itemView.findViewById(R.id.prop_image))
+        // Property image
+        if(item.picturesList.isNotEmpty()){
+            Glide.with(mContext).load(item.picturesList[0]).into(holder.itemView.findViewById(R.id.prop_image))
         }
 
         // Type
