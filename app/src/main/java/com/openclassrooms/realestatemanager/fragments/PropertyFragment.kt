@@ -61,24 +61,24 @@ class PropertyFragment : Fragment() {
 
             for(url in prop.picturesList){
                 val img = DismissibleImageView(context)
-                val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
-                params.weight = 1.0f
-                params.gravity = Gravity.FILL_HORIZONTAL
+                val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 800)
+                //params.weight = 1.0f
+                //params.gravity = Gravity.FILL
                 params.setMargins(0, 0, 0, 0)
-                img.layoutParams = params
+                //img.layoutParams = params
                 pictures_layout.addView(img)
                 Glide.with(context!!).load(url).into(img)
             }
         }
-        overlay.setOnClickListener {
+        /*overlay.setOnClickListener {
                 activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
         }
         card_view.setOnClickListener {  }
 
-        prop_edit.setOnClickListener {
+        fab_edit.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
             (activity as MainActivity).displayEditProperty(prop!!)
-        }
+        }*/
     }
     fun newInstance(prop: Property): PropertyFragment {
         val myFragment = PropertyFragment()

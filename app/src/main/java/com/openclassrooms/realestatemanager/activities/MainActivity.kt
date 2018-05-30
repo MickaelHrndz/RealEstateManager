@@ -101,6 +101,10 @@ open class MainActivity : AppCompatActivity() {
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+
+        fab.setOnClickListener {
+            displayAddProperty()
+        }
     }
 
     // Creates the toolbar menu
@@ -140,6 +144,32 @@ open class MainActivity : AppCompatActivity() {
     fun displayEditProperty(prop: Property){
         // Create a new Fragment to be placed in the activity layout
         val firstFragment = EditPropertyFragment().newInstance(prop)
+
+        if((resources.configuration.screenLayout
+                        .and(Configuration.SCREENLAYOUT_SIZE_MASK)) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE) {
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit()
+        } else {
+            val transaction = supportFragmentManager.beginTransaction()
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack so the user can navigate back
+            transaction.replace(R.id.fragment_container, firstFragment)
+            transaction.addToBackStack(null)
+            // Commit the transaction
+            transaction.commit()
+
+            /*if(mRecyclerView.visibility == View.VISIBLE){
+                mRecyclerView.visibility = View.GONE
+            }*/
+        }
+    }
+
+    fun displayAddProperty(){
+        // Create a new Fragment to be placed in the activity layout
+        val firstFragment = EditPropertyFragment().newInstance(Property())
 
         if((resources.configuration.screenLayout
                         .and(Configuration.SCREENLAYOUT_SIZE_MASK)) ==

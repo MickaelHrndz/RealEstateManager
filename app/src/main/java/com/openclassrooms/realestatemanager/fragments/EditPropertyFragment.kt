@@ -18,7 +18,11 @@ import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_editproperty.*
 import kotlinx.android.synthetic.main.fragment_property.*
+import java.sql.Date
 import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 /**
@@ -31,6 +35,8 @@ class EditPropertyFragment : Fragment() {
     /** Firestore instance */
     private val firestore = FirebaseFirestore.getInstance()
 
+    private val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
     private var colRef = firestore.collection("properties")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,28 +48,29 @@ class EditPropertyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val prop = arguments?.getParcelable<Property>("property")
         if(prop != null){
-            editprop_type.text = prop.type
-            editprop_address.setText(prop.address)
-            editprop_location.text = prop.location
-            editprop_desc.setText(prop.description)
-            editprop_surface.setText(prop.surface.toString())
-            editprop_rooms.setText(prop.roomsCount.toString())
-            editprop_price.text = this.getString(R.string.price, prop.price)
-            editprop_entryDate.setText(dateFormat.format(prop.entryDate))
+            if(prop.pid != "") {
+                editprop_type.text = prop.type
+                editprop_address.setText(prop.address)
+                editprop_location.text = prop.location
+                editprop_desc.setText(prop.description)
+                editprop_surface.setText(prop.surface.toString())
+                editprop_rooms.setText(prop.roomsCount.toString())
+                editprop_price.text = this.getString(R.string.price, prop.price)
+                editprop_entryDate.setText(dateFormat.format(prop.entryDate))
+                // Status
+                if(prop.status){
+                    editprop_status.text = this.getString(R.string.available)
+                    editprop_status.setTextColor(Color.parseColor("#4caf50"))
+                } else {
+                    editprop_status.text = this.getString(R.string.unavailable)
+                    editprop_status.setTextColor(Color.RED)
+                }
 
-            // Status
-            if(prop.status){
-                editprop_status.text = this.getString(R.string.available)
-                editprop_status.setTextColor(Color.parseColor("#4caf50"))
-            } else {
-                editprop_status.text = this.getString(R.string.unavailable)
-                editprop_status.setTextColor(Color.RED)
-            }
-
-            for(url in prop.picturesList){
-                val editText = EditText(context)
-                editText.setText(url)
-                editpictures_layout.addView(editText)
+                for(url in prop.picturesList){
+                    val editText = EditText(context)
+                    editText.setText(url)
+                    editpictures_layout.addView(editText)
+                }
             }
         }
         editoverlay.setOnClickListener {
@@ -78,11 +85,21 @@ class EditPropertyFragment : Fragment() {
 
         // If user validates his edits
         prop_done.setOnClickListener {
-            val data = HashMap<String, String>()
+            val data = HashMap<String, Any>()
+            data["address"] = editprop_address.text.toString()
             data["description"] = editprop_desc.text.toString()
-
-            // Update Firestore data
-            colRef.document(prop!!.pid).update(data as Map<String, Any>)
+            data["surface"] = Integer.parseInt(editprop_surface.text.toString())
+            data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
+            data["entryDate"] = df.parse(editprop_entryDate.text.toString())
+            if(prop!!.pid != ""){
+                // Update Firestore data
+                colRef.document(prop.pid).update(data as Map<String, Any>)
+            } else {
+                // Create new document and set its pid as a field after it is successfully created
+                colRef.add(data).addOnSuccessListener {
+                    colRef.document(it.id).update("pid", it.id)
+                }
+            }
 
             (activity as MainActivity).displayProperty(prop)
         }
