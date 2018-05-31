@@ -5,8 +5,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
-
+    android:fitsSystemWindows="true"
+    android:background="#21000000">
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/property_margin"
+        android:layout_marginBottom="0dp"
+        android:background="@color/cardview_light_background">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -25,7 +31,7 @@
             app:expandedTitleMarginEnd="64dp">
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="@dimen/property_images_height"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layout_collapseMode="parallax">
 
@@ -70,15 +76,13 @@
                     android:id="@+id/property_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:textColor="#fff"/>
 
                 <TextView
                     android:id="@+id/property_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
                     android:textColor="#fff"/>
             </LinearLayout>
 
@@ -97,23 +101,37 @@
                     android:drawableTop="@drawable/ic_star_rate_black"
                     style="@style/Widget.AppCompat.Button.Borderless"/>
             </LinearLayout>-->
+            <!--android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="6dp"
+                android:layout_margin="6dp"-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#fff">
-                <TextView
-                    android:id="@+id/property_status"
-                    android:layout_width="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_row_text"
-                    android:textColor="@color/colorPrimaryDark"/>
-                <TextView
-                    android:id="@+id/property_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_row_text"
-                    android:textColor="@color/colorPrimaryDark"/>
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/property_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:layout_margin="@dimen/margin_row_text"
+                        android:textColor="@color/colorPrimaryDark"/>
+                    <TextView
+                        android:id="@+id/property_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:layout_margin="@dimen/margin_row_text"
+                        android:textColor="@color/colorPrimaryDark"/>
+                </LinearLayout>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -179,12 +197,18 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_row_text"
                     />
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/property_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
+            <!--/android.support.v7.widget.CardView-->
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_select"
+        android:id="@+id/fab_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
@@ -192,4 +216,5 @@
         app:layout_anchorGravity="bottom|end"
         android:tint="#fff"
         android:src="@drawable/ic_edit"/>
+    </android.support.design.widget.CoordinatorLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -1,27 +1,18 @@
 package com.openclassrooms.realestatemanager.fragments
 
-import android.graphics.Color
-import android.support.v4.app.Fragment
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.ImageView
-import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.R.id.editprop_entryDate
-import com.openclassrooms.realestatemanager.R.id.editprop_price
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_editproperty.*
-import kotlinx.android.synthetic.main.fragment_property.*
-import java.sql.Date
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -49,22 +40,15 @@ class EditPropertyFragment : Fragment() {
         val prop = arguments?.getParcelable<Property>("property")
         if(prop != null){
             if(prop.pid != "") {
-                editprop_type.text = prop.type
+                editprop_type.setText(prop.type)
                 editprop_address.setText(prop.address)
-                editprop_location.text = prop.location
+                editprop_location.setText(prop.location)
                 editprop_desc.setText(prop.description)
                 editprop_surface.setText(prop.surface.toString())
                 editprop_rooms.setText(prop.roomsCount.toString())
-                editprop_price.text = this.getString(R.string.price, prop.price)
+                editprop_price.setText(prop.price.toString())
                 editprop_entryDate.setText(dateFormat.format(prop.entryDate))
-                // Status
-                if(prop.status){
-                    editprop_status.text = this.getString(R.string.available)
-                    editprop_status.setTextColor(Color.parseColor("#4caf50"))
-                } else {
-                    editprop_status.text = this.getString(R.string.unavailable)
-                    editprop_status.setTextColor(Color.RED)
-                }
+                editprop_checkbox.isChecked = prop.status
 
                 for(url in prop.picturesList){
                     val editText = EditText(context)
@@ -86,11 +70,15 @@ class EditPropertyFragment : Fragment() {
         // If user validates his edits
         prop_done.setOnClickListener {
             val data = HashMap<String, Any>()
+            data["type"] = editprop_type.text.toString()
+            data["location"] = editprop_location.text.toString()
             data["address"] = editprop_address.text.toString()
             data["description"] = editprop_desc.text.toString()
             data["surface"] = Integer.parseInt(editprop_surface.text.toString())
             data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
             data["entryDate"] = df.parse(editprop_entryDate.text.toString())
+            data["price"] = Integer.parseInt(editprop_price.text.toString())
+            data["status"] = editprop_checkbox.isChecked
             if(prop!!.pid != ""){
                 // Update Firestore data
                 colRef.document(prop.pid).update(data as Map<String, Any>)

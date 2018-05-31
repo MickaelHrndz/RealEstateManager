@@ -1,35 +1,30 @@
 package com.openclassrooms.realestatemanager.activities
 
 import android.content.res.Configuration
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
-
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
+import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
 import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-import com.openclassrooms.realestatemanager.database.AppDatabase
-import android.arch.persistence.room.Room
-import android.support.transition.Transition
-import android.view.Menu
-import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 
 
 open class MainActivity : AppCompatActivity() {
 
     companion object {
         //lateinit var instance: AppDatabase
+        var colRef = FirebaseFirestore.getInstance().collection("properties")
     }
 
     /** List of workmates */
@@ -37,11 +32,6 @@ open class MainActivity : AppCompatActivity() {
 
     /** Adapter between workmates list and ListView */
     private lateinit var mAdapter: PropertiesListAdapter
-
-    /** Firestore instance */
-    private val firestore = FirebaseFirestore.getInstance()
-
-    private var colRef = firestore.collection("properties")
 
     /** RecyclerView */
     private lateinit var mRecyclerView: RecyclerView
@@ -86,9 +76,6 @@ open class MainActivity : AppCompatActivity() {
                             // Add properties to the list
                             propertiesList.add(prop)
                             mAdapter.notifyDataSetChanged()
-
-                            // Add properties to the database
-                            //MainActivity.instance.userDao().insertAll(prop)
                         }
                     }
                 }

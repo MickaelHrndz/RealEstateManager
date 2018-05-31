@@ -56,8 +56,8 @@ dependencies {
     //def room_version = "2.0.0-alpha1"
 
     // Room
-    implementation 'android.arch.persistence.room:runtime:1.1.0'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.1.0'
+    //implementation 'android.arch.persistence.room:runtime:1.1.0'
+    //annotationProcessor 'android.arch.persistence.room:compiler:1.1.0'
     //implementation "androidx.room:room-runtime:$room_version"
     //annotationProcessor "androidx.room:room-compiler:$room_version"
 

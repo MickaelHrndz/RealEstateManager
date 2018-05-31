@@ -5,7 +5,9 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
+import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 import java.util.*
 
 /**
@@ -17,6 +19,7 @@ data class Property(
         @PrimaryKey var pid: String, // Property ID generated randomly
         var type: String, // Type (apartment, loft, mansion, etc...)
         var location: String, // Location identifier (City, neighbourhood...)
+        var geopoint: @RawValue GeoPoint,
         var address: String, // Full address of the property
         var price: Int, // Price (in US Dollars)
         var surface: Int, // Surface (in square meters)
@@ -29,5 +32,5 @@ data class Property(
         var salesmanUid: String // Salesman Firebase uid, if sold
             //var poiList: ArrayList<MarkerOptions> // List of nearby points of interest
         ) : Parcelable {
-    constructor() : this("", "", "", "", 0, 0, 0, "", arrayListOf<String>(), false, Calendar.getInstance().time, Date(), "")
+    constructor() : this("", "", "", GeoPoint(.0, .0),"", 0, 0, 0, "", arrayListOf<String>(), false, Calendar.getInstance().time, Date(), "")
 }
