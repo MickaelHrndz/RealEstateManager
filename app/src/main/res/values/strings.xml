@@ -13,4 +13,9 @@
     <string name="rooms">Rooms</string>
     <string name="entry_date">Entry date</string>
     <string name="address">Address</string>
+    <string name="location">Location</string>
+    <string name="type">Type</string>
+    <string name="dollarsign">$</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
 </resources>

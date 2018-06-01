@@ -42,14 +42,14 @@ class PropertyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         fragmentView = view
         val prop = arguments?.getParcelable<Property>("property")
+        arguments?.remove("property")
         if(prop != null){
-            updateFromProperty(prop)
-
+            updateUIFromProperty(prop)
             MainActivity.colRef.document(prop.pid).addSnapshotListener { doc, _ ->
                 if(doc != null){
                     val property = doc.toObject(Property::class.java)
                     if(property != null){
-                        updateFromProperty(property)
+                        updateUIFromProperty(property)
                     }
                 }
             }
@@ -77,7 +77,7 @@ class PropertyFragment : Fragment() {
     }
 
     /** Update UI based on a Property object */
-    private fun updateFromProperty(prop: Property) {
+    private fun updateUIFromProperty(prop: Property) {
         if(::fragmentView.isInitialized){
             fragmentView.findViewById<TextView>(R.id.property_location).text = prop.location
             fragmentView.findViewById<TextView>(R.id.property_type).text = prop.type

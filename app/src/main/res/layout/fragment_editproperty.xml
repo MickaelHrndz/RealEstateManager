@@ -38,6 +38,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:hint="@string/location"
                         android:padding="5dp"
                         android:textSize="18sp"/>
                     <EditText
@@ -45,6 +46,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_row_text"
+                        android:hint="@string/type"
                         android:padding="5dp"
                         android:layout_gravity="center"
                         android:textSize="18sp"/>
@@ -65,6 +67,18 @@
                         android:id="@+id/editprop_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_row_text"
+                        android:textSize="16sp"
+                        android:text="@string/dollarsign"/>
                     <EditText
                         android:id="@+id/editprop_price"
                         android:layout_width="wrap_content"
@@ -153,8 +167,8 @@
                         android:id="@+id/prop_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="CANCEL"
-                        android:drawableLeft="@drawable/ic_cancel"
+                        android:text="@string/cancel"
+                        android:drawableStart="@drawable/ic_cancel"
                         android:drawableTint="#fff"
                         android:textColor="#fff"
                         android:backgroundTint="#d32f2f"/>
@@ -162,8 +176,8 @@
                         android:id="@+id/prop_done"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DONE"
-                        android:drawableLeft="@drawable/ic_done"
+                        android:text="@string/done"
+                        android:drawableStart="@drawable/ic_done"
                         android:drawableTint="#fff"
                         android:textColor="#fff"
                         android:backgroundTint="#43a047"/>

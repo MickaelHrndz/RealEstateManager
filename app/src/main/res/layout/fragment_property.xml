@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:background="#21000000">
     <android.support.design.widget.CoordinatorLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/property_margin"
         android:layout_marginBottom="0dp"
@@ -38,7 +38,7 @@
 
             <LinearLayout
                 android:id="@+id/pictures_layout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -67,10 +67,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/row_workmate_height"
+                android:layout_height="@dimen/prop_header_height"
                 android:background="@color/colorPrimary"
                 android:orientation="vertical"
-                android:padding="@dimen/activity_horizontal_margin">
+                android:gravity="center_vertical"
+                android:paddingStart="20dp">
 
                 <TextView
                     android:id="@+id/property_location"

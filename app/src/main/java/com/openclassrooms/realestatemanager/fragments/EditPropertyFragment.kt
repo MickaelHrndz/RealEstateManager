@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
@@ -30,6 +31,9 @@ class EditPropertyFragment : Fragment() {
 
     private var colRef = firestore.collection("properties")
 
+    /** If the fragment is used to add a new property */
+    private var isNew = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dateFormat = android.text.format.DateFormat.getDateFormat(context?.applicationContext)
         return inflater.inflate(R.layout.fragment_editproperty, container, false)
@@ -38,6 +42,7 @@ class EditPropertyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val prop = arguments?.getParcelable<Property>("property")
+        arguments?.remove("property")
         if(prop != null){
             if(prop.pid != "") {
                 editprop_type.setText(prop.type)
@@ -55,43 +60,58 @@ class EditPropertyFragment : Fragment() {
                     editText.setText(url)
                     editpictures_layout.addView(editText)
                 }
+            } else {
+                isNew = true
             }
+        } else {
+            finish()
         }
         editoverlay.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+            finish()
         }
         card_view_edit.setOnClickListener {  }
 
         // If user cancels the edit
         prop_cancel.setOnClickListener {
-            (activity as MainActivity).displayProperty(prop!!)
+            if(isNew){
+                finish()
+            } else {
+                (activity as MainActivity).displayProperty(prop!!)
+            }
         }
 
         // If user validates his edits
         prop_done.setOnClickListener {
-            val data = HashMap<String, Any>()
-            data["type"] = editprop_type.text.toString()
-            data["location"] = editprop_location.text.toString()
-            data["address"] = editprop_address.text.toString()
-            data["description"] = editprop_desc.text.toString()
-            data["surface"] = Integer.parseInt(editprop_surface.text.toString())
-            data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
-            data["entryDate"] = df.parse(editprop_entryDate.text.toString())
-            data["price"] = Integer.parseInt(editprop_price.text.toString())
-            data["status"] = editprop_checkbox.isChecked
-            if(prop!!.pid != ""){
-                // Update Firestore data
-                colRef.document(prop.pid).update(data as Map<String, Any>)
-            } else {
-                // Create new document and set its pid as a field after it is successfully created
-                colRef.add(data).addOnSuccessListener {
-                    colRef.document(it.id).update("pid", it.id)
+            try {
+                val data = HashMap<String, Any>()
+                data["type"] = editprop_type.text.toString()
+                data["location"] = editprop_location.text.toString()
+                data["address"] = editprop_address.text.toString()
+                data["description"] = editprop_desc.text.toString()
+                data["surface"] = Integer.parseInt(editprop_surface.text.toString())
+                data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
+                data["entryDate"] = df.parse(editprop_entryDate.text.toString())
+                data["price"] = Integer.parseInt(editprop_price.text.toString())
+                data["status"] = editprop_checkbox.isChecked
+                if(prop!!.pid != ""){
+                    // Update Firestore data
+                    colRef.document(prop.pid).update(data as Map<String, Any>)
+                    (activity as MainActivity).displayProperty(prop)
+                } else {
+                    // Create new document and set its pid as a field after it is successfully created
+                    colRef.add(data).addOnSuccessListener {
+                        colRef.document(it.id).update("pid", it.id)
+                        finish()
+                    }
                 }
             }
-
-            (activity as MainActivity).displayProperty(prop)
+            catch(e: Exception){
+                Toast.makeText(context, "Something went wrong. Please make sure that all value entered is valid.", Toast.LENGTH_LONG).show()
+            }
         }
     }
+
+    /** Creates a new instance of this fragment */
     fun newInstance(prop: Property): EditPropertyFragment {
         val myFragment = EditPropertyFragment()
         val args = Bundle()
@@ -99,4 +119,19 @@ class EditPropertyFragment : Fragment() {
         myFragment.arguments = args
         return myFragment
     }
+
+    /** Removes this fragment */
+    private fun finish(){
+        activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+    }
+
+    /** Displays property or removes this fragment depending if the property is created or edited */
+    private fun displayOrFinish(prop: Property){
+        if(isNew){
+            finish()
+        } else {
+            (activity as MainActivity).displayProperty(prop)
+        }
+    }
+
 }
