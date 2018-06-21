@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import com.cielyang.android.clearableedittext.ClearableEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
@@ -15,6 +16,24 @@ import kotlinx.android.synthetic.main.fragment_editproperty.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import com.google.firebase.storage.FirebaseStorage
+import android.content.DialogInterface
+import android.support.v7.app.AlertDialog
+import android.content.Intent
+import android.provider.MediaStore
+import android.R.attr.data
+import android.app.Activity.RESULT_OK
+import android.net.Uri
+import android.support.annotation.NonNull
+import com.google.android.gms.tasks.Continuation
+import com.google.android.gms.tasks.OnCompleteListener
+import kotlinx.android.synthetic.main.abc_activity_chooser_view.*
+import com.google.firebase.storage.UploadTask
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.storage.StorageReference
+import java.io.File
 
 
 /**
@@ -22,10 +41,17 @@ import java.util.*
  */
 class EditPropertyFragment : Fragment() {
 
+    companion object {
+        const val RESULT_IMAGE = 9
+    }
+
     private lateinit var dateFormat: DateFormat
 
     /** Firestore instance */
     private val firestore = FirebaseFirestore.getInstance()
+
+    /** Firebase storage instance */
+    var storage = FirebaseStorage.getInstance().reference
 
     private val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
@@ -56,7 +82,7 @@ class EditPropertyFragment : Fragment() {
                 editprop_checkbox.isChecked = prop.status
 
                 for(url in prop.picturesList){
-                    val editText = EditText(context)
+                    val editText = ClearableEditText(context)
                     editText.setText(url)
                     editpictures_layout.addView(editText)
                 }
@@ -71,6 +97,25 @@ class EditPropertyFragment : Fragment() {
         }
         card_view_edit.setOnClickListener {  }
 
+        btn_addpicture.setOnClickListener {
+            val builder = AlertDialog.Builder(context!!)
+            builder.setTitle("Pick a color")
+            builder.setItems(arrayOf("On Internet", "On my phone"), (DialogInterface.OnClickListener { dialogInterface, i ->
+                when(i){
+                    // Internet URL
+                    0 -> {
+                        addUrlField()
+                    }
+                    // Phone
+                    1 -> {
+                        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        startActivityForResult(intent, RESULT_IMAGE)
+                    }
+                }
+            }))
+            builder.show()
+        }
+
         // If user cancels the edit
         prop_cancel.setOnClickListener {
             if(isNew){
@@ -84,6 +129,7 @@ class EditPropertyFragment : Fragment() {
         prop_done.setOnClickListener {
             try {
                 val data = HashMap<String, Any>()
+                // Populate data map with user input
                 data["type"] = editprop_type.text.toString()
                 data["location"] = editprop_location.text.toString()
                 data["address"] = editprop_address.text.toString()
@@ -93,6 +139,14 @@ class EditPropertyFragment : Fragment() {
                 data["entryDate"] = df.parse(editprop_entryDate.text.toString())
                 data["price"] = Integer.parseInt(editprop_price.text.toString())
                 data["status"] = editprop_checkbox.isChecked
+
+                val pList = ArrayList<String>()
+                for(i in 0 until editpictures_layout.childCount){
+                    pList.add((editpictures_layout.getChildAt(i) as EditText).text.toString())
+                }
+                data["picturesList"] = pList
+
+                // If the property exists
                 if(prop!!.pid != ""){
                     // Update Firestore data
                     colRef.document(prop.pid).update(data as Map<String, Any>)
@@ -105,12 +159,57 @@ class EditPropertyFragment : Fragment() {
                     }
                 }
             }
-            catch(e: Exception){
+            catch(e: Exception) {
                 Toast.makeText(context, "Something went wrong. Please make sure that all value entered is valid.", Toast.LENGTH_LONG).show()
+                e.printStackTrace()
+            }
+
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            val selectedMediaUri = data?.data
+            if (selectedMediaUri.toString().contains("image")) {
+                //handle image
+                val file = Uri.fromFile(File(selectedMediaUri.toString()))
+                val imgRef = storage.child("images/" + file.lastPathSegment)
+
+                // Register observers to listen for when the download is done or if it fails
+                val uploadTask = imgRef.putFile(file)
+                uploadTask.continueWithTask {
+                    if (!it.isSuccessful) {
+                        throw it.exception!!
+                    }
+                    // Continue with the task to get the download URL
+                    imgRef.downloadUrl
+
+                }.addOnCompleteListener {
+                    if(it.isSuccessful){
+                        addUrlField(it.result.toString())
+                    }
+                }
+
+                /*val urlTask = uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    if(!it.isSuccessful){
+                        throw it.exception!!
+                    }
+            }).addOnCompleteListener {
+                    addUrlField(it.result.toString())
+            }*/
             }
         }
     }
 
+    private fun addUrlField(url: String = ""){
+        val editText = ClearableEditText(context)
+        if(url != ""){
+            editText.setText(url)
+        }
+        editText.hint = "Image URL"
+        editpictures_layout.addView(editText)
+    }
     /** Creates a new instance of this fragment */
     fun newInstance(prop: Property): EditPropertyFragment {
         val myFragment = EditPropertyFragment()

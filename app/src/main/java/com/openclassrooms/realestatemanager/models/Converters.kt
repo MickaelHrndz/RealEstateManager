@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.models
+/*package com.openclassrooms.realestatemanager.models
 
 import android.arch.persistence.room.TypeConverter
 import java.util.*
@@ -13,4 +13,4 @@ class Converters {
     fun dateToTimestamp(date: Date?): Long? {
         return (date?.time)!!.toLong()
     }
-}
+}*/

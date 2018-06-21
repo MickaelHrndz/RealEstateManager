@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.database
 
-import android.arch.persistence.room.*
+/*import android.arch.persistence.room.*
 import com.openclassrooms.realestatemanager.models.Property
 
 
@@ -26,4 +26,4 @@ interface PropertyDao {
     fun delete(property: Property)
 
 
-}
+}*/

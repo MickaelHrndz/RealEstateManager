@@ -30,20 +30,28 @@
                 <LinearLayout
                     android:id="@+id/editprop_header_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal">
-                    <EditText
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/location"/>
+                    <com.cielyang.android.clearableedittext.ClearableEditText
                         android:id="@+id/editprop_location"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:hint="@string/location"
                         android:padding="5dp"
                         android:textSize="18sp"/>
-                    <EditText
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/type"/>
+                    <com.cielyang.android.clearableedittext.ClearableEditText
                         android:id="@+id/editprop_type"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_row_text"
                         android:hint="@string/type"
@@ -79,7 +87,7 @@
                         android:layout_margin="@dimen/margin_row_text"
                         android:textSize="16sp"
                         android:text="@string/dollarsign"/>
-                    <EditText
+                    <com.cielyang.android.clearableedittext.ClearableEditText
                         android:id="@+id/editprop_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -90,20 +98,25 @@
                 <LinearLayout
                     android:id="@+id/editpictures_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/row_prop_height"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
                 </LinearLayout>
+                <Button
+                    android:id="@+id/btn_addpicture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_a_picture"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
                     android:text="@string/address"/>
-                <EditText
+                <com.cielyang.android.clearableedittext.ClearableEditText
                     android:id="@+id/editprop_address"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_row_text"/>
 
@@ -113,9 +126,9 @@
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
                     android:text="@string/description"/>
-                <EditText
+                <com.cielyang.android.clearableedittext.ClearableEditText
                     android:id="@+id/editprop_desc"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_row_text"/>
 
@@ -125,9 +138,9 @@
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
                     android:text="@string/surface"/>
-                <EditText
+                <com.cielyang.android.clearableedittext.ClearableEditText
                     android:id="@+id/editprop_surface"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:layout_margin="@dimen/margin_row_text"/>
@@ -138,9 +151,9 @@
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
                     android:text="@string/rooms"/>
-                <EditText
+                <com.cielyang.android.clearableedittext.ClearableEditText
                     android:id="@+id/editprop_rooms"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:layout_margin="@dimen/margin_row_text"/>
@@ -151,9 +164,9 @@
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
                     android:text="@string/entry_date"/>
-                <EditText
+                <com.cielyang.android.clearableedittext.ClearableEditText
                     android:id="@+id/editprop_entryDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="date"
                     android:layout_margin="@dimen/margin_row_text"

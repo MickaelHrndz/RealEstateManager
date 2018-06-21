@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.database;
+/*package com.openclassrooms.realestatemanager.database;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
@@ -12,4 +12,4 @@ import com.openclassrooms.realestatemanager.models.Property;
 //@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract PropertyDao userDao();
-}
+}*/

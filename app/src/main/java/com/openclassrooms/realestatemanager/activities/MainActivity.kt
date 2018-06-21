@@ -154,7 +154,7 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun displayAddProperty(){
+    private fun displayAddProperty(){
         // Create a new Fragment to be placed in the activity layout
         val firstFragment = EditPropertyFragment().newInstance(Property())
 

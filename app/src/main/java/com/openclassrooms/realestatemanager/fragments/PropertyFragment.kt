@@ -79,38 +79,46 @@ class PropertyFragment : Fragment() {
     /** Update UI based on a Property object */
     private fun updateUIFromProperty(prop: Property) {
         if(::fragmentView.isInitialized){
-            fragmentView.findViewById<TextView>(R.id.property_location).text = prop.location
-            fragmentView.findViewById<TextView>(R.id.property_type).text = prop.type
-            fragmentView.findViewById<TextView>(R.id.property_address).text = prop.address
-            fragmentView.findViewById<TextView>(R.id.property_desc).text = prop.description
-            fragmentView.findViewById<TextView>(R.id.property_surface).text = getString(R.string.square_meters, prop.surface)
-            fragmentView.findViewById<TextView>(R.id.property_rooms).text = prop.roomsCount.toString()
-            fragmentView.findViewById<TextView>(R.id.property_price).text = getString(R.string.price, prop.price)
-            fragmentView.findViewById<TextView>(R.id.property_entryDate).text = dateFormat.format(prop.entryDate)
-            fragmentView.findViewById<MapView>(R.id.property_map).getMapAsync {
-                it.addMarker(MarkerOptions().position(geoPointToLatLng(prop.geopoint)))
-                it.moveCamera(CameraUpdateFactory.newLatLng(geoPointToLatLng(prop.geopoint)))
-            }
+            try {
+                // Setting UI elements according to the property object
+                fragmentView.findViewById<TextView>(R.id.property_location).text = prop.location
+                fragmentView.findViewById<TextView>(R.id.property_type).text = prop.type
+                fragmentView.findViewById<TextView>(R.id.property_address).text = prop.address
+                fragmentView.findViewById<TextView>(R.id.property_desc).text = prop.description
+                fragmentView.findViewById<TextView>(R.id.property_surface).text = getString(R.string.square_meters, prop.surface)
+                fragmentView.findViewById<TextView>(R.id.property_rooms).text = prop.roomsCount.toString()
+                fragmentView.findViewById<TextView>(R.id.property_price).text = getString(R.string.price, prop.price)
+                fragmentView.findViewById<TextView>(R.id.property_entryDate).text = dateFormat.format(prop.entryDate)
+                fragmentView.findViewById<MapView>(R.id.property_map).getMapAsync {
+                    it.addMarker(MarkerOptions().position(geoPointToLatLng(prop.geopoint)))
+                    it.moveCamera(CameraUpdateFactory.newLatLng(geoPointToLatLng(prop.geopoint)))
+                }
 
-            // Status
-            val statusView = fragmentView.findViewById<TextView>(R.id.property_status)
-            if(prop.status){
-                statusView.text = this.getString(R.string.available)
-                statusView.setTextColor(Color.parseColor("#4caf50"))
-            } else {
-                statusView.text = this.getString(R.string.unavailable)
-                statusView.setTextColor(Color.RED)
-            }
+                // Status
+                val statusView = fragmentView.findViewById<TextView>(R.id.property_status)
+                if(prop.status){
+                    statusView.text = this.getString(R.string.available)
+                    statusView.setTextColor(Color.parseColor("#4caf50"))
+                } else {
+                    statusView.text = this.getString(R.string.unavailable)
+                    statusView.setTextColor(Color.RED)
+                }
 
-            for(url in prop.picturesList){
-                val img = DismissibleImageView(context)
-                val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 800)
-                //params.weight = 1.0f
-                //params.gravity = Gravity.FILL
-                params.setMargins(0, 0, 0, 0)
-                //img.layoutParams = params
-                fragmentView.findViewById<LinearLayout>(R.id.pictures_layout).addView(img)
-                Glide.with(context!!).load(url).into(img)
+                // Pictures
+                pictures_layout.removeAllViews()
+                for(url in prop.picturesList){
+                    val img = DismissibleImageView(context)
+                    val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 800)
+                    //params.weight = 1.0f
+                    //params.gravity = Gravity.FILL
+                    params.setMargins(0, 0, 0, 0)
+                    //img.layoutParams = params
+                    fragmentView.findViewById<LinearLayout>(R.id.pictures_layout).addView(img)
+                    Glide.with(context!!).load(url).into(img)
+                }
+
+            } catch (e: Exception){
+                e.printStackTrace()
             }
         }
     }
