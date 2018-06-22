@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.fragments
 
+import android.Manifest
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -21,18 +22,12 @@ import android.content.DialogInterface
 import android.support.v7.app.AlertDialog
 import android.content.Intent
 import android.provider.MediaStore
-import android.R.attr.data
 import android.app.Activity.RESULT_OK
+import android.content.pm.PackageManager
 import android.net.Uri
-import android.support.annotation.NonNull
-import com.google.android.gms.tasks.Continuation
-import com.google.android.gms.tasks.OnCompleteListener
-import kotlinx.android.synthetic.main.abc_activity_chooser_view.*
-import com.google.firebase.storage.UploadTask
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.storage.StorageReference
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import com.openclassrooms.realestatemanager.Utils
 import java.io.File
 
 
@@ -42,7 +37,8 @@ import java.io.File
 class EditPropertyFragment : Fragment() {
 
     companion object {
-        const val RESULT_IMAGE = 9
+        const val REQUEST_READ_EXTERNAL_STORAGE = 8
+        const val REQUEST_IMAGE = 9
     }
 
     private lateinit var dateFormat: DateFormat
@@ -104,12 +100,33 @@ class EditPropertyFragment : Fragment() {
                 when(i){
                     // Internet URL
                     0 -> {
+
                         addUrlField()
                     }
                     // Phone
                     1 -> {
-                        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                        startActivityForResult(intent, RESULT_IMAGE)
+                        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            // Permission is not granted
+                            // Should we show an explanation?
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!,
+                                            Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                // Show an explanation to the user *asynchronously* -- don't block
+                                // this thread waiting for the user's response! After the user
+                                // sees the explanation, try again to request the permission.
+                            } else {
+                                // No explanation needed; request the permission
+                                ActivityCompat.requestPermissions(activity!!,
+                                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                                        REQUEST_READ_EXTERNAL_STORAGE)
+
+                                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                                // app-defined int constant. The callback method gets the
+                                // result of the request.
+                            }
+                        } else {
+                            startImagePickIntent()
+                        }
                     }
                 }
             }))
@@ -166,31 +183,40 @@ class EditPropertyFragment : Fragment() {
 
         }
     }
+    private fun startImagePickIntent(){
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, REQUEST_IMAGE)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_READ_EXTERNAL_STORAGE -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    startImagePickIntent()
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return
+            }
+
+        // Add other 'when' lines to check for other
+        // permissions this app might request.
+            else -> {
+                // Ignore all other requests.
+            }
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE) {
             val selectedMediaUri = data?.data
-            if (selectedMediaUri.toString().contains("image")) {
-                //handle image
-                val file = Uri.fromFile(File(selectedMediaUri.toString()))
-                val imgRef = storage.child("images/" + file.lastPathSegment)
-
-                // Register observers to listen for when the download is done or if it fails
-                val uploadTask = imgRef.putFile(file)
-                uploadTask.continueWithTask {
-                    if (!it.isSuccessful) {
-                        throw it.exception!!
-                    }
-                    // Continue with the task to get the download URL
-                    imgRef.downloadUrl
-
-                }.addOnCompleteListener {
-                    if(it.isSuccessful){
-                        addUrlField(it.result.toString())
-                    }
-                }
-
+            if (selectedMediaUri.toString().contains("image") && Utils.isExternalStorageReadable()) {
+                uploadImageFromUri(selectedMediaUri!!)
                 /*val urlTask = uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     if(!it.isSuccessful){
                         throw it.exception!!
@@ -202,6 +228,28 @@ class EditPropertyFragment : Fragment() {
         }
     }
 
+    /** Uploads an image to the Firebase Storage based on its uri */
+    private fun uploadImageFromUri(uri: Uri){
+        //get image path from uri
+        val file = Uri.fromFile(File(Utils.getRealPathFromUri(context, uri)))
+        val imgRef = storage.child("images/" + file.lastPathSegment)
+        // Register observers to listen for when the download is done or if it fails
+        val uploadTask = imgRef.putFile(file)
+        uploadTask.continueWithTask {
+            if (!it.isSuccessful) {
+                throw it.exception!!
+            }
+            // Continue with the task to get the download URL
+            imgRef.downloadUrl
+
+        }.addOnCompleteListener {
+            if(it.isSuccessful){
+                addUrlField(it.result.toString())
+            }
+        }
+    }
+
+    /** Adds an image url field to the UI */
     private fun addUrlField(url: String = ""){
         val editText = ClearableEditText(context)
         if(url != ""){
@@ -210,6 +258,7 @@ class EditPropertyFragment : Fragment() {
         editText.hint = "Image URL"
         editpictures_layout.addView(editText)
     }
+
     /** Creates a new instance of this fragment */
     fun newInstance(prop: Property): EditPropertyFragment {
         val myFragment = EditPropertyFragment()

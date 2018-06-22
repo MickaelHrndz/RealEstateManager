@@ -1,11 +1,18 @@
 package com.openclassrooms.realestatemanager;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.support.constraint.Constraints.TAG;
 
 /**
  * Created by Philippe on 21/02/2018.
@@ -40,7 +47,28 @@ public class Utils {
      * @return
      */
     public static Boolean isInternetAvailable(Context context){
-        WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager)context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        assert wifi != null;
         return wifi.isWifiEnabled();
+    }
+
+    /* Checks if external storage is available to at least read */
+    public static boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+    }
+
+    public static String getRealPathFromUri(Context context, Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        try (Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null)) {
+            assert cursor != null;
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(columnIndex);
+        } catch (Exception e) {
+            Log.e(TAG, "getRealPathFromURI Exception : " + e.toString());
+            return "";
+        }
     }
 }
