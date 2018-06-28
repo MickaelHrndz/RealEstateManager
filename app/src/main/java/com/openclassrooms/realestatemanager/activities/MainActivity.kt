@@ -42,7 +42,9 @@ open class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Sign in Firebase Auth anonymously (useful for Storage upload)
-        FirebaseAuth.getInstance().signInAnonymously()
+        if(FirebaseAuth.getInstance().currentUser == null){
+            FirebaseAuth.getInstance().signInAnonymously()
+        }
 
         mAdapter = PropertiesListAdapter(this, R.layout.row_property, propertiesList)
         val llm = LinearLayoutManager(this)

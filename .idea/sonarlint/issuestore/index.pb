@@ -23,3 +23,9 @@ Tapp/src/main/java/com/openclassrooms/realestatemanager/fragments/PropertyFragme
 Xapp/src/main/java/com/openclassrooms/realestatemanager/fragments/EditPropertyFragment.kt,4\6\466ceda89a69f149de5b8cedcf81afe67a20d6b3
 a
 1app/src/main/res/layout/fragment_editproperty.xml,2\7\27cd79f55c66e878020b5ae73dfdee646a60bdf0
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+q
+Aapp/src/main/java/com/openclassrooms/realestatemanager/Utils.java,f\1\f1cdde1ae10dbcb7e4502dc957ce7854a5461cbb
+ˆ
+Xapp/src/main/java/com/openclassrooms/realestatemanager/adapters/PropertiesListAdapter.kt,7\3\73ab1759920883430d3a37b3639f098f06e31cef

@@ -27,7 +27,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.ArrayAdapter
+import android.widget.ProgressBar
 import com.openclassrooms.realestatemanager.Utils
+import com.openclassrooms.realestatemanager.adapters.EditImagesAdapter
 import java.io.File
 
 
@@ -56,6 +62,10 @@ class EditPropertyFragment : Fragment() {
     /** If the fragment is used to add a new property */
     private var isNew = false
 
+    private lateinit var editImagesAdapter: EditImagesAdapter
+
+    private var imagesList = ArrayList<String>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dateFormat = android.text.format.DateFormat.getDateFormat(context?.applicationContext)
         return inflater.inflate(R.layout.fragment_editproperty, container, false)
@@ -65,6 +75,12 @@ class EditPropertyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val prop = arguments?.getParcelable<Property>("property")
         arguments?.remove("property")
+        editImagesAdapter = EditImagesAdapter(context!!, R.layout.row_edit_image, imagesList)
+        val llm = LinearLayoutManager(context)
+        llm.orientation = LinearLayoutManager.VERTICAL
+        list_pictures.adapter = editImagesAdapter
+        list_pictures.layoutManager = llm
+        list_pictures.isNestedScrollingEnabled = false
         if(prop != null){
             if(prop.pid != "") {
                 editprop_type.setText(prop.type)
@@ -76,12 +92,9 @@ class EditPropertyFragment : Fragment() {
                 editprop_price.setText(prop.price.toString())
                 editprop_entryDate.setText(dateFormat.format(prop.entryDate))
                 editprop_checkbox.isChecked = prop.status
-
-                for(url in prop.picturesList){
-                    val editText = ClearableEditText(context)
-                    editText.setText(url)
-                    editpictures_layout.addView(editText)
-                }
+                imagesList.clear()
+                imagesList.addAll(prop.picturesList)
+                editImagesAdapter.notifyDataSetChanged()
             } else {
                 isNew = true
             }
@@ -100,7 +113,6 @@ class EditPropertyFragment : Fragment() {
                 when(i){
                     // Internet URL
                     0 -> {
-
                         addUrlField()
                     }
                     // Phone
@@ -157,11 +169,11 @@ class EditPropertyFragment : Fragment() {
                 data["price"] = Integer.parseInt(editprop_price.text.toString())
                 data["status"] = editprop_checkbox.isChecked
 
-                val pList = ArrayList<String>()
+                /*val pList = ArrayList<String>()
                 for(i in 0 until editpictures_layout.childCount){
                     pList.add((editpictures_layout.getChildAt(i) as EditText).text.toString())
-                }
-                data["picturesList"] = pList
+                }*/
+                data["picturesList"] = imagesList
 
                 // If the property exists
                 if(prop!!.pid != ""){
@@ -215,7 +227,7 @@ class EditPropertyFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE) {
             val selectedMediaUri = data?.data
-            if (selectedMediaUri.toString().contains("image") && Utils.isExternalStorageReadable()) {
+            if (Utils.isExternalStorageReadable()) {
                 uploadImageFromUri(selectedMediaUri!!)
                 /*val urlTask = uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     if(!it.isSuccessful){
@@ -233,9 +245,13 @@ class EditPropertyFragment : Fragment() {
         //get image path from uri
         val file = Uri.fromFile(File(Utils.getRealPathFromUri(context, uri)))
         val imgRef = storage.child("images/" + file.lastPathSegment)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
         // Register observers to listen for when the download is done or if it fails
-        val uploadTask = imgRef.putFile(file)
-        uploadTask.continueWithTask {
+        val uploadTask = imgRef.putFile(file).addOnProgressListener {
+            val progress = 100.0 * (it.bytesTransferred / it.totalByteCount)
+                progressBar?.visibility = View.VISIBLE
+                progressBar?.progress = progress.toInt()
+        }.continueWithTask {
             if (!it.isSuccessful) {
                 throw it.exception!!
             }
@@ -246,17 +262,14 @@ class EditPropertyFragment : Fragment() {
             if(it.isSuccessful){
                 addUrlField(it.result.toString())
             }
+            progressBar?.visibility = View.GONE
         }
     }
 
     /** Adds an image url field to the UI */
     private fun addUrlField(url: String = ""){
-        val editText = ClearableEditText(context)
-        if(url != ""){
-            editText.setText(url)
-        }
-        editText.hint = "Image URL"
-        editpictures_layout.addView(editText)
+        imagesList.add(url)
+        editImagesAdapter.notifyDataSetChanged()
     }
 
     /** Creates a new instance of this fragment */
