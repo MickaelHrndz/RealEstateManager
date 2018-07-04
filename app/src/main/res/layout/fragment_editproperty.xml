@@ -16,7 +16,7 @@
             card_view:cardCornerRadius="4dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/property_margin"
+            android:layout_margin="8dp"
             card_view:cardElevation="8sp"
             card_view:cardUseCompatPadding="true">
             <ScrollView

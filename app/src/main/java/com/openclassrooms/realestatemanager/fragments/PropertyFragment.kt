@@ -27,6 +27,16 @@ import java.text.DateFormat
  */
 class PropertyFragment : Fragment() {
 
+    companion object {
+        fun newInstance(prop: Property): PropertyFragment {
+            val myFragment = PropertyFragment()
+            val args = Bundle()
+            args.putParcelable("property", prop)
+            myFragment.arguments = args
+            return myFragment
+        }
+    }
+
     private lateinit var dateFormat: DateFormat
 
     private lateinit var pid: String
@@ -61,15 +71,8 @@ class PropertyFragment : Fragment() {
 
         fab_edit.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
-            (activity as MainActivity).displayEditProperty(prop!!)
+            (activity as MainActivity).displayFragment(EditPropertyFragment.newInstance(prop!!))
         }
-    }
-    fun newInstance(prop: Property): PropertyFragment {
-        val myFragment = PropertyFragment()
-        val args = Bundle()
-        args.putParcelable("property", prop)
-        myFragment.arguments = args
-        return myFragment
     }
 
     private fun geoPointToLatLng(geopoint: GeoPoint): LatLng {

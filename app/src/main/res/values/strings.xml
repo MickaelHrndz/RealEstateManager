@@ -19,4 +19,7 @@
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
     <string name="add_a_picture">Add a picture</string>
+    <string name="property_created">Property successfully created.</string>
+    <string name="edit_error">Something went wrong. Please make sure that all value entered is valid.</string>
+    <string name="apply">Apply</string>
 </resources>

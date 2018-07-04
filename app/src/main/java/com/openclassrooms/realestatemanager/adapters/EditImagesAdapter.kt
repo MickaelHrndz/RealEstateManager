@@ -1,7 +1,7 @@
 package com.openclassrooms.realestatemanager.adapters
 
 import android.content.Context
-import android.support.annotation.UiThread
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,10 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.cielyang.android.clearableedittext.ClearableEditText
-import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.activities.MainActivity
-import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import kotlinx.android.synthetic.main.row_edit_image.view.*
 import kotlin.concurrent.thread
 
@@ -23,10 +22,13 @@ import kotlin.concurrent.thread
 
 /** Custom adapter for the workmates RecyclerView */
 open class EditImagesAdapter(context: Context, resource: Int, list: ArrayList<String>) : RecyclerView.Adapter<EditImagesAdapter.ViewHolder>() {
-
     private var mContext = context
     private var mResource = resource
     private var mList = list
+    //private var mListener = listener
+    /*interface UrlChangeListener {
+        fun onUrlChange(position: Int)
+    }*/
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -39,28 +41,30 @@ open class EditImagesAdapter(context: Context, resource: Int, list: ArrayList<St
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // Item (row)
-        val url = mList[position]
-
-        // Property image
-        Glide.with(mContext).load(url).into(holder.imageView)
-
-        // Property url
-        holder.editUrlView.setText(url)
-
-        holder.editUrlView.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-
-            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                mList[position] = text.toString()
-            }
-
-        })
+        holder.updateUI(mList[position])
     }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView = itemView.row_edit_image!!
         val editUrlView = itemView.row_edit_url!!
+        private var imagesValid = true
+
+        fun updateUI(url : String){
+            // Property image
+            Glide.with(itemView.context).load(url).listener(object : RequestListener<Drawable> {
+                override fun onResourceReady(resource: Drawable?, model: Any?, target: com.bumptech.glide.request.target.Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    imagesValid = true
+                    return false
+                }
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: com.bumptech.glide.request.target.Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    if(editUrlView.text.toString() != ""){ imagesValid = false }
+                    return true
+                }
+            }).into(imageView)
+
+            // Property url
+            editUrlView.setText(url)
+        }
     }
 
 }

@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
+import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
+import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.row_property.view.*
 
@@ -24,6 +26,7 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
     private var mContext = context
     private var mResource = resource
     private var mList = list
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -64,7 +67,7 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         
         // Item click listener
         holder.itemView.setOnClickListener {
-            (mContext as MainActivity).displayProperty(item)
+            (mContext as MainActivity).displayFragment(PropertyFragment.newInstance(item))
         }
 
     }

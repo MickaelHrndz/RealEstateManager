@@ -24,6 +24,7 @@ import android.content.Intent
 import android.provider.MediaStore
 import android.app.Activity.RESULT_OK
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -32,6 +33,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.adapters.EditImagesAdapter
 import java.io.File
@@ -45,6 +50,14 @@ class EditPropertyFragment : Fragment() {
     companion object {
         const val REQUEST_READ_EXTERNAL_STORAGE = 8
         const val REQUEST_IMAGE = 9
+        /** Creates a new instance of this fragment */
+        fun newInstance(prop: Property): EditPropertyFragment {
+            val myFragment = EditPropertyFragment()
+            val args = Bundle()
+            args.putParcelable("property", prop)
+            myFragment.arguments = args
+            return myFragment
+        }
     }
 
     private lateinit var dateFormat: DateFormat
@@ -66,6 +79,7 @@ class EditPropertyFragment : Fragment() {
 
     private var imagesList = ArrayList<String>()
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dateFormat = android.text.format.DateFormat.getDateFormat(context?.applicationContext)
         return inflater.inflate(R.layout.fragment_editproperty, container, false)
@@ -80,7 +94,7 @@ class EditPropertyFragment : Fragment() {
         llm.orientation = LinearLayoutManager.VERTICAL
         list_pictures.adapter = editImagesAdapter
         list_pictures.layoutManager = llm
-        list_pictures.isNestedScrollingEnabled = false
+        //list_pictures.isNestedScrollingEnabled = false
         if(prop != null){
             if(prop.pid != "") {
                 editprop_type.setText(prop.type)
@@ -150,50 +164,57 @@ class EditPropertyFragment : Fragment() {
             if(isNew){
                 finish()
             } else {
-                (activity as MainActivity).displayProperty(prop!!)
+                (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop!!))
             }
         }
 
         // If user validates his edits
         prop_done.setOnClickListener {
-            try {
-                val data = HashMap<String, Any>()
-                // Populate data map with user input
-                data["type"] = editprop_type.text.toString()
-                data["location"] = editprop_location.text.toString()
-                data["address"] = editprop_address.text.toString()
-                data["description"] = editprop_desc.text.toString()
-                data["surface"] = Integer.parseInt(editprop_surface.text.toString())
-                data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
-                data["entryDate"] = df.parse(editprop_entryDate.text.toString())
-                data["price"] = Integer.parseInt(editprop_price.text.toString())
-                data["status"] = editprop_checkbox.isChecked
+                try {
+                    val data = HashMap<String, Any>()
+                    // Populate data map with user input
+                    data["type"] = editprop_type.text.toString()
+                    data["location"] = editprop_location.text.toString()
+                    data["address"] = editprop_address.text.toString()
+                    data["description"] = editprop_desc.text.toString()
+                    data["surface"] = Integer.parseInt(editprop_surface.text.toString())
+                    data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
+                    data["entryDate"] = df.parse(editprop_entryDate.text.toString())
+                    data["price"] = Integer.parseInt(editprop_price.text.toString())
+                    data["status"] = editprop_checkbox.isChecked
+                    data["picturesList"] = imagesList.filter { it != "" }
 
-                /*val pList = ArrayList<String>()
-                for(i in 0 until editpictures_layout.childCount){
-                    pList.add((editpictures_layout.getChildAt(i) as EditText).text.toString())
-                }*/
-                data["picturesList"] = imagesList
+                    /*val pList = ArrayList<String>()
+                    for(i in 0 until editpictures_layout.childCount){
+                        pList.add((editpictures_layout.getChildAt(i) as EditText).text.toString())
+                    }*/
 
-                // If the property exists
-                if(prop!!.pid != ""){
-                    // Update Firestore data
-                    colRef.document(prop.pid).update(data as Map<String, Any>)
-                    (activity as MainActivity).displayProperty(prop)
-                } else {
-                    // Create new document and set its pid as a field after it is successfully created
-                    colRef.add(data).addOnSuccessListener {
-                        colRef.document(it.id).update("pid", it.id)
-                        finish()
+                    // If the property exists
+                    if(prop!!.pid != ""){
+                        // Update Firestore data
+                        colRef.document(prop.pid).update(data as Map<String, Any>)
+                        (activity as MainActivity).displayFragment(newInstance(prop))
+                    } else {
+                        // Create new document and set its pid as a field after it is successfully created
+                        colRef.add(data).addOnSuccessListener {
+                            colRef.document(it.id).update("pid", it.id).addOnCompleteListener {
+                                if(it.isSuccessful){
+                                    Toast.makeText(context, getString(R.string.property_created), Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                            }
+                        }
                     }
                 }
-            }
-            catch(e: Exception) {
-                Toast.makeText(context, "Something went wrong. Please make sure that all value entered is valid.", Toast.LENGTH_LONG).show()
-                e.printStackTrace()
+                catch(e: Exception) {
+                    Toast.makeText(context, getString(R.string.edit_error), Toast.LENGTH_LONG).show()
+                    e.printStackTrace()
+                }
+            } /*else {
+                Toast.makeText(context, "One or more images url are invalid. Leave it empty to delete.", Toast.LENGTH_LONG).show()
             }
 
-        }
+        }*/
     }
     private fun startImagePickIntent(){
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -272,15 +293,6 @@ class EditPropertyFragment : Fragment() {
         editImagesAdapter.notifyDataSetChanged()
     }
 
-    /** Creates a new instance of this fragment */
-    fun newInstance(prop: Property): EditPropertyFragment {
-        val myFragment = EditPropertyFragment()
-        val args = Bundle()
-        args.putParcelable("property", prop)
-        myFragment.arguments = args
-        return myFragment
-    }
-
     /** Removes this fragment */
     private fun finish(){
         activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
@@ -291,7 +303,7 @@ class EditPropertyFragment : Fragment() {
         if(isNew){
             finish()
         } else {
-            (activity as MainActivity).displayProperty(prop)
+            (activity as MainActivity).displayFragment(newInstance(prop))
         }
     }
 
