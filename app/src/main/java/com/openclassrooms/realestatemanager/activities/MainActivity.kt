@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.activities
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -15,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
+import com.openclassrooms.realestatemanager.FiltersViewModel
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
 import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
@@ -41,11 +43,15 @@ open class MainActivity : AppCompatActivity() {
     /** RecyclerView */
     private lateinit var mRecyclerView: RecyclerView
 
+    private lateinit var viewModel : FiltersViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
         title = ""
+
+        viewModel = ViewModelProviders.of(this).get(FiltersViewModel::class.java)
 
         // Sign in Firebase Auth anonymously (useful for Storage upload)
         if(FirebaseAuth.getInstance().currentUser == null){

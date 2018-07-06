@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.fragments
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
@@ -25,7 +27,7 @@ class SearchFragment : Fragment() {
     private lateinit var binding: ViewDataBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewModel = ViewModelProviders.of(this).get(FiltersViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(FiltersViewModel::class.java)
         binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, R.layout.fragment_search, container, false)
         binding.setVariable(BR.filters, viewModel)
         binding.setLifecycleOwner(this)
@@ -34,27 +36,41 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        range_price.setOnRangeSeekbarChangeListener(object : OnRangeSeekbarChangeListener, SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
-            override fun onStartTrackingTouch(p0: SeekBar?) {}
-            override fun onStopTrackingTouch(p0: SeekBar?) {}
-            override fun valueChanged(minValue: Number?, maxValue: Number?) {
-                viewModel.setPriceBounds(minValue!!.toInt(), maxValue!!.toInt())
-            }
 
-        })
-        search_edit_type.addTextChangedListener(object : TextWatcher {
+        range_price.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.price))
+        range_surface.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.surface))
+        range_rooms.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.rooms))
+        range_pictures.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.pictures))
+
+        /*search_edit_type.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 viewModel.type.value = p0.toString()
             }
 
-        })
-        /*.setOnClickListener {
+        })*/
+        search_overlay.setOnClickListener {}
+        search_parent.setOnClickListener {
             finish()
-        }*/
-        search_parent.setOnClickListener {  }
+        }
+    }
+
+    /** Removes this fragment */
+    private fun finish(){
+        activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+    }
+
+    private fun seekBarListenerWithLiveData(ld: MutableLiveData<Pair<Int, Int>>) : OnRangeSeekbarChangeListener {
+        return object : OnRangeSeekbarChangeListener, SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
+            override fun valueChanged(minValue: Number?, maxValue: Number?) {
+                ld.value = Pair(minValue!!.toInt(), maxValue!!.toInt())
+            }
+
+        }
     }
 
 }

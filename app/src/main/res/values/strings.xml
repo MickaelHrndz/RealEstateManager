@@ -4,7 +4,7 @@
     <string name="navigation_drawer_close">Drawer Closed</string>
     <string name="app_name">Real Estate Manager</string>
     <string name="square_meters">%1$d square meters</string>
-    <string name="price"> - $%1$d</string>
+    <string name="price_tag"> - $%1$d</string>
     <string name="available">Available</string>
     <string name="unavailable">Unavailable</string>
     <string name="action_edit">Edit</string>
@@ -22,4 +22,6 @@
     <string name="property_created">Property successfully created.</string>
     <string name="edit_error">Something went wrong. Please make sure that all value entered is valid.</string>
     <string name="apply">Apply</string>
+    <string name="price">Price</string>
+    <string name="pictures">Pictures</string>
 </resources>

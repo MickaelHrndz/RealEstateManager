@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.adapters
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
-import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
 import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.row_property.view.*
@@ -63,7 +61,7 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         }
         
         // Price
-        holder.priceTextView.text = mContext.getString(R.string.price, item.price)
+        holder.priceTextView.text = mContext.getString(R.string.price_tag, item.price)
         
         // Item click listener
         holder.itemView.setOnClickListener {

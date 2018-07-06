@@ -90,7 +90,7 @@ class PropertyFragment : Fragment() {
                 fragmentView.findViewById<TextView>(R.id.property_desc).text = prop.description
                 fragmentView.findViewById<TextView>(R.id.property_surface).text = getString(R.string.square_meters, prop.surface)
                 fragmentView.findViewById<TextView>(R.id.property_rooms).text = prop.roomsCount.toString()
-                fragmentView.findViewById<TextView>(R.id.property_price).text = getString(R.string.price, prop.price)
+                fragmentView.findViewById<TextView>(R.id.property_price).text = getString(R.string.price_tag, prop.price)
                 fragmentView.findViewById<TextView>(R.id.property_entryDate).text = dateFormat.format(prop.entryDate)
                 fragmentView.findViewById<MapView>(R.id.property_map).getMapAsync {
                     it.addMarker(MarkerOptions().position(geoPointToLatLng(prop.geopoint)))

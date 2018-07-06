@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <data xmlns:android="http://schemas.android.com/apk/res/android">
@@ -11,67 +12,136 @@
     android:id="@+id/search_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="#4D000000">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:orientation="vertical">
-        <TextView
+        android:layout_margin="@dimen/property_margin"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="8sp"
+        card_view:cardUseCompatPadding="true"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/search_overlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/type"/>
-        <EditText
-            android:id="@+id/search_edit_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{filters.type}"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/location"/>
-        <EditText
-            android:id="@+id/search_edit_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{filters.location}"/>
-        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-            android:id="@+id/range_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:min_value="0"
-            app:max_value="999999999"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_margin="8dp"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <!-- TYPE -->
             <TextView
-                android:id="@+id/filter_price_min"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(filters.minPrice)}"/>
+                android:text="@string/type"/>
+
+            <com.cielyang.android.clearableedittext.ClearableEditText
+                android:id="@+id/search_edit_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:text="@{filters.type}"/>
+
+            <!-- LOCATION -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/location"/>
+
+            <com.cielyang.android.clearableedittext.ClearableEditText
+                android:id="@+id/search_edit_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{filters.location}"/>
+
+            <!-- PRICE -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/price"/>
+
+            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                android:id="@+id/range_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:max_value="999999999"
+                app:min_value="0"/>
 
             <TextView
-                android:id="@+id/filter_price_max"
+                android:id="@+id/filter_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{filters.priceText}"
+                android:textAlignment="center"/>
+
+            <!-- SURFACE -->
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="@{String.valueOf(filters.maxPrice)}"/>
-        </RelativeLayout>
+                android:text="@string/surface"/>
 
-        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-            android:id="@+id/range_surface"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-            android:id="@+id/range_rooms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-            android:id="@+id/range_photos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                android:id="@+id/range_surface"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:max_value="999999"
+                app:min_value="0"
+                />
+
+            <TextView
+                android:id="@+id/filter_surface"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{filters.surfaceText}"
+                android:textAlignment="center"/>
+
+            <!-- ROOMS -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rooms"/>
+
+            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                android:id="@+id/range_rooms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/filter_rooms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{filters.roomsText}"
+                android:textAlignment="center"/>
+
+            <!-- PICTURES -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pictures"/>
+
+            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                android:id="@+id/range_pictures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/filter_pictures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{filters.picturesText}"
+                android:textAlignment="center"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
 
 </android.support.constraint.ConstraintLayout>
 </layout>
