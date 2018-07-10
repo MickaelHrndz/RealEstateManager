@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.activities
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -32,13 +33,14 @@ open class MainActivity : AppCompatActivity() {
     companion object {
         //lateinit var instance: AppDatabase
         var colRef = FirebaseFirestore.getInstance().collection("properties")
+        const val SEARCH_CODE = 123
     }
 
     /** List of workmates */
     private var propertiesList = ArrayList<Property>()
 
     /** Adapter between workmates list and ListView */
-    private lateinit var mAdapter: PropertiesListAdapter
+    lateinit var mAdapter: PropertiesListAdapter
 
     /** RecyclerView */
     private lateinit var mRecyclerView: RecyclerView
@@ -110,6 +112,11 @@ open class MainActivity : AppCompatActivity() {
         fab.setOnClickListener {
             displayFragment(EditPropertyFragment.newInstance(Property()))
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

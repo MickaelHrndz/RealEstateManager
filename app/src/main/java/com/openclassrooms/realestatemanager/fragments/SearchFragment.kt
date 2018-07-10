@@ -17,6 +17,7 @@ import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener
 import com.openclassrooms.realestatemanager.BR
 import com.openclassrooms.realestatemanager.FiltersViewModel
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_search.*
 
 /**
@@ -37,10 +38,10 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        range_price.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.price))
-        range_surface.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.surface))
-        range_rooms.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.rooms))
-        range_pictures.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.pictures))
+        range_price.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.price))
+        range_surface.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.surface))
+        range_rooms.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.rooms))
+        range_pictures.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.pictures))
 
         /*search_edit_type.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
@@ -58,6 +59,7 @@ class SearchFragment : Fragment() {
 
     /** Removes this fragment */
     private fun finish(){
+        (context as MainActivity).mAdapter.filter(viewModel.filter)
         activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
     }
 

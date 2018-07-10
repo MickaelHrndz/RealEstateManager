@@ -1,17 +1,26 @@
 package com.openclassrooms.realestatemanager.adapters
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import com.bumptech.glide.Glide
+import com.openclassrooms.realestatemanager.FiltersViewModel
+import com.openclassrooms.realestatemanager.PropertyFilter
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.row_property.view.*
+import android.app.LauncherActivity.ListItem
+
+
 
 
 /**
@@ -24,6 +33,7 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
     private var mContext = context
     private var mResource = resource
     private var mList = list
+    private var mFilteredList = list
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,12 +43,12 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
     }
 
     override fun getItemCount(): Int {
-        return mList.size
+        return mFilteredList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Item (row)
-        val item = mList[position]
+        val item = mFilteredList[position]
 
         // Property image
         if(item.picturesList.isNotEmpty()){
@@ -69,6 +79,19 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         }
 
     }
+
+    fun filter(filter: PropertyFilter){
+        mFilteredList.clear()
+        mFilteredList.addAll(mList.filter {
+            it.type.contains(filter.type.value!!, true) &&
+            it.location.contains(filter.location.value!!, true) &&
+            it.price >= filter.price.value!!.first&&
+            it.price <= filter.price.value!!.second
+        })
+        notifyDataSetChanged()
+    }
+
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val typeTextView = itemView.prop_type!!
         val locationTextView = itemView.prop_location!!
