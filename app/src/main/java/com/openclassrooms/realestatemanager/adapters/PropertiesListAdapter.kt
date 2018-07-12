@@ -80,14 +80,25 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
 
     }
 
-    fun filter(filter: PropertyFilter){
+    /** Sets the list to a filtered list based on the filter and original list provided */
+    fun filter(originalList: ArrayList<Property>, filter: PropertyFilter){
+        // Resetting the filtered list as a copy of the original
         mFilteredList.clear()
-        mFilteredList.addAll(mList.filter {
-            it.type.contains(filter.type.value!!, true) &&
-            it.location.contains(filter.location.value!!, true) &&
-            it.price >= filter.price.value!!.first&&
-            it.price <= filter.price.value!!.second
-        })
+        mFilteredList.addAll(originalList)
+
+        // Type filter
+        if(filter.type.value != null && filter.type.value != ""){
+            mFilteredList.removeAll(mFilteredList.filter { !it.type.contains(filter.type.value!!, true)})
+        }
+
+        // Location filter
+        if(filter.location.value != null && filter.location.value != ""){
+            mFilteredList.removeAll(mFilteredList.filter { !it.location.contains(filter.location.value!!, true)})
+        }
+
+        // Price filter
+        mFilteredList.removeAll(mFilteredList.filter { it.price < filter.price.value!!.first && it.price > filter.price.value!!.second })
+
         notifyDataSetChanged()
     }
 

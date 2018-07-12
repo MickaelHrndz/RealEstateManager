@@ -3,6 +3,8 @@ package com.openclassrooms.realestatemanager
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
+import android.databinding.BaseObservable
+import java.util.*
 
 /**
  * Created by Mickael Hernandez on 10/07/2018.
@@ -39,5 +41,9 @@ class PropertyFilter {
     var pictures = MutableLiveData<Pair<Int, Int>>()
     var picturesText : LiveData<String> = Transformations.map(pictures) {
         pictures.value?.first.toString() + " to " + pictures.value?.second.toString() + " pictures"
+    }
+
+    fun getAllFilters(): Collection<MutableLiveData<*>>{
+        return arrayListOf<MutableLiveData<*>>(type, location, price, surface, rooms, pictures)
     }
 }

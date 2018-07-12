@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.activities
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.res.Configuration
@@ -14,6 +16,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -34,10 +37,14 @@ open class MainActivity : AppCompatActivity() {
         //lateinit var instance: AppDatabase
         var colRef = FirebaseFirestore.getInstance().collection("properties")
         const val SEARCH_CODE = 123
+        const val SHARED_PREFS = "SHARED_PREFS"
     }
 
     /** List of workmates */
     private var propertiesList = ArrayList<Property>()
+
+    /** Unfiltered list */
+    private var unfilteredList = ArrayList<Property>()
 
     /** Adapter between workmates list and ListView */
     lateinit var mAdapter: PropertiesListAdapter
@@ -89,15 +96,11 @@ open class MainActivity : AppCompatActivity() {
             override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                 if(p0 != null){
                     propertiesList.clear()
-                    val res = p0.documents
-                    for(doc in res){
-                        val prop = doc.toObject(Property::class.java)
-                        if(prop != null){
-                            // Add properties to the list
-                            propertiesList.add(prop)
-                            mAdapter.notifyDataSetChanged()
-                        }
-                    }
+                    propertiesList.addAll(documentsToPropertyList(p0.documents))
+                    unfilteredList.clear()
+                    unfilteredList.addAll(documentsToPropertyList(p0.documents))
+                    mAdapter.notifyDataSetChanged()
+
                 }
             }
 
@@ -112,6 +115,44 @@ open class MainActivity : AppCompatActivity() {
         fab.setOnClickListener {
             displayFragment(EditPropertyFragment.newInstance(Property()))
         }
+
+        viewModel.filter.getAllFilters().forEach {
+            it.observeForever {
+                mAdapter.filter(unfilteredList, viewModel.filter)
+            }
+        }
+    }
+
+    private fun observeFilters(filters : Collection<MutableLiveData<*>>){
+        filters.forEach {
+            it.observeForever {
+                mAdapter.filter(unfilteredList, viewModel.filter)
+            }
+        }
+    }
+
+    /** Get properties from Firestore database */
+    private fun getPropertyList(): ArrayList<Property> {
+        val list = ArrayList<Property>()
+        colRef.get().addOnCompleteListener {
+            if(it.isSuccessful){
+                list.addAll(documentsToPropertyList(it.result.documents))
+            }
+        }
+        return list
+    }
+
+    /** Converts firestore snapshots list to a properties list */
+    private fun documentsToPropertyList(res: MutableList<DocumentSnapshot>) : ArrayList<Property> {
+        val list = ArrayList<Property>()
+        for(doc in res){
+            val prop = doc.toObject(Property::class.java)
+            if(prop != null){
+                // Add properties to the list
+                list.add(prop)
+            }
+        }
+        return list
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

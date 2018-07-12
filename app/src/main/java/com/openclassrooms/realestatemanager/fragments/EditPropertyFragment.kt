@@ -81,6 +81,7 @@ class EditPropertyFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        retainInstance = true
         dateFormat = android.text.format.DateFormat.getDateFormat(context?.applicationContext)
         return inflater.inflate(R.layout.fragment_editproperty, container, false)
     }

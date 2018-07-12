@@ -1,8 +1,9 @@
 package com.openclassrooms.realestatemanager.fragments
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.SharedPreferences
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.os.Bundle
@@ -26,8 +27,10 @@ import kotlinx.android.synthetic.main.fragment_search.*
 class SearchFragment : Fragment() {
     private lateinit var viewModel : FiltersViewModel
     private lateinit var binding: ViewDataBinding
+    private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        sharedPrefs = context!!.getSharedPreferences(MainActivity.SHARED_PREFS, Context.MODE_PRIVATE)
         viewModel = ViewModelProviders.of(activity!!).get(FiltersViewModel::class.java)
         binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, R.layout.fragment_search, container, false)
         binding.setVariable(BR.filters, viewModel)
@@ -37,6 +40,8 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        search_edit_type.addTextChangedListener(textWatcherListenerWithLiveData(viewModel.filter.type))
+        search_edit_location.addTextChangedListener(textWatcherListenerWithLiveData(viewModel.filter.location))
 
         range_price.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.price))
         range_surface.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.surface))
@@ -59,17 +64,29 @@ class SearchFragment : Fragment() {
 
     /** Removes this fragment */
     private fun finish(){
-        (context as MainActivity).mAdapter.filter(viewModel.filter)
+        //(context as MainActivity).mAdapter.filter(viewModel.filter)
         activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
     }
 
-    private fun seekBarListenerWithLiveData(ld: MutableLiveData<Pair<Int, Int>>) : OnRangeSeekbarChangeListener {
+    private fun seekBarListenerWithLiveData(ld: MutableLiveData<Pair<Int, Int>>?) : OnRangeSeekbarChangeListener {
         return object : OnRangeSeekbarChangeListener, SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
             override fun onStartTrackingTouch(p0: SeekBar?) {}
             override fun onStopTrackingTouch(p0: SeekBar?) {}
             override fun valueChanged(minValue: Number?, maxValue: Number?) {
-                ld.value = Pair(minValue!!.toInt(), maxValue!!.toInt())
+                ld?.value = Pair(minValue!!.toInt(), maxValue!!.toInt())
+            }
+
+        }
+    }
+
+    private fun textWatcherListenerWithLiveData(ld: MutableLiveData<String>?) : TextWatcher {
+        return object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(charSeq: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                ld?.value = charSeq.toString()
             }
 
         }
