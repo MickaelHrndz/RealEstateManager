@@ -95,9 +95,27 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         if(filter.location.value != null && filter.location.value != ""){
             mFilteredList.removeAll(mFilteredList.filter { !it.location.contains(filter.location.value!!, true)})
         }
+        val pr = filter.price.value
 
         // Price filter
-        mFilteredList.removeAll(mFilteredList.filter { it.price < filter.price.value!!.first && it.price > filter.price.value!!.second })
+        if(filter.price.value != null){
+            mFilteredList.removeAll(mFilteredList.filter { it.price < filter.price.value!!.first || it.price > filter.price.value!!.second })
+        }
+
+        // Surface filter
+        if(filter.surface.value != null) {
+            mFilteredList.removeAll(mFilteredList.filter { it.surface < filter.surface.value!!.first || it.surface > filter.surface.value!!.second })
+        }
+
+        // Rooms filter
+        if(filter.rooms.value != null){
+            mFilteredList.removeAll(mFilteredList.filter { it.roomsCount < filter.rooms.value!!.first || it.roomsCount > filter.rooms.value!!.second })
+        }
+
+        // Pictures filter
+        if(filter.pictures.value != null){
+            mFilteredList.removeAll(mFilteredList.filter { it.picturesList.size < filter.pictures.value!!.first || it.picturesList.size > filter.pictures.value!!.second })
+        }
 
         notifyDataSetChanged()
     }
