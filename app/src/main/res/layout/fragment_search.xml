@@ -73,8 +73,9 @@
                 android:id="@+id/range_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:max_value="999999999"
-                app:min_value="0"/>
+                app:min_value="0"
+                app:max_value="99999999"
+                />
 
             <TextView
                 android:id="@+id/filter_price"
@@ -93,8 +94,8 @@
                 android:id="@+id/range_surface"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:max_value="999999"
                 app:min_value="0"
+                app:max_value="999999"
                 />
 
             <TextView

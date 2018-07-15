@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.fragments
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -15,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener
+import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.openclassrooms.realestatemanager.BR
 import com.openclassrooms.realestatemanager.FiltersViewModel
 import com.openclassrooms.realestatemanager.R
@@ -40,13 +42,16 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        search_edit_type.addTextChangedListener(textWatcherListenerWithLiveData(viewModel.filter.type))
-        search_edit_location.addTextChangedListener(textWatcherListenerWithLiveData(viewModel.filter.location))
 
-        range_price.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.price))
-        range_surface.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.surface))
-        range_rooms.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.rooms))
-        range_pictures.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(viewModel.filter.pictures))
+        val fltr = viewModel.filter
+
+        search_edit_type.addTextChangedListener(textWatcherListenerWithLiveData(fltr.type))
+        search_edit_location.addTextChangedListener(textWatcherListenerWithLiveData(fltr.location))
+
+        setUpRangeBar(range_price, fltr.price)
+        setUpRangeBar(range_surface, fltr.surface)
+        setUpRangeBar(range_rooms, fltr.rooms)
+        setUpRangeBar(range_pictures, fltr.pictures)
 
         /*search_edit_type.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
@@ -60,6 +65,15 @@ class SearchFragment : Fragment() {
         search_parent.setOnClickListener {
             finish()
         }
+    }
+
+    /** Sets up range bars initial values and listener */
+    private fun setUpRangeBar(rangeBar: CrystalRangeSeekbar, ld: MutableLiveData<Pair<Int, Int>>){
+        if(ld.value != null){
+            rangeBar.setMinStartValue(ld.value?.first!!.toFloat())
+            rangeBar.setMaxStartValue(ld.value?.second!!.toFloat())
+        }
+        rangeBar.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(ld))
     }
 
     /** Removes this fragment */

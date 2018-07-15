@@ -59,7 +59,6 @@ open class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
         title = ""
-
         viewModel = ViewModelProviders.of(this).get(FiltersViewModel::class.java)
 
         // Sign in Firebase Auth anonymously (useful for Storage upload)
@@ -74,7 +73,6 @@ open class MainActivity : AppCompatActivity() {
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView.layoutManager = llm
         mRecyclerView.adapter = mAdapter
-
 
         // Row separator
         mRecyclerView.addItemDecoration(DividerItemDecoration(mRecyclerView.context, llm.orientation))
@@ -153,11 +151,6 @@ open class MainActivity : AppCompatActivity() {
             }
         }
         return list
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

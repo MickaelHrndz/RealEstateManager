@@ -65,7 +65,7 @@ class PropertyFragment : Fragment() {
                 }
             }
         }
-        overlay.setOnClickListener {
+        property_overlay.setOnClickListener {
                 activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
         }
         //card_view.setOnClickListener {  }
