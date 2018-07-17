@@ -1,45 +1,35 @@
 package com.openclassrooms.realestatemanager.fragments
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
-import com.cielyang.android.clearableedittext.ClearableEditText
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.activities.MainActivity
+import com.openclassrooms.realestatemanager.adapters.EditImagesAdapter
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_editproperty.*
+import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import com.google.firebase.storage.FirebaseStorage
-import android.content.DialogInterface
-import android.support.v7.app.AlertDialog
-import android.content.Intent
-import android.provider.MediaStore
-import android.app.Activity.RESULT_OK
-import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
-import android.net.Uri
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.ArrayAdapter
-import android.widget.ProgressBar
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.openclassrooms.realestatemanager.Utils
-import com.openclassrooms.realestatemanager.adapters.EditImagesAdapter
-import java.io.File
 
 
 /**
@@ -98,6 +88,7 @@ class EditPropertyFragment : Fragment() {
         //list_pictures.isNestedScrollingEnabled = false
         if(prop != null){
             if(prop.pid != "") {
+                editprop_checkbox.isChecked = prop.status
                 editprop_type.setText(prop.type)
                 editprop_address.setText(prop.address)
                 editprop_location.setText(prop.location)
@@ -106,7 +97,7 @@ class EditPropertyFragment : Fragment() {
                 editprop_rooms.setText(prop.roomsCount.toString())
                 editprop_price.setText(prop.price.toString())
                 editprop_entryDate.setText(dateFormat.format(prop.entryDate))
-                editprop_checkbox.isChecked = prop.status
+                editprop_agent.setText(prop.agent)
                 imagesList.clear()
                 imagesList.addAll(prop.picturesList)
                 editImagesAdapter.notifyDataSetChanged()
@@ -183,6 +174,7 @@ class EditPropertyFragment : Fragment() {
                     data["entryDate"] = df.parse(editprop_entryDate.text.toString())
                     data["price"] = Integer.parseInt(editprop_price.text.toString())
                     data["status"] = editprop_checkbox.isChecked
+                    data["agent"] = editprop_agent.text.toString()
                     data["picturesList"] = imagesList.filter { it != "" }
 
                     /*val pList = ArrayList<String>()
@@ -194,7 +186,7 @@ class EditPropertyFragment : Fragment() {
                     if(prop!!.pid != ""){
                         // Update Firestore data
                         colRef.document(prop.pid).update(data as Map<String, Any>)
-                        (activity as MainActivity).displayFragment(newInstance(prop))
+                        (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop))
                     } else {
                         // Create new document and set its pid as a field after it is successfully created
                         colRef.add(data).addOnSuccessListener {

@@ -199,6 +199,20 @@
                     android:layout_margin="@dimen/margin_row_text"
                     />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="2dp"
+                    android:textStyle="bold"
+                    android:text="@string/agent"/>
+                <TextView
+                    android:id="@+id/property_agent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"
+                    />
+
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/property_map"
                     android:layout_width="match_parent"

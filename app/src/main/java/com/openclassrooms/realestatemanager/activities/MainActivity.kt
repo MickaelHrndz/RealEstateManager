@@ -1,9 +1,7 @@
 package com.openclassrooms.realestatemanager.activities
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,7 +10,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
@@ -24,7 +21,6 @@ import com.openclassrooms.realestatemanager.FiltersViewModel
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
 import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
-import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import com.openclassrooms.realestatemanager.fragments.SearchFragment
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.activity_main.*
