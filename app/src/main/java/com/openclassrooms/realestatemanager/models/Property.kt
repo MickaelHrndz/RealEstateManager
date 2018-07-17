@@ -25,7 +25,6 @@ data class Property(
         var entryDate: Date, // Date of entry on the market
         var saleDate: Date, // Date of sale, if sold
         var agent: String // Full name of the real estate agent in charge of this property
-            //var poiList: ArrayList<MarkerOptions> // List of nearby points of interest
         ) : Parcelable {
     constructor() : this("", "", "", GeoPoint(.0, .0),"", 0, 0, 0, "", arrayListOf<String>(), false, Calendar.getInstance().time, Date(), "")
 }

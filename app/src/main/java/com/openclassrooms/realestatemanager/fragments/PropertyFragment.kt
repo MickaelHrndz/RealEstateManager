@@ -12,10 +12,12 @@ import com.bumptech.glide.Glide
 import com.dmallcott.dismissibleimageview.DismissibleImageView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.GeoPoint
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_property.*
@@ -76,10 +78,6 @@ class PropertyFragment : Fragment() {
         }
     }
 
-    private fun geoPointToLatLng(geopoint: GeoPoint): LatLng {
-        return LatLng(geopoint.latitude, geopoint.longitude)
-    }
-
     /** Update UI based on a Property object */
     private fun updateUIFromProperty(prop: Property) {
         if(::fragmentView.isInitialized){
@@ -95,10 +93,8 @@ class PropertyFragment : Fragment() {
                 fragmentView.findViewById<TextView>(R.id.property_entryDate).text = dateFormat.format(prop.entryDate)
                 fragmentView.findViewById<TextView>(R.id.property_saleDate).text = dateFormat.format(prop.saleDate)
                 fragmentView.findViewById<TextView>(R.id.property_agent).text = prop.agent
-                fragmentView.findViewById<MapView>(R.id.property_map).getMapAsync {
-                    it.addMarker(MarkerOptions().position(geoPointToLatLng(prop.geopoint)))
-                    it.moveCamera(CameraUpdateFactory.newLatLng(geoPointToLatLng(prop.geopoint)))
-                }
+
+
 
                 // Status
                 val statusView = fragmentView.findViewById<TextView>(R.id.property_status)
@@ -111,16 +107,27 @@ class PropertyFragment : Fragment() {
                 }
 
                 // Pictures
-                pictures_layout.removeAllViews()
-                for(url in prop.picturesList){
-                    val img = DismissibleImageView(context)
-                    val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 800)
-                    //params.weight = 1.0f
-                    //params.gravity = Gravity.FILL
-                    params.setMargins(0, 0, 0, 0)
-                    //img.layoutParams = params
-                    fragmentView.findViewById<LinearLayout>(R.id.pictures_layout).addView(img)
-                    Glide.with(context!!).load(url).into(img)
+                val picturesLayout = fragmentView.findViewById<LinearLayout>(R.id.pictures_layout)
+                if(picturesLayout != null){
+                    picturesLayout.removeAllViews()
+                    for(url in prop.picturesList){
+                        val img = DismissibleImageView(context)
+                        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 800)
+                        //params.weight = 1.0f
+                        //params.gravity = Gravity.FILL
+                        params.setMargins(0, 0, 0, 0)
+                        //img.layoutParams = params
+                        picturesLayout.addView(img)
+                        Glide.with(context!!).load(url).into(img)
+                    }
+                }
+
+                // Map
+                val latlng = Utils.getLocationFromAddress(context, prop.address)
+                val mapFragment = activity?.supportFragmentManager?.findFragmentById(R.id.property_map) as? SupportMapFragment
+                mapFragment?.getMapAsync {
+                    it.addMarker(MarkerOptions().position(latlng))
+                    it.moveCamera(CameraUpdateFactory.newLatLng(latlng))
                 }
 
             } catch (e: Exception){
