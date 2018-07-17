@@ -183,6 +183,20 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
+                    android:text="@string/sale_date"/>
+                <com.cielyang.android.clearableedittext.ClearableEditText
+                    android:id="@+id/editprop_saleDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="date"
+                    android:layout_margin="@dimen/margin_row_text"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_row_text"
+                    android:textStyle="bold"
                     android:text="@string/agent"/>
                 <com.cielyang.android.clearableedittext.ClearableEditText
                     android:id="@+id/editprop_agent"

@@ -97,6 +97,7 @@ class EditPropertyFragment : Fragment() {
                 editprop_rooms.setText(prop.roomsCount.toString())
                 editprop_price.setText(prop.price.toString())
                 editprop_entryDate.setText(dateFormat.format(prop.entryDate))
+                editprop_saleDate.setText(dateFormat.format(prop.saleDate))
                 editprop_agent.setText(prop.agent)
                 imagesList.clear()
                 imagesList.addAll(prop.picturesList)
@@ -172,6 +173,7 @@ class EditPropertyFragment : Fragment() {
                     data["surface"] = Integer.parseInt(editprop_surface.text.toString())
                     data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
                     data["entryDate"] = df.parse(editprop_entryDate.text.toString())
+                    data["saleDate"] = df.parse(editprop_saleDate.text.toString())
                     data["price"] = Integer.parseInt(editprop_price.text.toString())
                     data["status"] = editprop_checkbox.isChecked
                     data["agent"] = editprop_agent.text.toString()

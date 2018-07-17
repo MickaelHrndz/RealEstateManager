@@ -1,8 +1,8 @@
 <resources>
-    <string name="google_maps_key">AIzaSyCb12op8RHxcSA-xlM_ovNzNZKLlnf-y3w</string>
+    <string name="google_maps_key" translatable="false">AIzaSyCb12op8RHxcSA-xlM_ovNzNZKLlnf-y3w</string>
     <string name="navigation_drawer_open">Drawer Open</string>
     <string name="navigation_drawer_close">Drawer Closed</string>
-    <string name="app_name">Real Estate Manager</string>
+    <string name="app_name" translatable="false">Real Estate Manager</string>
     <string name="square_meters">%1$d square meters</string>
     <string name="price_tag"> - $%1$d</string>
     <string name="available">Available</string>
@@ -15,7 +15,7 @@
     <string name="address">Address</string>
     <string name="location">Location</string>
     <string name="type">Type</string>
-    <string name="dollarsign">$</string>
+    <string name="dollarsign" translatable="false">$</string>
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
     <string name="add_a_picture">Add a picture</string>
@@ -24,5 +24,6 @@
     <string name="apply">Apply</string>
     <string name="price">Price</string>
     <string name="pictures">Pictures</string>
-    <string name="agent">Agent immobilier</string>
+    <string name="agent">Real estate agent</string>
+    <string name="sale_date">Sale date</string>
 </resources>
