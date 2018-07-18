@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import com.openclassrooms.realestatemanager.FiltersViewModel
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
 import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
 import com.openclassrooms.realestatemanager.fragments.SearchFragment
@@ -57,10 +59,16 @@ open class MainActivity : AppCompatActivity() {
         title = ""
         viewModel = ViewModelProviders.of(this).get(FiltersViewModel::class.java)
 
+        // Test if Internet is available
+        if(!Utils.isInternetAvailable(applicationContext)){
+            Toast.makeText(this, "Internet connection unavailable.", Toast.LENGTH_SHORT).show()
+        }
+
         // Sign in Firebase Auth anonymously (useful for Storage upload)
-        if(FirebaseAuth.getInstance().currentUser == null){
+        else if(FirebaseAuth.getInstance().currentUser == null){
             FirebaseAuth.getInstance().signInAnonymously()
         }
+
 
         mAdapter = PropertiesListAdapter(this, R.layout.row_property, propertiesList)
         val llm = LinearLayoutManager(this)

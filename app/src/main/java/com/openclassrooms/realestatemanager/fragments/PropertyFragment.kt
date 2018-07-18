@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.fragments
 
 import android.graphics.Color
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +23,7 @@ import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_property.*
+import java.io.IOException
 import java.text.DateFormat
 
 
@@ -123,14 +126,31 @@ class PropertyFragment : Fragment() {
                 }
 
                 // Map
-                val latlng = Utils.getLocationFromAddress(context, prop.address)
-                val mapFragment = activity?.supportFragmentManager?.findFragmentById(R.id.property_map) as? SupportMapFragment
-                mapFragment?.getMapAsync {
-                    it.addMarker(MarkerOptions().position(latlng))
-                    it.moveCamera(CameraUpdateFactory.newLatLng(latlng))
+                val mapFragment = childFragmentManager.findFragmentById(R.id.property_map) as? SupportMapFragment
+                if(mapFragment != null){
+                    setMapWithAddress(mapFragment, prop.address)
                 }
 
             } catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun setMapWithAddress(map: SupportMapFragment, address: String) {
+        map.getMapAsync {
+            val coder = Geocoder(context)
+            val addresses: List<Address>?
+            var latlng: LatLng? = null
+            try {
+                addresses = coder.getFromLocationName(address, 5)
+                if (addresses != null && addresses.isNotEmpty()) {
+                    latlng = LatLng(addresses[0].latitude, addresses[0].longitude)
+                    it.addMarker(MarkerOptions().position(latlng))
+                    it.moveCamera(CameraUpdateFactory.newLatLng(latlng))
+                    it.setMinZoomPreference(10f)
+                }
+            } catch (e: IOException) {
                 e.printStackTrace()
             }
         }

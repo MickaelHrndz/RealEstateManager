@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class Utils {
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @return
      */
+    
     public static String getTodayDate(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return dateFormat.format(new Date());
@@ -76,31 +78,6 @@ public class Utils {
         } catch (Exception e) {
             Log.e(TAG, "getRealPathFromURI Exception : " + e.toString());
             return "";
-        }
-    }
-
-    public static LatLng getLocationFromAddress(Context ctx, String strAddress){
-
-        Geocoder coder = new Geocoder(ctx);
-        List<Address> address;
-        LatLng latlng = null;
-
-        try {
-            address = coder.getFromLocationName(strAddress,5);
-            if (address==null) {
-                return null;
-            }
-            Address location=address.get(0);
-            location.getLatitude();
-            location.getLongitude();
-
-            latlng = new LatLng((location.getLatitude() * 1E6),
-                    (location.getLongitude() * 1E6));
-
-            return latlng;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 }
