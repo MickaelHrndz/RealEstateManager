@@ -267,7 +267,8 @@ class EditPropertyFragment : Fragment() {
             val progress = 100.0 * (it.bytesTransferred / it.totalByteCount)
                 progressBar?.visibility = View.VISIBLE
                 progressBar?.progress = progress.toInt()
-        }.continueWithTask {
+        }
+        uploadTask.continueWithTask {
             if (!it.isSuccessful) {
                 throw it.exception!!
             }

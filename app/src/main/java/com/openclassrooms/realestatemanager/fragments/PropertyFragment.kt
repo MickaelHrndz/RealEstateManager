@@ -13,13 +13,12 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.dmallcott.dismissibleimageview.DismissibleImageView
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_property.*
@@ -33,6 +32,7 @@ import java.text.DateFormat
 class PropertyFragment : Fragment() {
 
     companion object {
+        const val MAP_ZOOM = 10f
         fun newInstance(prop: Property): PropertyFragment {
             val myFragment = PropertyFragment()
             val args = Bundle()
@@ -97,8 +97,6 @@ class PropertyFragment : Fragment() {
                 fragmentView.findViewById<TextView>(R.id.property_saleDate).text = dateFormat.format(prop.saleDate)
                 fragmentView.findViewById<TextView>(R.id.property_agent).text = prop.agent
 
-
-
                 // Status
                 val statusView = fragmentView.findViewById<TextView>(R.id.property_status)
                 if(prop.status){
@@ -128,7 +126,11 @@ class PropertyFragment : Fragment() {
                 // Map
                 val mapFragment = childFragmentManager.findFragmentById(R.id.property_map) as? SupportMapFragment
                 if(mapFragment != null){
-                    setMapWithAddress(mapFragment, prop.address)
+                    if(prop.geopoint.latitude != 0.0){
+                        setMapWithGeopoint(mapFragment, prop.geopoint)
+                    } else {
+                        setMapWithProperty(mapFragment, prop)
+                    }
                 }
 
             } catch (e: Exception){
@@ -137,22 +139,34 @@ class PropertyFragment : Fragment() {
         }
     }
 
-    private fun setMapWithAddress(map: SupportMapFragment, address: String) {
+    /** Get geopoint from address, set up map and upload geopoint into firestore */
+    private fun setMapWithProperty(map: SupportMapFragment, prop: Property) {
         map.getMapAsync {
             val coder = Geocoder(context)
             val addresses: List<Address>?
             var latlng: LatLng? = null
             try {
-                addresses = coder.getFromLocationName(address, 5)
+                addresses = coder.getFromLocationName(prop.address, 5)
                 if (addresses != null && addresses.isNotEmpty()) {
                     latlng = LatLng(addresses[0].latitude, addresses[0].longitude)
+                    val geoPoint = GeoPoint(addresses[0].latitude, addresses[0].longitude)
                     it.addMarker(MarkerOptions().position(latlng))
                     it.moveCamera(CameraUpdateFactory.newLatLng(latlng))
-                    it.setMinZoomPreference(10f)
+                    it.setMinZoomPreference(MAP_ZOOM)
+                    FirebaseFirestore.getInstance().collection("properties").document(prop.pid).update("geopoint", geoPoint)
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun setMapWithGeopoint(map: SupportMapFragment, geo: GeoPoint) {
+        val latlng = LatLng(geo.latitude, geo.longitude)
+        map.getMapAsync {
+            it.addMarker(MarkerOptions().position(latlng))
+            it.moveCamera(CameraUpdateFactory.newLatLng(latlng))
+            it.setMinZoomPreference(MAP_ZOOM)
         }
     }
 }

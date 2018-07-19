@@ -52,6 +52,9 @@ open class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel : FiltersViewModel
 
+    /** FirebaseAuth instance */
+    private var firebaseAuth = FirebaseAuth.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -65,8 +68,8 @@ open class MainActivity : AppCompatActivity() {
         }
 
         // Sign in Firebase Auth anonymously (useful for Storage upload)
-        else if(FirebaseAuth.getInstance().currentUser == null){
-            FirebaseAuth.getInstance().signInAnonymously()
+        else if(firebaseAuth.currentUser == null){
+            firebaseAuth.signInAnonymously()
         }
 
 
