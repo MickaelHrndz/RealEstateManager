@@ -24,4 +24,6 @@
     <string name="pictures">Photos</string>
     <string name="agent">Agent immobilier</string>
     <string name="sale_date">Date de vente</string>
+    <string name="search">Rechercher</string>
+    <string name="map">Carte</string>
 </resources>

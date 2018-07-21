@@ -26,4 +26,6 @@
     <string name="pictures">Pictures</string>
     <string name="agent">Real estate agent</string>
     <string name="sale_date">Sale date</string>
+    <string name="search">Search</string>
+    <string name="map">Map</string>
 </resources>

@@ -40,6 +40,7 @@ class EditPropertyFragment : Fragment() {
     companion object {
         const val REQUEST_READ_EXTERNAL_STORAGE = 8
         const val REQUEST_IMAGE = 9
+        const val datePattern = "dd/MM/yyyy"
         /** Creates a new instance of this fragment */
         fun newInstance(prop: Property): EditPropertyFragment {
             val myFragment = EditPropertyFragment()
@@ -58,7 +59,7 @@ class EditPropertyFragment : Fragment() {
     /** Firebase storage instance */
     var storage = FirebaseStorage.getInstance().reference
 
-    private val df = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private val df = SimpleDateFormat(datePattern, Locale.getDefault())
 
     private var colRef = firestore.collection("properties")
 
@@ -115,7 +116,7 @@ class EditPropertyFragment : Fragment() {
 
         btn_addpicture.setOnClickListener {
             val builder = AlertDialog.Builder(context!!)
-            builder.setTitle("Pick a color")
+            builder.setTitle("Where is the image ?")
             builder.setItems(arrayOf("On Internet", "On my phone"), (DialogInterface.OnClickListener { dialogInterface, i ->
                 when(i){
                     // Internet URL

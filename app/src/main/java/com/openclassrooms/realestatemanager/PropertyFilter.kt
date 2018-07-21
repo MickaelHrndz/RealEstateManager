@@ -43,6 +43,12 @@ class PropertyFilter {
         pictures.value?.first.toString() + " to " + pictures.value?.second.toString() + " pictures"
     }
 
+    // Date of entry on the market
+    var entryDate : MutableLiveData<Date>? = MutableLiveData()
+
+    // Date of the sale
+    var saleDate : MutableLiveData<Date>? = MutableLiveData()
+
     fun getAllFilters(): Collection<MutableLiveData<*>>{
         return arrayListOf<MutableLiveData<*>>(type, location, price, surface, rooms, pictures)
     }

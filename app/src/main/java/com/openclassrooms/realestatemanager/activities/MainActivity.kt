@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -23,6 +24,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
 import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
+import com.openclassrooms.realestatemanager.fragments.PropertiesMapFragment
 import com.openclassrooms.realestatemanager.fragments.SearchFragment
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.activity_main.*
@@ -117,6 +119,23 @@ open class MainActivity : AppCompatActivity() {
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
+        nav_view.setNavigationItemSelectedListener {
+            drawer_layout.closeDrawers()
+            when(it.itemId){
+                R.id.nav_search -> {
+                    displayFragment(SearchFragment())
+                    true
+
+                }
+                R.id.nav_map -> {
+                    displayFragment(PropertiesMapFragment())
+                    true
+                }
+                else -> { false }
+            }
+
+        }
+
         fab.setOnClickListener {
             displayFragment(EditPropertyFragment.newInstance(Property()))
         }
@@ -184,6 +203,9 @@ open class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                     .add(R.id.fragment_container, frag).commit()
         } else {
+            // Pop backstack to have only one fragment in it
+            supportFragmentManager.popBackStack()
+
             val transaction = supportFragmentManager.beginTransaction()
             // Replace whatever is in the fragment_container view with this fragment,
             // and add the transaction to the back stack so the user can navigate back
@@ -197,4 +219,5 @@ open class MainActivity : AppCompatActivity() {
             }*/
         }
     }
+
 }

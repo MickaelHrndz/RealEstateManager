@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.fragments
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -22,6 +21,8 @@ import com.openclassrooms.realestatemanager.FiltersViewModel
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_search.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by Mickael Hernandez on 03/07/2018.
@@ -30,6 +31,8 @@ class SearchFragment : Fragment() {
     private lateinit var viewModel : FiltersViewModel
     private lateinit var binding: ViewDataBinding
     private lateinit var sharedPrefs: SharedPreferences
+
+    private val df = SimpleDateFormat(EditPropertyFragment.datePattern, Locale.getDefault())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         sharedPrefs = context!!.getSharedPreferences(MainActivity.SHARED_PREFS, Context.MODE_PRIVATE)
@@ -45,13 +48,17 @@ class SearchFragment : Fragment() {
 
         val fltr = viewModel.filter
 
-        search_edit_type.addTextChangedListener(textWatcherListenerWithLiveData(fltr.type))
-        search_edit_location.addTextChangedListener(textWatcherListenerWithLiveData(fltr.location))
+        search_edit_type.addTextChangedListener(textWatcherWithStringLiveData(fltr.type))
+        search_edit_location.addTextChangedListener(textWatcherWithStringLiveData(fltr.location))
 
         setUpRangeBar(range_price, fltr.price)
         setUpRangeBar(range_surface, fltr.surface)
         setUpRangeBar(range_rooms, fltr.rooms)
         setUpRangeBar(range_pictures, fltr.pictures)
+
+        search_edit_entry.addTextChangedListener(textWatcherWithDateLiveData(fltr.entryDate))
+        search_edit_sale.addTextChangedListener(textWatcherWithDateLiveData(fltr.saleDate))
+
 
         /*search_edit_type.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
@@ -94,13 +101,29 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun textWatcherListenerWithLiveData(ld: MutableLiveData<String>?) : TextWatcher {
+    private fun textWatcherWithStringLiveData(ld: MutableLiveData<String>?) : TextWatcher {
         return object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(charSeq: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 ld?.value = charSeq.toString()
+            }
+
+        }
+    }
+
+    private fun textWatcherWithDateLiveData(ld: MutableLiveData<Date>?) : TextWatcher {
+        return object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(charSeq: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                try {
+                    ld?.value = df.parse(charSeq.toString())
+                } catch (e : Exception){
+                    e.printStackTrace()
+                }
             }
 
         }

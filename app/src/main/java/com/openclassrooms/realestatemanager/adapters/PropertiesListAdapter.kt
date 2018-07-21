@@ -117,6 +117,16 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
             mFilteredList.removeAll(mFilteredList.filter { it.picturesList.size < filter.pictures.value!!.first || it.picturesList.size > filter.pictures.value!!.second })
         }
 
+        // Entry date filter
+        if(filter.entryDate?.value != null){
+            mFilteredList.removeAll(mFilteredList.filter { it.entryDate.after(filter.entryDate?.value) })
+        }
+
+        // Sale date filter
+        if(filter.saleDate?.value != null){
+            mFilteredList.removeAll(mFilteredList.filter { it.saleDate.after(filter.saleDate!!.value) })
+        }
+
         notifyDataSetChanged()
     }
 
