@@ -178,6 +178,8 @@ class EditPropertyFragment : Fragment() {
                     data["price"] = Integer.parseInt(editprop_price.text.toString())
                     data["status"] = editprop_checkbox.isChecked
                     data["agent"] = editprop_agent.text.toString()
+
+                    editImagesAdapter.notifyDataSetChanged()
                     data["picturesList"] = imagesList.filter { it != "" }
 
                     /*val pList = ArrayList<String>()
@@ -264,12 +266,8 @@ class EditPropertyFragment : Fragment() {
         val imgRef = storage.child("images/" + file.lastPathSegment)
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
         // Register observers to listen for when the download is done or if it fails
-        val uploadTask = imgRef.putFile(file).addOnProgressListener {
-            val progress = 100.0 * (it.bytesTransferred / it.totalByteCount)
-                progressBar?.visibility = View.VISIBLE
-                progressBar?.progress = progress.toInt()
-        }
-        uploadTask.continueWithTask {
+        progressBar?.visibility = View.VISIBLE
+        imgRef.putFile(file).continueWithTask {
             if (!it.isSuccessful) {
                 throw it.exception!!
             }

@@ -41,7 +41,19 @@ open class EditImagesAdapter(context: Context, resource: Int, list: ArrayList<St
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        // Property url
+        holder.editUrlView.setText(mList[position])
         holder.updateUI(mList[position])
+        holder.editUrlView.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(str: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                holder.updateUI(str.toString())
+                mList[position] = str.toString()
+            }
+
+        })
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -49,7 +61,7 @@ open class EditImagesAdapter(context: Context, resource: Int, list: ArrayList<St
         val editUrlView = itemView.row_edit_url!!
         private var imagesValid = true
 
-        fun updateUI(url : String){
+        fun updateUI(url: String){
             // Property image
             Glide.with(itemView.context).load(url).listener(object : RequestListener<Drawable> {
                 override fun onResourceReady(resource: Drawable?, model: Any?, target: com.bumptech.glide.request.target.Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
@@ -57,13 +69,10 @@ open class EditImagesAdapter(context: Context, resource: Int, list: ArrayList<St
                     return false
                 }
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: com.bumptech.glide.request.target.Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    if(editUrlView.text.toString() != ""){ imagesValid = false }
+                    if(url != ""){ imagesValid = false }
                     return true
                 }
             }).into(imageView)
-
-            // Property url
-            editUrlView.setText(url)
         }
     }
 
