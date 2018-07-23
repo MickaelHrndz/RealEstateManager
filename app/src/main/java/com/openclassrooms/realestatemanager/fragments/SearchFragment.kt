@@ -13,6 +13,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.SeekBar
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
@@ -47,6 +48,11 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val fltr = viewModel.filter
+
+        search_radio_availability.findViewById<RadioButton>(fltr.availability.value!!).isChecked = true
+        search_radio_availability.setOnCheckedChangeListener { _, i ->
+            fltr.availability.value = i
+        }
 
         search_edit_type.addTextChangedListener(textWatcherWithStringLiveData(fltr.type))
         search_edit_location.addTextChangedListener(textWatcherWithStringLiveData(fltr.location))

@@ -26,4 +26,5 @@
     <string name="sale_date">Date de vente</string>
     <string name="search">Rechercher</string>
     <string name="map">Carte</string>
+    <string name="all">Tous</string>
 </resources>

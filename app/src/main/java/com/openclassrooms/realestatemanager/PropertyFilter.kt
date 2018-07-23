@@ -16,6 +16,9 @@ class PropertyFilter {
     // Location
     var location = MutableLiveData<String>()
 
+    // Availability : Id of the radio button
+    var availability = MutableLiveData<Int>().default(R.id.search_radio_all)
+
 
     //// Bounds
 
@@ -50,6 +53,9 @@ class PropertyFilter {
     var saleDate : MutableLiveData<Date>? = MutableLiveData()
 
     fun getAllFilters(): Collection<MutableLiveData<*>>{
-        return arrayListOf<MutableLiveData<*>>(type, location, price, surface, rooms, pictures)
+        return arrayListOf<MutableLiveData<*>>(type, location, availability, price, surface, rooms, pictures)
     }
+
+    // Handy function to set default value
+    private fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
 }

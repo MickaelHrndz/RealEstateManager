@@ -28,4 +28,5 @@
     <string name="sale_date">Sale date</string>
     <string name="search">Search</string>
     <string name="map">Map</string>
+    <string name="all">All</string>
 </resources>
