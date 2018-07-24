@@ -152,7 +152,7 @@ class PropertyFragment : Fragment() {
                     val geoPoint = GeoPoint(addresses[0].latitude, addresses[0].longitude)
                     it.addMarker(MarkerOptions().position(latlng))
                     it.moveCamera(CameraUpdateFactory.newLatLng(latlng))
-                    it.setMinZoomPreference(MAP_ZOOM)
+                    it.animateCamera(CameraUpdateFactory.zoomTo(MAP_ZOOM))
                     FirebaseFirestore.getInstance().collection("properties").document(prop.pid).update("geopoint", geoPoint)
                 }
             } catch (e: IOException) {

@@ -1,7 +1,10 @@
 package com.openclassrooms.realestatemanager.models
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Transformations
 import android.os.Parcelable
 import com.google.firebase.firestore.GeoPoint
+import com.openclassrooms.realestatemanager.R
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.util.*
@@ -27,4 +30,11 @@ data class Property(
         var agent: String // Full name of the real estate agent in charge of this property
         ) : Parcelable {
     constructor() : this("", "", "", GeoPoint(.0, .0),"", 0, 0, 0, "", arrayListOf<String>(), false, Calendar.getInstance().time, Date(), "")
+    fun getStateStringId(): Int {
+        return if(status){
+            R.string.available
+        } else {
+            R.string.unavailable
+        }
+    }
 }

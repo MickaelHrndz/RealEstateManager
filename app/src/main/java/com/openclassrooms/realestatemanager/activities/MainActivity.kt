@@ -103,9 +103,9 @@ open class MainActivity : AppCompatActivity() {
             override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                 if(p0 != null){
                     propertiesList.clear()
-                    propertiesList.addAll(documentsToPropertyList(p0.documents))
+                    propertiesList.addAll(Utils.documentsToPropertyList(p0.documents))
                     unfilteredList.clear()
-                    unfilteredList.addAll(documentsToPropertyList(p0.documents))
+                    unfilteredList.addAll(Utils.documentsToPropertyList(p0.documents))
                     mAdapter.notifyDataSetChanged()
 
                 }
@@ -160,20 +160,7 @@ open class MainActivity : AppCompatActivity() {
         val list = ArrayList<Property>()
         colRef.get().addOnCompleteListener {
             if(it.isSuccessful){
-                list.addAll(documentsToPropertyList(it.result.documents))
-            }
-        }
-        return list
-    }
-
-    /** Converts firestore snapshots list to a properties list */
-    private fun documentsToPropertyList(res: MutableList<DocumentSnapshot>) : ArrayList<Property> {
-        val list = ArrayList<Property>()
-        for(doc in res){
-            val prop = doc.toObject(Property::class.java)
-            if(prop != null){
-                // Add properties to the list
-                list.add(prop)
+                list.addAll(Utils.documentsToPropertyList(it.result.documents))
             }
         }
         return list

@@ -14,11 +14,14 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
+import com.openclassrooms.realestatemanager.models.Property;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -82,5 +85,22 @@ public class Utils {
             Log.e(TAG, "getRealPathFromURI Exception : " + e.toString());
             return "";
         }
+    }
+
+    /** Converts firestore snapshots list to a properties list */
+    public static ArrayList<Property> documentsToPropertyList(List<DocumentSnapshot> res) {
+        ArrayList<Property> list = new ArrayList<>();
+        for(DocumentSnapshot doc : res){
+            Property prop = doc.toObject(Property.class);
+            if(prop != null){
+                // Add properties to the list
+                list.add(prop);
+            }
+        }
+        return list;
+    }
+
+    public static LatLng geoPointToLatLng(GeoPoint geoPoint) {
+        return new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
     }
 }
