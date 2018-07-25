@@ -5,12 +5,15 @@ import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -20,6 +23,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.activities.MainActivity
@@ -27,6 +31,9 @@ import com.openclassrooms.realestatemanager.adapters.EditImagesAdapter
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_editproperty.*
 import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,6 +46,8 @@ class EditPropertyFragment : Fragment() {
 
     companion object {
         const val REQUEST_READ_EXTERNAL_STORAGE = 8
+        const val REQUEST_WRITE_EXTERNAL_STORAGE = 9
+
         const val REQUEST_IMAGE = 9
         const val datePattern = "dd/MM/yyyy"
         /** Creates a new instance of this fragment */
@@ -116,8 +125,8 @@ class EditPropertyFragment : Fragment() {
 
         btn_addpicture.setOnClickListener {
             val builder = AlertDialog.Builder(context!!)
-            builder.setTitle("Where is the image ?")
-            builder.setItems(arrayOf("On Internet", "On my phone"), (DialogInterface.OnClickListener { dialogInterface, i ->
+            builder.setTitle("Picture location")
+            builder.setItems(arrayOf("On Internet", "On my phone", "Take the picture"), (DialogInterface.OnClickListener { dialogInterface, i ->
                 when(i){
                     // Internet URL
                     0 -> {
@@ -148,6 +157,30 @@ class EditPropertyFragment : Fragment() {
                             startImagePickIntent()
                         }
                     }
+                    2 -> {
+                        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            // Permission is not granted
+                            // Should we show an explanation?
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!,
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                                // Show an explanation to the user *asynchronously* -- don't block
+                                // this thread waiting for the user's response! After the user
+                                // sees the explanation, try again to request the permission.
+                            } else {
+                                // No explanation needed; request the permission
+                                ActivityCompat.requestPermissions(activity!!,
+                                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                        REQUEST_WRITE_EXTERNAL_STORAGE)
+
+                                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                                // app-defined int constant. The callback method gets the
+                                // result of the request.
+                            }
+                        } else {
+                            startCameraIntent()
+                        }
+                    }
                 }
             }))
             builder.show()
@@ -166,8 +199,12 @@ class EditPropertyFragment : Fragment() {
         prop_done.setOnClickListener {
                 try {
                     val data = HashMap<String, Any>()
+                    if(!editprop_checkbox.isChecked) {
+                        assert(df.parse(editprop_saleDate.text.toString()) != null)
+                    }
                     // Populate data map with user input
                     data["type"] = editprop_type.text.toString()
+                    data["status"] = editprop_checkbox.isChecked
                     data["location"] = editprop_location.text.toString()
                     data["address"] = editprop_address.text.toString()
                     data["description"] = editprop_desc.text.toString()
@@ -176,7 +213,6 @@ class EditPropertyFragment : Fragment() {
                     data["entryDate"] = df.parse(editprop_entryDate.text.toString())
                     data["saleDate"] = df.parse(editprop_saleDate.text.toString())
                     data["price"] = Integer.parseInt(editprop_price.text.toString())
-                    data["status"] = editprop_checkbox.isChecked
                     data["agent"] = editprop_agent.text.toString()
 
                     editImagesAdapter.notifyDataSetChanged()
@@ -214,6 +250,33 @@ class EditPropertyFragment : Fragment() {
 
         }*/
     }
+
+    private val REQUEST_CAMERA = 7256
+
+    private fun startCameraIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(context?.packageManager) != null)
+        {
+            // Create the File where the photo should go
+            var photoFile:File? = null
+            try
+            {
+                photoFile = createImageFile()
+            }
+            catch (ex:IOException) {}// Error occurred while creating the File
+            // Continue only if the File was successfully created
+            if (photoFile != null)
+            {
+                val photoURI = FileProvider.getUriForFile(context!!,
+                        "com.example.android.fileprovider",
+                        photoFile)
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(takePictureIntent, REQUEST_CAMERA)
+            }
+        }
+    }
+
     private fun startImagePickIntent(){
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, REQUEST_IMAGE)
@@ -234,6 +297,19 @@ class EditPropertyFragment : Fragment() {
                 return
             }
 
+            REQUEST_WRITE_EXTERNAL_STORAGE -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    startCameraIntent()
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return
+            }
+
         // Add other 'when' lines to check for other
         // permissions this app might request.
             else -> {
@@ -244,30 +320,53 @@ class EditPropertyFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE) {
-            val selectedMediaUri = data?.data
-            if (Utils.isExternalStorageReadable()) {
-                uploadImageFromUri(selectedMediaUri!!)
-                /*val urlTask = uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    if(!it.isSuccessful){
-                        throw it.exception!!
-                    }
-            }).addOnCompleteListener {
-                    addUrlField(it.result.toString())
-            }*/
+        if (resultCode == RESULT_OK && Utils.isExternalStorageReadable()) {
+            if(requestCode == REQUEST_IMAGE){
+                val selectedMediaUri = data?.data
+                    uploadImageFromUri(selectedMediaUri!!)
+
+            } else if(requestCode == REQUEST_CAMERA){
+                uploadImageFromPath(currentPhotoPath)
             }
         }
+    }
+
+    private lateinit var currentPhotoPath: String
+
+    @Throws(IOException::class)
+    private fun createImageFile():File {
+        // Create an image file name
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "JPEG_" + timeStamp + "_"
+        val storageDir = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(
+                imageFileName, /* prefix */
+                ".jpg", /* suffix */
+                storageDir /* directory */
+        )
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.absolutePath
+        return image
+    }
+
+    private fun uploadImageFromPath(path: String){
+        uploadImage(Uri.parse(path))
     }
 
     /** Uploads an image to the Firebase Storage based on its uri */
     private fun uploadImageFromUri(uri: Uri){
         //get image path from uri
         val file = Uri.fromFile(File(Utils.getRealPathFromUri(context, uri)))
-        val imgRef = storage.child("images/" + file.lastPathSegment)
+        uploadImage(file)
+    }
+
+    private fun uploadImage(file: Uri){
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
-        // Register observers to listen for when the download is done or if it fails
         progressBar?.visibility = View.VISIBLE
-        imgRef.putFile(file).continueWithTask {
+
+        val imgRef = storage.child("images/" + file.lastPathSegment)
+        // Register observers to listen for when the download is done or if it fails
+        imgRef.putStream(FileInputStream(file.path)).continueWithTask {
             if (!it.isSuccessful) {
                 throw it.exception!!
             }
