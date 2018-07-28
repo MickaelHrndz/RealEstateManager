@@ -88,7 +88,7 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
 
         // Availability filter
         if(filter.availability.value != R.id.search_radio_all){
-            mFilteredList.removeAll(mFilteredList.filter { it.status == (filter.availability.value == R.id.search_radio_available) })
+            mFilteredList.removeAll(mFilteredList.filter { it.status == (filter.availability.value == R.id.search_radio_unavailable) })
         }
 
         // Type filter

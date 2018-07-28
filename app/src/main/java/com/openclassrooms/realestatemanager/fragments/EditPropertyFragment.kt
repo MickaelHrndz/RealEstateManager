@@ -5,7 +5,6 @@ import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -23,7 +22,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.UploadTask
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.activities.MainActivity
@@ -33,7 +31,6 @@ import kotlinx.android.synthetic.main.fragment_editproperty.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
-import java.io.InputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,7 +43,7 @@ class EditPropertyFragment : Fragment() {
 
     companion object {
         const val REQUEST_READ_EXTERNAL_STORAGE = 8
-        const val REQUEST_WRITE_EXTERNAL_STORAGE = 9
+        const val REQUEST_CAMERA = 9
 
         const val REQUEST_IMAGE = 9
         const val datePattern = "dd/MM/yyyy"
@@ -159,7 +156,9 @@ class EditPropertyFragment : Fragment() {
                     }
                     2 -> {
                         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                != PackageManager.PERMISSION_GRANTED) {
+                                != PackageManager.PERMISSION_GRANTED ||
+                                ContextCompat.checkSelfPermission(context!!, Manifest.permission.CAMERA) !=
+                                PackageManager.PERMISSION_GRANTED) {
                             // Permission is not granted
                             // Should we show an explanation?
                             if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!,
@@ -168,11 +167,10 @@ class EditPropertyFragment : Fragment() {
                                 // this thread waiting for the user's response! After the user
                                 // sees the explanation, try again to request the permission.
                             } else {
-                                // No explanation needed; request the permission
+                                // No explanation needed; request the permissions
                                 ActivityCompat.requestPermissions(activity!!,
-                                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                                        REQUEST_WRITE_EXTERNAL_STORAGE)
-
+                                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA),
+                                        REQUEST_CAMERA)
                                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                                 // app-defined int constant. The callback method gets the
                                 // result of the request.
@@ -297,7 +295,7 @@ class EditPropertyFragment : Fragment() {
                 return
             }
 
-            REQUEST_WRITE_EXTERNAL_STORAGE -> {
+            REQUEST_CAMERA -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // permission was granted, yay! Do the
@@ -326,12 +324,13 @@ class EditPropertyFragment : Fragment() {
                     uploadImageFromUri(selectedMediaUri!!)
 
             } else if(requestCode == REQUEST_CAMERA){
-                uploadImageFromPath(currentPhotoPath)
+                uploadImage(Uri.fromFile(currentPicture))
             }
         }
     }
 
     private lateinit var currentPhotoPath: String
+    private lateinit var currentPicture: File
 
     @Throws(IOException::class)
     private fun createImageFile():File {
@@ -344,14 +343,17 @@ class EditPropertyFragment : Fragment() {
                 ".jpg", /* suffix */
                 storageDir /* directory */
         )
+        image.setReadable(true)
+        image.setWritable(true)
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.absolutePath
+        currentPicture = image
         return image
     }
 
-    private fun uploadImageFromPath(path: String){
-        uploadImage(Uri.parse(path))
-    }
+    /*private fun uploadImageFromPath(path: String){
+        uploadImageFromUri(Uri.parse(path))
+    }*/
 
     /** Uploads an image to the Firebase Storage based on its uri */
     private fun uploadImageFromUri(uri: Uri){
