@@ -8,10 +8,11 @@
     <dimen name="button_login_height">1dp</dimen>
     <dimen name="button_login_margin">5dp</dimen>
 
-    <dimen name="prop_header_height">70dp</dimen>
+    <!-- PropertyFragment dimensions -->
+    <dimen name="prop_header_height">68dp</dimen>
     <dimen name="row_prop_height">100dp</dimen>
     <dimen name="margin_row_text">4dp</dimen>
-    <dimen name="property_images_height">170dp</dimen>
-    <dimen name="property_margin">30dp</dimen>
+    <dimen name="property_images_height">220dp</dimen>
+    <dimen name="property_margin">18dp</dimen>
 
 </resources>

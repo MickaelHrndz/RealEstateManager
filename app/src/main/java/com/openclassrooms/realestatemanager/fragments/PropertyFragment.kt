@@ -79,6 +79,10 @@ class PropertyFragment : Fragment() {
             activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
             (activity as MainActivity).displayFragment(EditPropertyFragment.newInstance(prop!!))
         }
+
+        property_close_button.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+        }
     }
 
     /** Update UI based on a Property object */

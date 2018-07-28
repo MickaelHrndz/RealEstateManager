@@ -33,4 +33,5 @@
     <string name="date_format">dd/mm/yyyy</string>
     <string name="type_hint">House, apartment, condo…</string>
     <string name="location_hint">City, neighbourhood…</string>
+    <string name="close">Close</string>
 </resources>
