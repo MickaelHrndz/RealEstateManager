@@ -27,4 +27,8 @@
     <string name="search">Rechercher</string>
     <string name="map">Carte</string>
     <string name="all">Tous</string>
+    <string name="reset_filters">Reinitialiser les filtres</string>
+    <string name="date_format">jj/mm/aaaa</string>
+    <string name="type_hint">Maison, appartement, copropriété…</string>
+    <string name="location_hint">Ville, quartier…</string>
 </resources>

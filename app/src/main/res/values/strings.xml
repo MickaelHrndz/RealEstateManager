@@ -29,4 +29,8 @@
     <string name="search">Search</string>
     <string name="map">Map</string>
     <string name="all">All</string>
+    <string name="reset_filters">Reset all filters</string>
+    <string name="date_format">dd/mm/yyyy</string>
+    <string name="type_hint">House, apartment, condo…</string>
+    <string name="location_hint">City, neighbourhood…</string>
 </resources>

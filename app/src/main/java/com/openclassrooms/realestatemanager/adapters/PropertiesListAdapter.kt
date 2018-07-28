@@ -124,12 +124,12 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
 
         // Entry date filter
         if(filter.entryDate?.value != null){
-            mFilteredList.removeAll(mFilteredList.filter { it.entryDate.after(filter.entryDate?.value) })
+            mFilteredList.removeAll(mFilteredList.filter { it.entryDate.before(filter.entryDate!!.value) })
         }
 
         // Sale date filter
         if(filter.saleDate?.value != null){
-            mFilteredList.removeAll(mFilteredList.filter { it.saleDate.after(filter.saleDate!!.value) })
+            mFilteredList.removeAll(mFilteredList.filter { it.saleDate.before(filter.saleDate!!.value) })
         }
 
         notifyDataSetChanged()

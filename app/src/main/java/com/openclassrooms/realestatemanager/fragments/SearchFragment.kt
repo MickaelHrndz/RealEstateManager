@@ -19,6 +19,7 @@ import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.openclassrooms.realestatemanager.BR
 import com.openclassrooms.realestatemanager.FiltersViewModel
+import com.openclassrooms.realestatemanager.PropertyFilter
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -53,6 +54,14 @@ class SearchFragment : Fragment() {
         search_radio_availability.setOnCheckedChangeListener { _, i ->
             fltr.availability.value = i
         }
+        fltr.availability.observeForever {
+            if(it != null && search_radio_availability != null){
+                val radioBtn = search_radio_availability.findViewById<RadioButton>(it)
+                if(!radioBtn.isChecked){
+                    radioBtn.isChecked = true
+                }
+            }
+        }
 
         search_edit_type.addTextChangedListener(textWatcherWithStringLiveData(fltr.type))
         search_edit_location.addTextChangedListener(textWatcherWithStringLiveData(fltr.location))
@@ -65,7 +74,9 @@ class SearchFragment : Fragment() {
         search_edit_entry.addTextChangedListener(textWatcherWithDateLiveData(fltr.entryDate))
         search_edit_sale.addTextChangedListener(textWatcherWithDateLiveData(fltr.saleDate))
 
-
+        search_reset_button.setOnClickListener {
+            fltr.reset()
+        }
         /*search_edit_type.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -111,7 +122,6 @@ class SearchFragment : Fragment() {
         return object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
             override fun onTextChanged(charSeq: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 ld?.value = charSeq.toString()
             }
@@ -123,12 +133,13 @@ class SearchFragment : Fragment() {
         return object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
             override fun onTextChanged(charSeq: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 try {
-                    ld?.value = df.parse(charSeq.toString())
+                    val date = df.parse(charSeq.toString())
+                    ld?.value = date
                 } catch (e : Exception){
                     e.printStackTrace()
+                    ld?.value = null
                 }
             }
 

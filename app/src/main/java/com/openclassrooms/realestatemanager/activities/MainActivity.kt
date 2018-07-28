@@ -141,7 +141,7 @@ open class MainActivity : AppCompatActivity() {
         }
 
         viewModel.filter.getAllFilters().forEach {
-            it.observeForever {
+            it?.observeForever {
                 mAdapter.filter(unfilteredList, viewModel.filter)
             }
         }
