@@ -10,12 +10,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -182,29 +180,34 @@ open class MainActivity : AppCompatActivity() {
     }
 
     fun displayFragment(frag: Fragment){
-        if((resources.configuration.screenLayout
-                        .and(Configuration.SCREENLAYOUT_SIZE_MASK)) ==
-                Configuration.SCREENLAYOUT_SIZE_LARGE) {
+        // Pop backstack to have only one fragment in it
+        supportFragmentManager.popBackStack()
 
+        // Transaction
+        val transaction = supportFragmentManager.beginTransaction()
+
+        val screenSize = resources.configuration.screenLayout.and(Configuration.SCREENLAYOUT_SIZE_MASK)
+        if(screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
             // Add the fragment to the 'fragment_container' FrameLayout
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, frag).commit()
+            transaction.replace(R.id.large_screen_container, frag)
         } else {
-            // Pop backstack to have only one fragment in it
-            supportFragmentManager.popBackStack()
 
-            val transaction = supportFragmentManager.beginTransaction()
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back
+            // Replace whatever is in the fragment_container view with this fragment
             transaction.replace(R.id.fragment_container, frag)
-            transaction.addToBackStack(null)
-            // Commit the transaction
-            transaction.commit()
+
 
             /*if(mRecyclerView.visibility == View.VISIBLE){
                 mRecyclerView.visibility = View.GONE
             }*/
         }
+
+        // add the transaction to the back stack so the user can navigate back
+        transaction.addToBackStack(null)
+
+        // Commit the transaction
+        transaction.commit()
+
+
     }
 
 }

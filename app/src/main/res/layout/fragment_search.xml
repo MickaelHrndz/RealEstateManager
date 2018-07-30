@@ -19,7 +19,7 @@
         android:id="@+id/card_view_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/property_margin"
+        android:layout_margin="@dimen/search_margin"
         card_view:cardCornerRadius="4dp"
         card_view:cardElevation="8sp"
         card_view:cardUseCompatPadding="true"
