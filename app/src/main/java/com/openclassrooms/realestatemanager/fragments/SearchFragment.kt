@@ -18,10 +18,9 @@ import android.widget.SeekBar
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.openclassrooms.realestatemanager.BR
-import com.openclassrooms.realestatemanager.FiltersViewModel
-import com.openclassrooms.realestatemanager.PropertyFilter
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
+import com.openclassrooms.realestatemanager.viewmodels.FiltersViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,8 +1,8 @@
-package com.openclassrooms.realestatemanager
+package com.openclassrooms.realestatemanager.viewmodels
 
 import android.app.Application
 import android.arch.lifecycle.*
-import android.databinding.Bindable
+import com.openclassrooms.realestatemanager.PropertyFilter
 
 /**
  * Created by Mickael Hernandez on 03/07/2018.

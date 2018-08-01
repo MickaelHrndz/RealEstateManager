@@ -6,7 +6,7 @@
 <data xmlns:android="http://schemas.android.com/apk/res/android">
     <variable
         name="filters"
-        type="com.openclassrooms.realestatemanager.FiltersViewModel" />
+        type="com.openclassrooms.realestatemanager.viewmodels.FiltersViewModel" />
 </data>
 <android.support.constraint.ConstraintLayout
     android:id="@+id/search_parent"

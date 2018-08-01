@@ -189,7 +189,7 @@ class EditPropertyFragment : Fragment() {
             if(isNew){
                 finish()
             } else {
-                (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop!!))
+                (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop?.pid!!))
             }
         }
 
@@ -225,7 +225,7 @@ class EditPropertyFragment : Fragment() {
                     if(prop!!.pid != ""){
                         // Update Firestore data
                         colRef.document(prop.pid).update(data as Map<String, Any>)
-                        (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop))
+                        (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop.pid))
                     } else {
                         // Create new document and set its pid as a field after it is successfully created
                         colRef.add(data).addOnSuccessListener {

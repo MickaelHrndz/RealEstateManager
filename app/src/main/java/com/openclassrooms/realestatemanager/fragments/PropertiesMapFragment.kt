@@ -43,7 +43,7 @@ class PropertiesMapFragment : SupportMapFragment() {
                 }
             }
             map.setOnInfoWindowClickListener {
-                (context as MainActivity).displayFragment(PropertyFragment.newInstance(markers[it]!!))
+                (context as MainActivity).displayFragment(PropertyFragment.newInstance(markers[it]?.pid!!))
             }
         }
     }

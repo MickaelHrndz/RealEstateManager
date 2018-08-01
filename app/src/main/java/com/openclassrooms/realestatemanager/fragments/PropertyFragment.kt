@@ -33,10 +33,11 @@ class PropertyFragment : Fragment() {
 
     companion object {
         const val MAP_ZOOM = 10f
-        fun newInstance(prop: Property): PropertyFragment {
+        const val PROPERTY_PID_KEY = "propertypid"
+        fun newInstance(propertyPid: String): PropertyFragment {
             val myFragment = PropertyFragment()
             val args = Bundle()
-            args.putParcelable("property", prop)
+            args.putString(PROPERTY_PID_KEY, propertyPid)
             myFragment.arguments = args
             return myFragment
         }
@@ -48,25 +49,35 @@ class PropertyFragment : Fragment() {
 
     private lateinit var fragmentView: View
 
+    private lateinit var prop : Property
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         retainInstance = true
         dateFormat = android.text.format.DateFormat.getDateFormat(context?.applicationContext)
-        return inflater.inflate(R.layout.fragment_property, container, false)
+        return inflater.inflate(R.layout.fragment_property, null)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(PROPERTY_PID_KEY, pid)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         fragmentView = view
-        val prop = arguments?.getParcelable<Property>("property")
-        arguments?.remove("property")
-        if(prop != null){
-            updateUIFromProperty(prop)
-            MainActivity.colRef.document(prop.pid).addSnapshotListener { doc, _ ->
-                if(doc != null){
-                    val property = doc.toObject(Property::class.java)
-                    if(property != null){
-                        updateUIFromProperty(property)
-                    }
+        if(savedInstanceState != null){
+            pid = savedInstanceState.getString(PROPERTY_PID_KEY)
+        } else {
+            pid = arguments?.getString(PROPERTY_PID_KEY)!!
+            arguments?.remove(PROPERTY_PID_KEY)
+        }
+        //updateUIFromProperty(prop)
+        MainActivity.colRef.document(pid).addSnapshotListener { doc, _ ->
+            if(doc != null){
+                val property = doc.toObject(Property::class.java)
+                if(property != null){
+                    updateUIFromProperty(property)
                 }
             }
         }
@@ -87,6 +98,7 @@ class PropertyFragment : Fragment() {
 
     /** Update UI based on a Property object */
     private fun updateUIFromProperty(prop: Property) {
+        this.prop = prop
         if(::fragmentView.isInitialized){
             try {
                 // Setting UI elements according to the property object

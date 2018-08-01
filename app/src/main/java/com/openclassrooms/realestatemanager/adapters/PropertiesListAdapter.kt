@@ -1,26 +1,18 @@
 package com.openclassrooms.realestatemanager.adapters
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import com.bumptech.glide.Glide
-import com.openclassrooms.realestatemanager.FiltersViewModel
 import com.openclassrooms.realestatemanager.PropertyFilter
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.row_property.view.*
-import android.app.LauncherActivity.ListItem
-
-
 
 
 /**
@@ -75,7 +67,7 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         
         // Item click listener
         holder.itemView.setOnClickListener {
-            (mContext as MainActivity).displayFragment(PropertyFragment.newInstance(item))
+            (mContext as MainActivity).displayFragment(PropertyFragment.newInstance(item.pid))
         }
 
     }
