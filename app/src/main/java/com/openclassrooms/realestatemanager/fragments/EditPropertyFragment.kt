@@ -48,10 +48,10 @@ class EditPropertyFragment : Fragment() {
         const val REQUEST_IMAGE = 9
         const val datePattern = "dd/MM/yyyy"
         /** Creates a new instance of this fragment */
-        fun newInstance(prop: Property): EditPropertyFragment {
+        fun newInstance(pid: String): EditPropertyFragment {
             val myFragment = EditPropertyFragment()
             val args = Bundle()
-            args.putParcelable("property", prop)
+            args.putString(PropertyFragment.PROPERTY_PID_KEY, pid)
             myFragment.arguments = args
             return myFragment
         }
@@ -76,6 +76,10 @@ class EditPropertyFragment : Fragment() {
 
     private var imagesList = ArrayList<String>()
 
+    private var pid = ""
+
+    private lateinit var prop : Property
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         retainInstance = true
@@ -83,38 +87,38 @@ class EditPropertyFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_editproperty, container, false)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(PropertyFragment.PROPERTY_PID_KEY, pid)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val prop = arguments?.getParcelable<Property>("property")
-        arguments?.remove("property")
+        // Get property PID from saved instance or arguments
+        if(savedInstanceState != null){
+            pid = savedInstanceState.getString(PropertyFragment.PROPERTY_PID_KEY)
+        } else {
+            pid = arguments?.getString(PropertyFragment.PROPERTY_PID_KEY)!!
+            arguments?.remove(PropertyFragment.PROPERTY_PID_KEY)
+        }
+
+        // Set up images list adapter
         editImagesAdapter = EditImagesAdapter(context!!, R.layout.row_edit_image, imagesList)
         val llm = LinearLayoutManager(context)
         llm.orientation = LinearLayoutManager.VERTICAL
         list_pictures.adapter = editImagesAdapter
         list_pictures.layoutManager = llm
-        //list_pictures.isNestedScrollingEnabled = false
-        if(prop != null){
-            if(prop.pid != "") {
-                editprop_checkbox.isChecked = prop.status
-                editprop_type.setText(prop.type)
-                editprop_address.setText(prop.address)
-                editprop_location.setText(prop.location)
-                editprop_desc.setText(prop.description)
-                editprop_surface.setText(prop.surface.toString())
-                editprop_rooms.setText(prop.roomsCount.toString())
-                editprop_price.setText(prop.price.toString())
-                editprop_entryDate.setText(dateFormat.format(prop.entryDate))
-                editprop_saleDate.setText(dateFormat.format(prop.saleDate))
-                editprop_agent.setText(prop.agent)
-                imagesList.clear()
-                imagesList.addAll(prop.picturesList)
-                editImagesAdapter.notifyDataSetChanged()
-            } else {
-                isNew = true
+
+        // Get the property's data according to its pid
+        MainActivity.colRef.document(pid).addSnapshotListener { doc, _ ->
+            if(doc != null){
+                prop = doc.toObject(Property::class.java)!!
+                updateUIFromProperty()
             }
-        } else {
-            finish()
         }
+
+        //list_pictures.isNestedScrollingEnabled = false
+
         editoverlay.setOnClickListener {
             finish()
         }
@@ -123,7 +127,7 @@ class EditPropertyFragment : Fragment() {
         btn_addpicture.setOnClickListener {
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle("Picture location")
-            builder.setItems(arrayOf("On Internet", "On my phone", "Take the picture"), (DialogInterface.OnClickListener { dialogInterface, i ->
+            builder.setItems(arrayOf("On Internet", "On my phone", "Take the picture"), (DialogInterface.OnClickListener { _, i ->
                 when(i){
                     // Internet URL
                     0 -> {
@@ -247,6 +251,31 @@ class EditPropertyFragment : Fragment() {
             }
 
         }*/
+    }
+
+    private fun updateUIFromProperty() {
+        if(::prop.isInitialized){
+            if(prop.pid != "") {
+                editprop_checkbox.isChecked = prop.status
+                editprop_type.setText(prop.type)
+                editprop_address.setText(prop.address)
+                editprop_location.setText(prop.location)
+                editprop_desc.setText(prop.description)
+                editprop_surface.setText(prop.surface.toString())
+                editprop_rooms.setText(prop.roomsCount.toString())
+                editprop_price.setText(prop.price.toString())
+                editprop_entryDate.setText(dateFormat.format(prop.entryDate))
+                editprop_saleDate.setText(dateFormat.format(prop.saleDate))
+                editprop_agent.setText(prop.agent)
+                imagesList.clear()
+                imagesList.addAll(prop.picturesList)
+                editImagesAdapter.notifyDataSetChanged()
+            } else {
+                isNew = true
+            }
+        } else {
+            finish()
+        }
     }
 
     private val REQUEST_CAMERA = 7256
@@ -392,15 +421,6 @@ class EditPropertyFragment : Fragment() {
     /** Removes this fragment */
     private fun finish(){
         activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
-    }
-
-    /** Displays property or removes this fragment depending if the property is created or edited */
-    private fun displayOrFinish(prop: Property){
-        if(isNew){
-            finish()
-        } else {
-            (activity as MainActivity).displayFragment(newInstance(prop))
-        }
     }
 
 }

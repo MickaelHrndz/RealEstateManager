@@ -16,12 +16,25 @@ import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.models.Property
 
 class PropertiesMapFragment : SupportMapFragment() {
+    companion object {
+        fun newInstance(propertyPid: String): PropertiesMapFragment {
+            val myFragment = PropertiesMapFragment()
+            val args = Bundle()
+            args.putString(PropertyFragment.PROPERTY_PID_KEY, propertyPid)
+            myFragment.arguments = args
+            return myFragment
+        }
+    }
     val cameraLatLng = LatLng(40.730610, -73.935242)
     val zoom = 6f
     val markers = mutableMapOf<Marker, Property>()
     override fun onActivityCreated(p0: Bundle?) {
         super.onActivityCreated(p0)
         this.getMapAsync { map ->
+            val pid = arguments?.getString(PropertyFragment.PROPERTY_PID_KEY)
+            map.moveCamera(CameraUpdateFactory.newLatLng(cameraLatLng))
+            map.animateCamera(CameraUpdateFactory.zoomTo(zoom))
+
             if (context != null && ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 map.isMyLocationEnabled = true
@@ -31,15 +44,18 @@ class PropertiesMapFragment : SupportMapFragment() {
                 // Request permission
                 ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
             }
-            map.moveCamera(CameraUpdateFactory.newLatLng(cameraLatLng))
-            map.animateCamera(CameraUpdateFactory.zoomTo(zoom))
-            MainActivity.colRef.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            MainActivity.colRef.addSnapshotListener { querySnapshot, _ ->
                 Utils.documentsToPropertyList(querySnapshot?.documents).forEach {
+
                     val marker = map.addMarker(MarkerOptions()
                             .position(Utils.geoPointToLatLng(it.geopoint))
                             .title(it.type + " - " + it.location)
                             .snippet("$" + it.price + " - " + getString(it.getStateStringId())))
                     markers[marker] = it
+                    if(it.pid == pid){
+                        map.moveCamera(CameraUpdateFactory.newLatLng(Utils.geoPointToLatLng(it.geopoint)))
+                        map.animateCamera(CameraUpdateFactory.zoomTo(12f))
+                    }
                 }
             }
             map.setOnInfoWindowClickListener {

@@ -245,13 +245,14 @@
 
 
             </LinearLayout>
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                      xmlns:tools="http://schemas.android.com/tools"
-                      android:layout_width="match_parent"
-                      android:layout_height="250dp"
-                      android:id="@+id/property_map"
-                      tools:context=".MapsActivity"
-                      android:name="com.google.android.gms.maps.SupportMapFragment" />
+            <fragment
+                    android:id="@+id/property_map"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    tools:context=".MapsActivity"
+                    android:name="com.google.android.gms.maps.SupportMapFragment" />
             <!--/android.support.v7.widget.CardView-->
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

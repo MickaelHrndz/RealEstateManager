@@ -135,7 +135,7 @@ open class MainActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            displayFragment(EditPropertyFragment.newInstance(Property()))
+            displayFragment(EditPropertyFragment.newInstance(""))
         }
 
         viewModel.filter.getAllFilters().forEach {

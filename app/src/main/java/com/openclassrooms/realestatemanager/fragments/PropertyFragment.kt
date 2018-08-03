@@ -84,11 +84,10 @@ class PropertyFragment : Fragment() {
         property_overlay.setOnClickListener {
                 activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
         }
-        //card_view.setOnClickListener {  }
 
         fab_edit.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
-            (activity as MainActivity).displayFragment(EditPropertyFragment.newInstance(prop!!))
+            (activity as MainActivity).displayFragment(EditPropertyFragment.newInstance(prop.pid))
         }
 
         property_close_button.setOnClickListener {
@@ -169,6 +168,9 @@ class PropertyFragment : Fragment() {
                     it.addMarker(MarkerOptions().position(latlng))
                     it.moveCamera(CameraUpdateFactory.newLatLng(latlng))
                     it.animateCamera(CameraUpdateFactory.zoomTo(MAP_ZOOM))
+                    it.setOnMapClickListener {
+                        displayPropertyMap(prop.pid)
+                    }
                     FirebaseFirestore.getInstance().collection("properties").document(prop.pid).update("geopoint", geoPoint)
                 }
             } catch (e: IOException) {
@@ -183,6 +185,14 @@ class PropertyFragment : Fragment() {
             it.addMarker(MarkerOptions().position(latlng))
             it.moveCamera(CameraUpdateFactory.newLatLng(latlng))
             it.setMinZoomPreference(MAP_ZOOM)
+            it.setOnMapClickListener {
+                displayPropertyMap(prop.pid)
+            }
         }
+    }
+
+    private fun displayPropertyMap(pid: String){
+        activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+        (activity as MainActivity).displayFragment(PropertiesMapFragment.newInstance(pid))
     }
 }
