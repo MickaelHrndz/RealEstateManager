@@ -36,6 +36,7 @@ open class MainActivity : AppCompatActivity() {
         var colRef = FirebaseFirestore.getInstance().collection("properties")
         const val SEARCH_CODE = 123
         const val SHARED_PREFS = "SHARED_PREFS"
+        const val PREVIOUS_PID = "PREVIOUS_PID"
     }
 
     /** List of workmates */
@@ -57,10 +58,12 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
         title = ""
         viewModel = ViewModelProviders.of(this).get(FiltersViewModel::class.java)
+
 
         // Test if Internet is available
         if(!Utils.isInternetAvailable(applicationContext)){
@@ -98,14 +101,14 @@ open class MainActivity : AppCompatActivity() {
         }*/
 
         colRef.addSnapshotListener(object: EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
-            override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-                if(p0 != null){
+            override fun onEvent(result: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                if(result != null){
+                    val properties = result.documents
                     propertiesList.clear()
-                    propertiesList.addAll(Utils.documentsToPropertyList(p0.documents))
+                    propertiesList.addAll(Utils.documentsToPropertyList(properties))
                     unfilteredList.clear()
-                    unfilteredList.addAll(Utils.documentsToPropertyList(p0.documents))
-                    mAdapter.notifyDataSetChanged()
-
+                    unfilteredList.addAll(Utils.documentsToPropertyList(properties))
+                    mAdapter.filter(unfilteredList, viewModel.filter)
                 }
             }
 
@@ -140,14 +143,6 @@ open class MainActivity : AppCompatActivity() {
 
         viewModel.filter.getAllFilters().forEach {
             it?.observeForever {
-                mAdapter.filter(unfilteredList, viewModel.filter)
-            }
-        }
-    }
-
-    private fun observeFilters(filters : Collection<MutableLiveData<*>>){
-        filters.forEach {
-            it.observeForever {
                 mAdapter.filter(unfilteredList, viewModel.filter)
             }
         }

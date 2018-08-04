@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
@@ -26,20 +25,26 @@ class PropertiesMapFragment : SupportMapFragment() {
         }
     }
     val cameraLatLng = LatLng(40.730610, -73.935242)
-    val zoom = 6f
+    val defaultZoom = 6f
+    val markerZoom = 14f
+
     val markers = mutableMapOf<Marker, Property>()
     override fun onActivityCreated(p0: Bundle?) {
         super.onActivityCreated(p0)
         this.getMapAsync { map ->
             val pid = arguments?.getString(PropertyFragment.PROPERTY_PID_KEY)
             map.moveCamera(CameraUpdateFactory.newLatLng(cameraLatLng))
-            map.animateCamera(CameraUpdateFactory.zoomTo(zoom))
+            map.animateCamera(CameraUpdateFactory.zoomTo(defaultZoom))
 
             if (context != null && ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
+                // Enables location button
                 map.isMyLocationEnabled = true
                 map.uiSettings.isMyLocationButtonEnabled = true
+                // Enables map toolbar
                 map.uiSettings.isMapToolbarEnabled = true
+                // Enables defaultZoom buttons
+                map.uiSettings.isZoomControlsEnabled = true
             } else {
                 // Request permission
                 ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
@@ -54,7 +59,7 @@ class PropertiesMapFragment : SupportMapFragment() {
                     markers[marker] = it
                     if(it.pid == pid){
                         map.moveCamera(CameraUpdateFactory.newLatLng(Utils.geoPointToLatLng(it.geopoint)))
-                        map.animateCamera(CameraUpdateFactory.zoomTo(12f))
+                        map.animateCamera(CameraUpdateFactory.zoomTo(markerZoom))
                     }
                 }
             }
