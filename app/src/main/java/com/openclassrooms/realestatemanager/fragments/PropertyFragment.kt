@@ -108,7 +108,7 @@ class PropertyFragment : Fragment() {
                 fragmentView.findViewById<TextView>(R.id.property_address).text = prop.address
                 fragmentView.findViewById<TextView>(R.id.property_desc).text = prop.description
                 fragmentView.findViewById<TextView>(R.id.property_surface).text = getString(R.string.square_meters, prop.surface)
-                fragmentView.findViewById<TextView>(R.id.property_rooms).text = prop.roomsCount.toString()
+                fragmentView.findViewById<TextView>(R.id.property_rooms).text = getString(R.string.rooms, prop.roomsCount)
                 fragmentView.findViewById<TextView>(R.id.property_price).text = getString(R.string.price_tag, prop.price)
                 fragmentView.findViewById<TextView>(R.id.property_entryDate).text = dateFormat.format(prop.entryDate)
                 fragmentView.findViewById<TextView>(R.id.property_saleDate).text = dateFormat.format(prop.saleDate)

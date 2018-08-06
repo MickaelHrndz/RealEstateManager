@@ -47,8 +47,10 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Search filter
         val fltr = viewModel.filter
 
+        // Availability
         search_radio_availability.findViewById<RadioButton>(fltr.availability.value!!).isChecked = true
         search_radio_availability.setOnCheckedChangeListener { _, i ->
             fltr.availability.value = i
@@ -62,28 +64,36 @@ class SearchFragment : Fragment() {
             }
         }
 
+        // Type
         search_edit_type.addTextChangedListener(textWatcherWithStringLiveData(fltr.type))
+
+        // Location
         search_edit_location.addTextChangedListener(textWatcherWithStringLiveData(fltr.location))
 
+        // Price
         setUpRangeBar(range_price, fltr.price)
+
+        // Surface
         setUpRangeBar(range_surface, fltr.surface)
+
+        // Rooms
         setUpRangeBar(range_rooms, fltr.rooms)
+
+        // Pictures
         setUpRangeBar(range_pictures, fltr.pictures)
 
+        // Entry date
         search_edit_entry.addTextChangedListener(textWatcherWithDateLiveData(fltr.entryDate))
+
+        // Sale date
         search_edit_sale.addTextChangedListener(textWatcherWithDateLiveData(fltr.saleDate))
 
+        // Filters reset button
         search_reset_button.setOnClickListener {
             fltr.reset()
         }
-        /*search_edit_type.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.type.value = p0.toString()
-            }
 
-        })*/
+        // Finish fragment by clicking away
         search_overlay.setOnClickListener {}
         search_parent.setOnClickListener {
             finish()
@@ -94,7 +104,7 @@ class SearchFragment : Fragment() {
     private fun setUpRangeBar(rangeBar: CrystalRangeSeekbar, ld: MutableLiveData<Pair<Int, Int>>){
         if(ld.value != null){
             rangeBar.setMinStartValue(ld.value?.first!!.toFloat())
-            rangeBar.setMaxStartValue(ld.value?.second!!.toFloat())
+            rangeBar.right = ld.value?.second!!
         }
         rangeBar.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(ld))
     }
