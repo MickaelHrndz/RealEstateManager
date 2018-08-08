@@ -102,20 +102,25 @@ class EditPropertyFragment : Fragment() {
             arguments?.remove(PropertyFragment.PROPERTY_PID_KEY)
         }
 
+        // If pid is not found, the user wants to add a new property
+        if(pid == "") {
+            isNew = true
+        } else {
+            // Get the property's data according to its pid
+            MainActivity.colRef.document(pid).addSnapshotListener { doc, _ ->
+                if(doc != null){
+                    prop = doc.toObject(Property::class.java)!!
+                    updateUIFromProperty()
+                }
+            }
+        }
+
         // Set up images list adapter
         editImagesAdapter = EditImagesAdapter(context!!, R.layout.row_edit_image, imagesList)
         val llm = LinearLayoutManager(context)
         llm.orientation = LinearLayoutManager.VERTICAL
         list_pictures.adapter = editImagesAdapter
         list_pictures.layoutManager = llm
-
-        // Get the property's data according to its pid
-        MainActivity.colRef.document(pid).addSnapshotListener { doc, _ ->
-            if(doc != null){
-                prop = doc.toObject(Property::class.java)!!
-                updateUIFromProperty()
-            }
-        }
 
         //list_pictures.isNestedScrollingEnabled = false
 
@@ -138,21 +143,13 @@ class EditPropertyFragment : Fragment() {
                         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE)
                                 != PackageManager.PERMISSION_GRANTED) {
                             // Permission is not granted
-                            // Should we show an explanation?
                             if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!,
                                             Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                                // Show an explanation to the user *asynchronously* -- don't block
-                                // this thread waiting for the user's response! After the user
-                                // sees the explanation, try again to request the permission.
                             } else {
                                 // No explanation needed; request the permission
                                 ActivityCompat.requestPermissions(activity!!,
                                         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                                         REQUEST_READ_EXTERNAL_STORAGE)
-
-                                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                                // app-defined int constant. The callback method gets the
-                                // result of the request.
                             }
                         } else {
                             startImagePickIntent()
@@ -164,20 +161,13 @@ class EditPropertyFragment : Fragment() {
                                 ContextCompat.checkSelfPermission(context!!, Manifest.permission.CAMERA) !=
                                 PackageManager.PERMISSION_GRANTED) {
                             // Permission is not granted
-                            // Should we show an explanation?
                             if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!,
                                             Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                // Show an explanation to the user *asynchronously* -- don't block
-                                // this thread waiting for the user's response! After the user
-                                // sees the explanation, try again to request the permission.
                             } else {
                                 // No explanation needed; request the permissions
                                 ActivityCompat.requestPermissions(activity!!,
                                         arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA),
                                         REQUEST_CAMERA)
-                                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                                // app-defined int constant. The callback method gets the
-                                // result of the request.
                             }
                         } else {
                             startCameraIntent()
@@ -314,12 +304,10 @@ class EditPropertyFragment : Fragment() {
             REQUEST_READ_EXTERNAL_STORAGE -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // permission was granted
                     startImagePickIntent()
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied
                 }
                 return
             }
@@ -327,12 +315,10 @@ class EditPropertyFragment : Fragment() {
             REQUEST_CAMERA -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // permission was granted
                     startCameraIntent()
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied
                 }
                 return
             }
