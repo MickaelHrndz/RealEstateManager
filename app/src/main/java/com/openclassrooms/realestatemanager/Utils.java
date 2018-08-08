@@ -32,6 +32,8 @@ import static android.support.constraint.Constraints.TAG;
  */
 
 public class Utils {
+    public static final double dollarEuro = 0.812;
+    public static final String dateFormat = "yyyy/MM/dd";
 
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
@@ -39,8 +41,8 @@ public class Utils {
      * @param dollars
      * @return
      */
-    public static int convertDollarToEuro(int dollars){
-        return (int) Math.round(dollars * 0.812);
+    public static double convertDollarToEuro(double dollars){
+        return dollars * dollarEuro;
     }
 
     /**
@@ -50,8 +52,8 @@ public class Utils {
      */
 
     public static String getTodayDate(){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        return dateFormat.format(new Date());
+        DateFormat df = new SimpleDateFormat(dateFormat);
+        return df.format(new Date());
     }
 
     /**
