@@ -20,6 +20,9 @@
             card_view:cardCornerRadius="4dp"
             card_view:cardElevation="8sp"
             card_view:cardUseCompatPadding="true">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -206,32 +209,36 @@
                     android:inputType="textPersonName"
                     android:layout_margin="@dimen/margin_row_text"
                     />
+            </LinearLayout>
+            </ScrollView>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
                     android:layout_gravity="bottom"
-                    android:gravity="end">
+                    android:gravity="end"
+                    android:padding="8dp">
                     <Button
                         android:id="@+id/prop_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/cancel"
                         android:drawableStart="@drawable/ic_cancel"
-                        android:drawableTint="#fff"
+                        android:drawablePadding="4dp"
                         android:textColor="#fff"
                         android:backgroundTint="#d32f2f"/>
                     <Button
                         android:id="@+id/prop_done"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:text="@string/done"
                         android:drawableStart="@drawable/ic_done"
-                        android:drawableTint="#fff"
+                        android:drawablePadding="4dp"
                         android:textColor="#fff"
                         android:backgroundTint="#43a047"/>
                 </LinearLayout>
-            </LinearLayout>
-            </ScrollView>
+            </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
