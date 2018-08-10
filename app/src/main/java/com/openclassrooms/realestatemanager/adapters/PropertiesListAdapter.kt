@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -58,11 +59,13 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
 
         // Status
         if(item.status){
-            holder.statusTextView.text = mContext.getString(R.string.available)
-            holder.statusTextView.setTextColor(Color.parseColor("#4caf50"))
+            //holder.statusTextView.text = mContext.getString(R.string.available)
+            //holder.statusTextView.setTextColor(Color.parseColor("#4caf50"))
+            holder.statusImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_dot_green))
         } else {
-            holder.statusTextView.text = mContext.getString(R.string.unavailable)
-            holder.statusTextView.setTextColor(Color.RED)
+            //holder.statusTextView.text = mContext.getString(R.string.unavailable)
+            //holder.statusTextView.setTextColor(Color.RED)
+            holder.statusImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_dot_red))
         }
         
         // Price
@@ -135,7 +138,7 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         val typeTextView = itemView.prop_type!!
         val locationTextView = itemView.prop_location!!
         val priceTextView = itemView.prop_price!!
-        val statusTextView = itemView.prop_status!!
+        val statusImageView = itemView.prop_status!!
     }
 
 }

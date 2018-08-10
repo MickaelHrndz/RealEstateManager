@@ -9,7 +9,7 @@
     <dimen name="button_login_margin">5dp</dimen>
 
     <!-- Property row -->
-    <dimen name="row_prop_height">185dp</dimen>
+    <dimen name="row_prop_height">175dp</dimen>
     <dimen name="row_image_width">170dp</dimen>
     <dimen name="margin_row_text">4dp</dimen>
 
