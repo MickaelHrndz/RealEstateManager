@@ -61,6 +61,7 @@ open class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        title = ""
         viewModel = ViewModelProviders.of(this).get(FiltersViewModel::class.java)
 
 

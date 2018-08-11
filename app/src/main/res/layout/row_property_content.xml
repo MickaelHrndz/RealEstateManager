@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_restaurant"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/row_prop_height"
+    android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/prop_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        />
+
+    <ImageView
+        android:id="@+id/prop_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"/>
+
+    <LinearLayout
+        android:id="@+id/row_linear1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/prop_status"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/prop_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_row_text"
+            android:textColor="@android:color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            style="@style/darkShadow"/>
+
+        <TextView
+            android:id="@+id/prop_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="23sp"
+            android:layout_margin="@dimen/margin_row_text"
+            android:maxLines="2"
+            style="@style/darkShadow"/>
+        <TextView
+            android:id="@+id/prop_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_row_text"
+            android:text="esfopslfoeslfoes"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"
+            style="@style/lightShadow"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <!--TextView
+                android:id="@+id/prop_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_margin="@dimen/margin_row_text"
+                style="@style/lightShadow"/-->
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.PropertyFilter
 import com.openclassrooms.realestatemanager.R
@@ -135,10 +136,10 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val typeTextView = itemView.prop_type!!
-        val locationTextView = itemView.prop_location!!
-        val priceTextView = itemView.prop_price!!
-        val statusImageView = itemView.prop_status!!
+        val typeTextView = itemView.findViewById<TextView>(R.id.prop_type)!!
+        val locationTextView = itemView.findViewById<TextView>(R.id.prop_location)!!
+        val priceTextView = itemView.findViewById<TextView>(R.id.prop_price)!!
+        val statusImageView = itemView.findViewById<ImageView>(R.id.prop_status)!!
     }
 
 }
