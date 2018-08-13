@@ -26,36 +26,28 @@ class PropertyFilter {
     //// Bounds
 
     // Price
-    var price = MutableLiveData<Pair<Int, Int>>()
     val minPrice = 0
     val maxPrice = 99999999
-    var priceText : LiveData<String> = Transformations.map(price) {
-        "\$" + price.value?.first + " to \$" + price.value?.second.toString()
-    }
+    var lowPrice = MutableLiveData<Int>().default(minPrice)
+    var highPrice = MutableLiveData<Int>().default(maxPrice)
 
     // Surface
-    var surface = MutableLiveData<Pair<Int, Int>>()
     val minSurface = 0
     val maxSurface = 999999
-    var surfaceText : LiveData<String> = Transformations.map(surface) {
-        surface.value?.first.toString() + "m² to " + surface.value?.second.toString() + "m²"
-    }
+    var lowSurface = MutableLiveData<Int>().default(minSurface)
+    var highSurface = MutableLiveData<Int>().default(maxSurface)
 
     // Rooms
-    var rooms = MutableLiveData<Pair<Int, Int>>()
-    var minRooms = 0
-    var maxRooms = 100
-    var roomsText : LiveData<String> = Transformations.map(rooms) {
-        rooms.value?.first.toString() + " to " + rooms.value?.second.toString() + " rooms"
-    }
+    val minRooms = 0
+    val maxRooms = 100
+    var lowRooms = MutableLiveData<Int>().default(minRooms)
+    var highRooms = MutableLiveData<Int>().default(maxRooms)
 
     // Pictures
-    var pictures = MutableLiveData<Pair<Int, Int>>()
-    var minPictures = 0
-    var maxPictures = 100
-    var picturesText : LiveData<String> = Transformations.map(pictures) {
-        pictures.value?.first.toString() + " to " + pictures.value?.second.toString() + " pictures"
-    }
+    val minPictures = 0
+    val maxPictures = 100
+    var lowPictures = MutableLiveData<Int>().default(minPictures)
+    var highPictures = MutableLiveData<Int>().default(maxPictures)
 
     // Date of entry on the market
     var entryDate : MutableLiveData<Date>? = MutableLiveData()
@@ -64,7 +56,8 @@ class PropertyFilter {
     var saleDate : MutableLiveData<Date>? = MutableLiveData()
 
     fun getAllFilters(): Collection<MutableLiveData<*>?>{
-        return arrayListOf<MutableLiveData<*>?>(type, location, availability, price, surface, rooms, pictures, entryDate, saleDate)
+        return arrayListOf<MutableLiveData<*>?>(
+                type, location, availability, lowPrice, highPrice, lowSurface, highSurface, lowRooms, highRooms, lowPictures, highPictures, entryDate, saleDate)
     }
 
     // Handy function to set default value
@@ -74,10 +67,14 @@ class PropertyFilter {
         type.value = ""
         location.value = ""
         availability.value = defaultAvailability
-        price.value = Pair(minPrice, maxPrice)
-        surface.value = Pair(minSurface, maxSurface)
-        rooms.value = Pair(minRooms, maxRooms)
-        pictures.value = Pair(minPictures, maxPictures)
+        lowPrice.value = minPrice
+        highPrice.value = maxPrice
+        lowSurface.value = minSurface
+        highSurface.value = maxSurface
+        lowRooms.value = minRooms
+        highRooms.value = maxRooms
+        lowPictures.value = minPictures
+        highPictures.value = maxPictures
         entryDate?.value = null
         saleDate?.value = null
     }

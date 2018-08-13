@@ -99,27 +99,18 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         if(filter.location.value != null && filter.location.value != ""){
             mFilteredList.removeAll(mFilteredList.filter { !it.location.contains(filter.location.value!!, true)})
         }
-        val pr = filter.price.value
 
         // Price filter
-        if(filter.price.value != null){
-            mFilteredList.removeAll(mFilteredList.filter { it.price < filter.price.value!!.first || it.price > filter.price.value!!.second })
-        }
+        mFilteredList.removeAll(mFilteredList.filter { it.price < filter.lowPrice.value!! || it.price > filter.highPrice.value!! })
 
         // Surface filter
-        if(filter.surface.value != null) {
-            mFilteredList.removeAll(mFilteredList.filter { it.surface < filter.surface.value!!.first || it.surface > filter.surface.value!!.second })
-        }
+        mFilteredList.removeAll(mFilteredList.filter { it.surface < filter.lowSurface.value!! || it.surface > filter.highSurface.value!! })
 
         // Rooms filter
-        if(filter.rooms.value != null){
-            mFilteredList.removeAll(mFilteredList.filter { it.roomsCount < filter.rooms.value!!.first || it.roomsCount > filter.rooms.value!!.second })
-        }
+        mFilteredList.removeAll(mFilteredList.filter { it.roomsCount < filter.lowRooms.value!! || it.roomsCount > filter.highRooms.value!! })
 
         // Pictures filter
-        if(filter.pictures.value != null){
-            mFilteredList.removeAll(mFilteredList.filter { it.picturesList.size < filter.pictures.value!!.first || it.picturesList.size > filter.pictures.value!!.second })
-        }
+        mFilteredList.removeAll(mFilteredList.filter { it.picturesList.size < filter.lowPictures.value!! || it.picturesList.size > filter.highPictures.value!! })
 
         // Entry date filter
         if(filter.entryDate?.value != null){

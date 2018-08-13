@@ -99,19 +99,37 @@
                 android:layout_height="wrap_content"
                 android:text="@string/price"/>
 
-            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-                android:id="@+id/range_price"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:min_value="0"
-                app:max_value="99999999"
-                />
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+                <EditText
+                    android:id="@+id/search_low_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{filters.filter.lowPrice.toString()}"
+                    android:inputType="number"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/to"/>
+                <EditText
+                    android:id="@+id/search_high_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{Integer.toString(filters.filter.highPrice)}"
+                    android:inputType="number"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dollarsign"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/filter_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{filters.filter.priceText}"
                 android:textAlignment="center"/>
 
             <!-- SURFACE -->
@@ -120,20 +138,32 @@
                 android:layout_height="wrap_content"
                 android:text="@string/surface"/>
 
-            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-                android:id="@+id/range_surface"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:min_value="0"
-                app:max_value="999999"
-                />
-
-            <TextView
-                android:id="@+id/filter_surface"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{filters.filter.surfaceText}"
-                android:textAlignment="center"/>
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+                <EditText
+                    android:id="@+id/search_low_surface"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{filters.filter.lowSurface.toString()}"
+                    android:inputType="number"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/to"/>
+                <EditText
+                    android:id="@+id/search_high_surface"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{filters.filter.highSurface.toString()}"
+                    android:inputType="number"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sqm"/>
+            </LinearLayout>
 
             <!-- ROOMS -->
             <TextView
@@ -141,17 +171,28 @@
                 android:layout_height="wrap_content"
                 android:text="@string/rooms"/>
 
-            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-                android:id="@+id/range_rooms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/filter_rooms"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{filters.filter.roomsText}"
-                android:textAlignment="center"/>
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+                <EditText
+                    android:id="@+id/search_low_rooms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{filters.filter.lowRooms.toString()}"
+                    android:inputType="number"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/to"/>
+                <EditText
+                    android:id="@+id/search_high_rooms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{filters.filter.highRooms.toString()}"
+                    android:inputType="number"/>
+            </LinearLayout>
 
             <!-- PICTURES -->
             <TextView
@@ -159,17 +200,28 @@
                 android:layout_height="wrap_content"
                 android:text="@string/pictures"/>
 
-            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-                android:id="@+id/range_pictures"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/filter_pictures"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{filters.filter.picturesText}"
-                android:textAlignment="center"/>
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+                <EditText
+                    android:id="@+id/search_low_pictures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{filters.filter.lowPictures.toString()}"
+                    android:inputType="number"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/to"/>
+                <EditText
+                    android:id="@+id/search_high_pictures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{filters.filter.highPictures.toString()}"
+                    android:inputType="number"/>
+            </LinearLayout>
 
             <!-- ENTRY DATE -->
             <TextView
@@ -177,24 +229,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/entry_date"/>
+
             <com.cielyang.android.clearableedittext.ClearableEditText
                 android:id="@+id/search_edit_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/date_format"
                 android:inputType="date"/>
-            <!--LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="to"/>
-                <EditText
-                    android:id="@+id/filter_entry_second"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout-->
+
             <!-- SALE DATE -->
             <TextView
                 android:layout_width="wrap_content"

@@ -160,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_row_text"
                     android:textStyle="bold"
-                    android:text="@string/rooms"/>
+                    android:text="@string/rooms_count"/>
                 <com.cielyang.android.clearableedittext.ClearableEditText
                     android:id="@+id/editprop_rooms"
                     android:layout_width="wrap_content"

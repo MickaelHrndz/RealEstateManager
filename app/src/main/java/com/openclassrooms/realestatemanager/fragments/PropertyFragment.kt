@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.dmallcott.dismissibleimageview.DismissibleImageView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -107,8 +106,8 @@ class PropertyFragment : Fragment() {
                 fragmentView.findViewById<TextView>(R.id.property_type).text = prop.type
                 fragmentView.findViewById<TextView>(R.id.property_address).text = prop.address
                 fragmentView.findViewById<TextView>(R.id.property_desc).text = prop.description
-                fragmentView.findViewById<TextView>(R.id.property_surface).text = getString(R.string.square_meters, prop.surface)
-                fragmentView.findViewById<TextView>(R.id.property_rooms).text = getString(R.string.rooms, prop.roomsCount)
+                fragmentView.findViewById<TextView>(R.id.property_surface).text = getString(R.string.sqm_value, prop.surface)
+                fragmentView.findViewById<TextView>(R.id.property_rooms).text = getString(R.string.rooms_count, prop.roomsCount)
                 fragmentView.findViewById<TextView>(R.id.property_price).text = getString(R.string.price_tag, prop.price)
                 fragmentView.findViewById<TextView>(R.id.property_entryDate).text = dateFormat.format(prop.entryDate)
                 fragmentView.findViewById<TextView>(R.id.property_saleDate).text = dateFormat.format(prop.saleDate)

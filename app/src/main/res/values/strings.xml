@@ -3,14 +3,14 @@
     <string name="navigation_drawer_open">Drawer Open</string>
     <string name="navigation_drawer_close">Drawer Closed</string>
     <string name="app_name" translatable="false">Real Estate Manager</string>
-    <string name="square_meters">%1$d sq m</string>
+    <string name="sqm_value">%1$d sq m</string>
     <string name="price_tag">$%1$d</string>
     <string name="available">Available</string>
     <string name="unavailable">Unavailable</string>
     <string name="action_edit">Edit</string>
     <string name="description">Description</string>
     <string name="surface">Surface</string>
-    <string name="rooms">%1$d rooms</string>
+    <string name="rooms_count">%1$d rooms</string>
     <string name="entry_date">Entry date</string>
     <string name="address">Address</string>
     <string name="location">Location</string>
@@ -34,4 +34,7 @@
     <string name="type_hint">House, apartment, condo…</string>
     <string name="location_hint">City, neighbourhood…</string>
     <string name="close">Close</string>
+    <string name="to">to</string>
+    <string name="rooms">Rooms</string>
+    <string name="sqm">sq m</string>
 </resources>

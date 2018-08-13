@@ -2,14 +2,14 @@
 <resources>
     <string name="navigation_drawer_open">Tiroir ouvert</string>
     <string name="navigation_drawer_close">Tiroir fermé</string>
-    <string name="square_meters">%1$dm²</string>
+    <string name="sqm_value">%1$dm²</string>
     <string name="price_tag">%1$d$</string>
     <string name="available">Disponible</string>
     <string name="unavailable">Indisponible</string>
     <string name="action_edit">Editer</string>
     <string name="description">Description</string>
     <string name="surface">Surface</string>
-    <string name="rooms">%1$d pièces</string>
+    <string name="rooms_count">%1$d pièces</string>
     <string name="entry_date">Date d\'entrée</string>
     <string name="address">Addresse</string>
     <string name="location">Location</string>
@@ -31,4 +31,8 @@
     <string name="date_format">jj/mm/aaaa</string>
     <string name="type_hint">Maison, appartement, copropriété…</string>
     <string name="location_hint">Ville, quartier…</string>
+    <string name="close">Fermer</string>
+    <string name="to">à</string>
+    <string name="rooms">Pièces</string>
+    <string name="sqm">m²</string>
 </resources>

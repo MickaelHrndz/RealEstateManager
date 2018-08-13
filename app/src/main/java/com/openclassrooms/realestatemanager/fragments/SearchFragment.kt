@@ -22,6 +22,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.viewmodels.FiltersViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
+import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -71,16 +72,20 @@ class SearchFragment : Fragment() {
         search_edit_location.addTextChangedListener(textWatcherWithStringLiveData(fltr.location))
 
         // Price
-        setUpRangeBar(range_price, fltr.price)
+        search_low_price.addTextChangedListener(textWatcherWithIntLiveData(fltr.lowPrice))
+        search_high_price.addTextChangedListener(textWatcherWithIntLiveData(fltr.highPrice))
 
         // Surface
-        setUpRangeBar(range_surface, fltr.surface)
+        search_low_surface.addTextChangedListener(textWatcherWithIntLiveData(fltr.lowSurface))
+        search_high_surface.addTextChangedListener(textWatcherWithIntLiveData(fltr.highSurface))
 
         // Rooms
-        setUpRangeBar(range_rooms, fltr.rooms)
+        search_low_rooms.addTextChangedListener(textWatcherWithIntLiveData(fltr.lowRooms))
+        search_high_rooms.addTextChangedListener(textWatcherWithIntLiveData(fltr.highRooms))
 
         // Pictures
-        setUpRangeBar(range_pictures, fltr.pictures)
+        search_low_pictures.addTextChangedListener(textWatcherWithIntLiveData(fltr.lowPictures))
+        search_high_pictures.addTextChangedListener(textWatcherWithIntLiveData(fltr.highPictures))
 
         // Entry date
         search_edit_entry.addTextChangedListener(textWatcherWithDateLiveData(fltr.entryDate))
@@ -100,30 +105,22 @@ class SearchFragment : Fragment() {
         }
     }
 
-    /** Sets up range bars initial values and listener */
-    private fun setUpRangeBar(rangeBar: CrystalRangeSeekbar, ld: MutableLiveData<Pair<Int, Int>>){
-        if(ld.value != null){
-            rangeBar.setMinStartValue(ld.value?.first!!.toFloat())
-            rangeBar.right = ld.value?.second!!
-        }
-        rangeBar.setOnRangeSeekbarChangeListener(seekBarListenerWithLiveData(ld))
-    }
-
     /** Removes this fragment */
     private fun finish(){
         //(context as MainActivity).mAdapter.filter(viewModel.filter)
         activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
     }
 
-    private fun seekBarListenerWithLiveData(ld: MutableLiveData<Pair<Int, Int>>?) : OnRangeSeekbarChangeListener {
-        return object : OnRangeSeekbarChangeListener, SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
-            override fun onStartTrackingTouch(p0: SeekBar?) {}
-            override fun onStopTrackingTouch(p0: SeekBar?) {}
-            override fun valueChanged(minValue: Number?, maxValue: Number?) {
-                ld?.value = Pair(minValue!!.toInt(), maxValue!!.toInt())
+    private fun textWatcherWithIntLiveData(ld: MutableLiveData<Int>?) : TextWatcher {
+        return object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(charSeq: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val str = charSeq.toString()
+                if(str.isNotEmpty()){
+                    ld?.value = str.toInt()
+                }
             }
-
         }
     }
 
