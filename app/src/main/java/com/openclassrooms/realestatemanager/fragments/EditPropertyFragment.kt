@@ -124,20 +124,26 @@ class EditPropertyFragment : Fragment() {
 
         //list_pictures.isNestedScrollingEnabled = false
 
+        // Clicking out of the cardView finishes the fragment
         editoverlay.setOnClickListener {
             finish()
         }
+        // Overriding click listener on card to do nothing
         card_view_edit.setOnClickListener {  }
 
+        // Add picture listener
         btn_addpicture.setOnClickListener {
+            // Building AlertDialog to let the user choose where its picture is
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle("Picture location")
             builder.setItems(arrayOf("On Internet", "On my phone", "Take the picture"), (DialogInterface.OnClickListener { _, i ->
                 when(i){
+
                     // Internet URL
                     0 -> {
                         addUrlField()
                     }
+
                     // Phone
                     1 -> {
                         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -155,6 +161,8 @@ class EditPropertyFragment : Fragment() {
                             startImagePickIntent()
                         }
                     }
+
+                    // Camera
                     2 -> {
                         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                 != PackageManager.PERMISSION_GRANTED ||
@@ -190,10 +198,13 @@ class EditPropertyFragment : Fragment() {
         // If user validates his edits
         prop_done.setOnClickListener {
                 try {
+                    // Data map used to update the property data
                     val data = HashMap<String, Any>()
+
                     if(!editprop_checkbox.isChecked) {
                         assert(df.parse(editprop_saleDate.text.toString()) != null)
                     }
+
                     // Populate data map with user input
                     data["type"] = editprop_type.text.toString()
                     data["status"] = editprop_checkbox.isChecked
@@ -209,11 +220,6 @@ class EditPropertyFragment : Fragment() {
 
                     editImagesAdapter.notifyDataSetChanged()
                     data["picturesList"] = imagesList.filter { it != "" }
-
-                    /*val pList = ArrayList<String>()
-                    for(i in 0 until editpictures_layout.childCount){
-                        pList.add((editpictures_layout.getChildAt(i) as EditText).text.toString())
-                    }*/
 
                     // If the property exists
                     if(prop!!.pid != ""){
@@ -244,8 +250,10 @@ class EditPropertyFragment : Fragment() {
     }
 
     private fun updateUIFromProperty() {
+        // lateinit prop must be initialized
         if(::prop.isInitialized){
-            if(prop.pid != "") {
+            // Assert property data and edit layout aren't empty or null
+            if(prop.pid != "" && editoverlay != null) {
                 editprop_checkbox.isChecked = prop.status
                 editprop_type.setText(prop.type)
                 editprop_address.setText(prop.address)
@@ -311,7 +319,6 @@ class EditPropertyFragment : Fragment() {
                 }
                 return
             }
-
             REQUEST_CAMERA -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
@@ -322,7 +329,6 @@ class EditPropertyFragment : Fragment() {
                 }
                 return
             }
-
         // Add other 'when' lines to check for other
         // permissions this app might request.
             else -> {
@@ -365,10 +371,6 @@ class EditPropertyFragment : Fragment() {
         currentPicture = image
         return image
     }
-
-    /*private fun uploadImageFromPath(path: String){
-        uploadImageFromUri(Uri.parse(path))
-    }*/
 
     /** Uploads an image to the Firebase Storage based on its uri */
     private fun uploadImageFromUri(uri: Uri){

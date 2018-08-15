@@ -39,6 +39,7 @@
             android:background="@android:color/white"
             android:orientation="vertical">
 
+            <!-- AVAILABILITY -->
             <RadioGroup
                 android:id="@+id/search_radio_availability"
                 android:layout_width="match_parent"
@@ -97,6 +98,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/price"/>
 
             <LinearLayout
@@ -113,6 +115,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
                     android:text="@string/to"/>
                 <EditText
                     android:id="@+id/search_high_price"
@@ -126,16 +129,11 @@
                     android:text="@string/dollarsign"/>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/filter_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"/>
-
             <!-- SURFACE -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/surface"/>
 
             <LinearLayout
@@ -152,6 +150,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
                     android:text="@string/to"/>
                 <EditText
                     android:id="@+id/search_high_surface"
@@ -169,7 +168,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rooms"/>
+                android:text="@string/rooms"
+                android:layout_marginTop="8dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -185,6 +185,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
                     android:text="@string/to"/>
                 <EditText
                     android:id="@+id/search_high_rooms"
@@ -198,7 +199,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/pictures"/>
+                android:text="@string/pictures"
+                android:layout_marginTop="8dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -214,6 +216,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
                     android:text="@string/to"/>
                 <EditText
                     android:id="@+id/search_high_pictures"
@@ -241,6 +244,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/sale_date"/>
             <com.cielyang.android.clearableedittext.ClearableEditText
                 android:id="@+id/search_edit_sale"
