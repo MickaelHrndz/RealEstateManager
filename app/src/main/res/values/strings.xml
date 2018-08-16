@@ -37,4 +37,5 @@
     <string name="to">to</string>
     <string name="rooms">Rooms</string>
     <string name="sqm">sq m</string>
+    <string name="property_placeholder">Tap a property in the list to show its details here</string>
 </resources>

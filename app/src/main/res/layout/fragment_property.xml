@@ -173,10 +173,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginStart="2dp"
-                    android:textStyle="bold"
-                    android:text="Address"/>
+                    style="@style/title"
+                    android:text="@string/address"/>
                 <TextView
                     android:id="@+id/property_address"
                     android:layout_width="wrap_content"
@@ -186,9 +184,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginStart="2dp"
-                    android:textStyle="bold"
+                    style="@style/title"
                     android:text="@string/description"/>
                 <TextView
                     android:id="@+id/property_desc"
@@ -199,9 +195,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginStart="2dp"
-                    android:textStyle="bold"
+                    style="@style/title"
                     android:text="@string/entry_date"/>
                 <TextView
                     android:id="@+id/property_entryDate"
@@ -213,9 +207,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginStart="2dp"
-                    android:textStyle="bold"
+                    style="@style/title"
                     android:text="@string/sale_date"/>
                 <TextView
                     android:id="@+id/property_saleDate"
@@ -227,9 +219,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginStart="2dp"
-                    android:textStyle="bold"
+                    style="@style/title"
                     android:text="@string/agent"/>
                 <TextView
                     android:id="@+id/property_agent"

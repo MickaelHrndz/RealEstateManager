@@ -53,10 +53,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_row_text"
-            android:text="esfopslfoeslfoes"
-            android:textSize="25sp"
+            android:textSize="27sp"
             android:textStyle="bold"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimaryLight"
             style="@style/lightShadow"/>
         <LinearLayout
             android:layout_width="match_parent"
