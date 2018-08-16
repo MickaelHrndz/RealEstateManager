@@ -5,6 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -12,6 +13,7 @@ import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.getColor
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -44,7 +46,6 @@ class EditPropertyFragment : Fragment() {
     companion object {
         const val REQUEST_READ_EXTERNAL_STORAGE = 8
         const val REQUEST_CAMERA = 9
-
         const val REQUEST_IMAGE = 9
         const val datePattern = "dd/MM/yyyy"
         /** Creates a new instance of this fragment */
@@ -201,13 +202,13 @@ class EditPropertyFragment : Fragment() {
                     // Data map used to update the property data
                     val data = HashMap<String, Any>()
 
-                    if(!editprop_checkbox.isChecked) {
+                    if(!editprop_switch.isChecked) {
                         assert(df.parse(editprop_saleDate.text.toString()) != null)
                     }
 
                     // Populate data map with user input
                     data["type"] = editprop_type.text.toString()
-                    data["status"] = editprop_checkbox.isChecked
+                    data["status"] = editprop_switch.isChecked
                     data["location"] = editprop_location.text.toString()
                     data["address"] = editprop_address.text.toString()
                     data["description"] = editprop_desc.text.toString()
@@ -242,7 +243,19 @@ class EditPropertyFragment : Fragment() {
                     Toast.makeText(context, getString(R.string.edit_error), Toast.LENGTH_LONG).show()
                     e.printStackTrace()
                 }
-            } /*else {
+            }
+            editprop_switch.setOnCheckedChangeListener { _, b ->
+                if(b){
+                    editprop_switch.setText(R.string.available)
+                    editprop_switch.setTextColor(getColor(activity!!, R.color.colorPrimary))
+                } else {
+                    editprop_switch.setText(R.string.unavailable)
+                    editprop_switch.setTextColor(Color.RED)
+
+                }
+            }
+
+            /*else {
                 Toast.makeText(context, "One or more images url are invalid. Leave it empty to delete.", Toast.LENGTH_LONG).show()
             }
 
@@ -254,7 +267,7 @@ class EditPropertyFragment : Fragment() {
         if(::prop.isInitialized){
             // Assert property data and edit layout aren't empty or null
             if(prop.pid != "" && editoverlay != null) {
-                editprop_checkbox.isChecked = prop.status
+                editprop_switch.isChecked = prop.status
                 editprop_type.setText(prop.type)
                 editprop_address.setText(prop.address)
                 editprop_location.setText(prop.location)

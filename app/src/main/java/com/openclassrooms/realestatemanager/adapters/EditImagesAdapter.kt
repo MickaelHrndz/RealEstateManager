@@ -50,7 +50,7 @@ open class EditImagesAdapter(context: Context, resource: Int, list: ArrayList<St
 
             override fun onTextChanged(str: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 holder.updateUI(str.toString())
-                mList[position] = str.toString()
+                mList[holder.adapterPosition] = str.toString()
             }
 
         })
