@@ -87,19 +87,6 @@ open class MainActivity : AppCompatActivity() {
         // Row separator
         mRecyclerView.addItemDecoration(DividerItemDecoration(mRecyclerView.context, llm.orientation))
 
-        /*colRef.get().addOnCompleteListener {
-            if(it.isSuccessful) {
-                val res = it.result.documents
-                for(doc in res){
-                    val prop = doc.toObject(Property::class.java)
-                    if(prop != null){
-                        propertiesList.add(prop)
-                        mAdapter.notifyDataSetChanged()
-                    }
-                }
-            }
-        }*/
-
         colRef.addSnapshotListener(object: EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
             override fun onEvent(result: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                 if(result != null){
@@ -137,10 +124,12 @@ open class MainActivity : AppCompatActivity() {
 
         }
 
+        // Floating action button listener
         fab.setOnClickListener {
             displayFragment(EditPropertyFragment.newInstance(""))
         }
 
+        // Updates the list every time a filter value changes
         viewModel.filter.getAllFilters().forEach {
             it?.observeForever {
                 mAdapter.filter(unfilteredList, viewModel.filter)
@@ -174,6 +163,7 @@ open class MainActivity : AppCompatActivity() {
         return true
     }
 
+    /** Handles transaction to show a fragment in the proper container */
     fun displayFragment(frag: Fragment){
         // Pop backstack to have only one fragment in it
         supportFragmentManager.popBackStack()
@@ -186,14 +176,8 @@ open class MainActivity : AppCompatActivity() {
             // Add the fragment to the 'fragment_container' FrameLayout
             transaction.replace(R.id.large_screen_container, frag)
         } else {
-
             // Replace whatever is in the fragment_container view with this fragment
             transaction.replace(R.id.fragment_container, frag)
-
-
-            /*if(mRecyclerView.visibility == View.VISIBLE){
-                mRecyclerView.visibility = View.GONE
-            }*/
         }
 
         // add the transaction to the back stack so the user can navigate back

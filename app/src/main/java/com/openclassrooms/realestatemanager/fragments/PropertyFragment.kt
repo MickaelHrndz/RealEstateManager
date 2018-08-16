@@ -33,24 +33,33 @@ import java.text.DateFormat
 class PropertyFragment : Fragment() {
 
     companion object {
+        /** Default zoom level for the embedded map */
         const val MAP_ZOOM = 10f
-        const val PROPERTY_PID_KEY = "propertypid"
+
+        /** Property id key for the instance save */
+        const val PID_KEY = "propertyid"
+
+        /** Returns a new instance of the fragment including the pid in arguments */
         fun newInstance(propertyPid: String): PropertyFragment {
             val myFragment = PropertyFragment()
             val args = Bundle()
-            args.putString(PROPERTY_PID_KEY, propertyPid)
+            args.putString(PID_KEY, propertyPid)
             myFragment.arguments = args
             return myFragment
         }
     }
 
+    /** DateFormat object */
     private lateinit var dateFormat: DateFormat
 
-    private lateinit var pid: String
-
+    /** Fragment root view */
     private lateinit var fragmentView: View
 
+    /** Property */
     private lateinit var prop : Property
+
+    /** Property id */
+    private lateinit var pid: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         retainInstance = true
@@ -59,21 +68,24 @@ class PropertyFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(PROPERTY_PID_KEY, pid)
+        outState.putString(PID_KEY, pid)
         super.onSaveInstanceState(outState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         fragmentView = view
+
         if(savedInstanceState != null){
-            pid = savedInstanceState.getString(PROPERTY_PID_KEY)
+            // Recover pid from the saved instance
+            pid = savedInstanceState.getString(PID_KEY)
         } else {
-            pid = arguments?.getString(PROPERTY_PID_KEY)!!
-            arguments?.remove(PROPERTY_PID_KEY)
+            // Get pid from the arguments
+            pid = arguments?.getString(PID_KEY)!!
+            arguments?.remove(PID_KEY)
         }
-        //updateUIFromProperty(prop)
+
+        // Get data from Firestore
         MainActivity.colRef.document(pid).addSnapshotListener { doc, _ ->
             if(doc != null){
                 val property = doc.toObject(Property::class.java)
@@ -82,15 +94,18 @@ class PropertyFragment : Fragment() {
                 }
             }
         }
+        // If clicking besides the fragment, close it
         property_overlay.setOnClickListener {
                 activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
         }
 
+        // Floating action button listener (to edit the property)
         fab_edit.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
             (activity as MainActivity).displayFragment(EditPropertyFragment.newInstance(prop.pid))
         }
 
+        // Close button listener
         property_close_button.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
         }
@@ -175,6 +190,7 @@ class PropertyFragment : Fragment() {
         }
     }
 
+    /** Set up map with a geopoint */
     private fun setMapWithGeopoint(map: SupportMapFragment, geo: GeoPoint) {
         val latlng = LatLng(geo.latitude, geo.longitude)
         map.getMapAsync {
@@ -182,6 +198,7 @@ class PropertyFragment : Fragment() {
         }
     }
 
+    /** Main map set-up */
     private fun setUpMap(map: GoogleMap, latlng: LatLng){
         map.addMarker(MarkerOptions().position(latlng))
         map.moveCamera(CameraUpdateFactory.newLatLng(latlng))
@@ -195,6 +212,7 @@ class PropertyFragment : Fragment() {
         }
     }
 
+    /** Show the property location in a PropertiesMapFragment */
     private fun displayPropertyMap(pid: String){
         activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
         (activity as MainActivity).displayFragment(PropertiesMapFragment.newInstance(pid))

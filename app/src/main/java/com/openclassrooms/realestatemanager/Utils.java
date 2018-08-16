@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -32,8 +33,10 @@ import static android.support.constraint.Constraints.TAG;
  */
 
 public class Utils {
+    /** $/€ conversion rate */
     public static final double dollarEuro = 0.812;
-    public static final String dateFormat = "yyyy/MM/dd";
+    /** Date parse pattern */
+    public static final String dateFormat = "dd/MM/yyyy";
 
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
@@ -52,7 +55,7 @@ public class Utils {
      */
 
     public static String getTodayDate(){
-        DateFormat df = new SimpleDateFormat(dateFormat);
+        DateFormat df = new SimpleDateFormat(dateFormat, Locale.getDefault());
         return df.format(new Date());
     }
 
@@ -65,17 +68,19 @@ public class Utils {
     public static Boolean isInternetAvailable(Context context){
         ConnectivityManager cm =
                 (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    /* Checks if external storage is available to at least read */
+    /** Checks if external storage is available to at least read */
     public static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
+    /** Returns the real storage path from the uri */
     public static String getRealPathFromUri(Context context, Uri contentUri) {
         String[] proj = { MediaStore.Images.Media.DATA };
         try (Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null)) {
@@ -102,6 +107,7 @@ public class Utils {
         return list;
     }
 
+    /** Converts GeoPoint object to LatLng object */
     public static LatLng geoPointToLatLng(GeoPoint geoPoint) {
         return new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
     }

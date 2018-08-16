@@ -11,17 +11,19 @@ import java.util.*
  */
 class PropertyFilter {
 
+    //// Strings
+
     // Type
     var type = MutableLiveData<String>()
 
     // Location
     var location = MutableLiveData<String>()
 
+    //// Int
+
     // Availability : Id of the radio button
     private val defaultAvailability = R.id.search_radio_all
     var availability = MutableLiveData<Int>().default(defaultAvailability)
-
-
 
     //// Bounds
 
@@ -49,12 +51,15 @@ class PropertyFilter {
     var lowPictures = MutableLiveData<Int>().default(minPictures)
     var highPictures = MutableLiveData<Int>().default(maxPictures)
 
+    //// Dates
+
     // Date of entry on the market
     var entryDate : MutableLiveData<Date>? = MutableLiveData()
 
     // Date of the sale
     var saleDate : MutableLiveData<Date>? = MutableLiveData()
 
+    // Returns every filter
     fun getAllFilters(): Collection<MutableLiveData<*>?>{
         return arrayListOf<MutableLiveData<*>?>(
                 type, location, availability, lowPrice, highPrice, lowSurface, highSurface, lowRooms, highRooms, lowPictures, highPictures, entryDate, saleDate)

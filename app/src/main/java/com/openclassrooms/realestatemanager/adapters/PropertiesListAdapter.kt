@@ -32,7 +32,6 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
     private var mList = list
     private var mFilteredList = list
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_property, parent, false)
@@ -60,12 +59,8 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
 
         // Status
         if(item.status){
-            //holder.statusTextView.text = mContext.getString(R.string.available)
-            //holder.statusTextView.setTextColor(Color.parseColor("#4caf50"))
             holder.statusImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_dot_green))
         } else {
-            //holder.statusTextView.text = mContext.getString(R.string.unavailable)
-            //holder.statusTextView.setTextColor(Color.RED)
             holder.statusImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_dot_red))
         }
         

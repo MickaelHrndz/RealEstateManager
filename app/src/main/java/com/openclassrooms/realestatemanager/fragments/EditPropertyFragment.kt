@@ -44,15 +44,20 @@ import java.util.*
 class EditPropertyFragment : Fragment() {
 
     companion object {
+        /** Request code for the external storage permission */
         const val REQUEST_READ_EXTERNAL_STORAGE = 8
+
+        /** Request code for the camera */
         const val REQUEST_CAMERA = 9
+
+        /** Request code for the image */
         const val REQUEST_IMAGE = 9
-        const val datePattern = "dd/MM/yyyy"
+
         /** Creates a new instance of this fragment */
         fun newInstance(pid: String): EditPropertyFragment {
             val myFragment = EditPropertyFragment()
             val args = Bundle()
-            args.putString(PropertyFragment.PROPERTY_PID_KEY, pid)
+            args.putString(PropertyFragment.PID_KEY, pid)
             myFragment.arguments = args
             return myFragment
         }
@@ -66,19 +71,25 @@ class EditPropertyFragment : Fragment() {
     /** Firebase storage instance */
     var storage = FirebaseStorage.getInstance().reference
 
-    private val df = SimpleDateFormat(datePattern, Locale.getDefault())
+    /** DateFormat based on the pattern in Utils class */
+    private val df = SimpleDateFormat(Utils.dateFormat, Locale.getDefault())
 
+    /** Firestore collection reference */
     private var colRef = firestore.collection("properties")
 
     /** If the fragment is used to add a new property */
     private var isNew = false
 
+    /** Adapter for the images */
     private lateinit var editImagesAdapter: EditImagesAdapter
 
+    /** Image list */
     private var imagesList = ArrayList<String>()
 
+    /** Property id */
     private var pid = ""
 
+    /** Property */
     private lateinit var prop : Property
 
 
@@ -88,19 +99,15 @@ class EditPropertyFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_editproperty, container, false)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(PropertyFragment.PROPERTY_PID_KEY, pid)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         // Get property PID from saved instance or arguments
         if(savedInstanceState != null){
-            pid = savedInstanceState.getString(PropertyFragment.PROPERTY_PID_KEY)
+            pid = savedInstanceState.getString(PropertyFragment.PID_KEY)
         } else {
-            pid = arguments?.getString(PropertyFragment.PROPERTY_PID_KEY)!!
-            arguments?.remove(PropertyFragment.PROPERTY_PID_KEY)
+            pid = arguments?.getString(PropertyFragment.PID_KEY)!!
+            arguments?.remove(PropertyFragment.PID_KEY)
         }
 
         // If pid is not found, the user wants to add a new property
@@ -123,12 +130,9 @@ class EditPropertyFragment : Fragment() {
         list_pictures.adapter = editImagesAdapter
         list_pictures.layoutManager = llm
 
-        //list_pictures.isNestedScrollingEnabled = false
-
         // Clicking out of the cardView finishes the fragment
-        editoverlay.setOnClickListener {
-            finish()
-        }
+        editoverlay.setOnClickListener { finish() }
+
         // Overriding click listener on card to do nothing
         card_view_edit.setOnClickListener {  }
 
@@ -139,7 +143,6 @@ class EditPropertyFragment : Fragment() {
             builder.setTitle("Picture location")
             builder.setItems(arrayOf("On Internet", "On my phone", "Take the picture"), (DialogInterface.OnClickListener { _, i ->
                 when(i){
-
                     // Internet URL
                     0 -> {
                         addUrlField()
@@ -162,7 +165,6 @@ class EditPropertyFragment : Fragment() {
                             startImagePickIntent()
                         }
                     }
-
                     // Camera
                     2 -> {
                         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -223,7 +225,7 @@ class EditPropertyFragment : Fragment() {
                     data["picturesList"] = imagesList.filter { it != "" }
 
                     // If the property exists
-                    if(prop!!.pid != ""){
+                    if(prop.pid != ""){
                         // Update Firestore data
                         colRef.document(prop.pid).update(data as Map<String, Any>)
                         (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop.pid))
@@ -244,6 +246,8 @@ class EditPropertyFragment : Fragment() {
                     e.printStackTrace()
                 }
             }
+
+            // Availability switch listener
             editprop_switch.setOnCheckedChangeListener { _, b ->
                 if(b){
                     editprop_switch.setText(R.string.available)
@@ -262,6 +266,12 @@ class EditPropertyFragment : Fragment() {
         }*/
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(PropertyFragment.PID_KEY, pid)
+    }
+
+    /** Update the UI based on the property data */
     private fun updateUIFromProperty() {
         // lateinit prop must be initialized
         if(::prop.isInitialized){
@@ -289,8 +299,7 @@ class EditPropertyFragment : Fragment() {
         }
     }
 
-    private val REQUEST_CAMERA = 7256
-
+    /** Starts the camera intent to take a picture */
     private fun startCameraIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         // Ensure that there's a camera activity to handle the intent
@@ -315,6 +324,7 @@ class EditPropertyFragment : Fragment() {
         }
     }
 
+    /** Start the gallery intent to pick an image */
     private fun startImagePickIntent(){
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, REQUEST_IMAGE)
@@ -327,8 +337,6 @@ class EditPropertyFragment : Fragment() {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // permission was granted
                     startImagePickIntent()
-                } else {
-                    // permission denied
                 }
                 return
             }
@@ -337,15 +345,8 @@ class EditPropertyFragment : Fragment() {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // permission was granted
                     startCameraIntent()
-                } else {
-                    // permission denied
                 }
                 return
-            }
-        // Add other 'when' lines to check for other
-        // permissions this app might request.
-            else -> {
-                // Ignore all other requests.
             }
         }
     }
@@ -356,20 +357,20 @@ class EditPropertyFragment : Fragment() {
             if(requestCode == REQUEST_IMAGE){
                 val selectedMediaUri = data?.data
                     uploadImageFromUri(selectedMediaUri!!)
-
             } else if(requestCode == REQUEST_CAMERA){
                 uploadImage(Uri.fromFile(currentPicture))
             }
         }
     }
 
-    private lateinit var currentPhotoPath: String
+    /** Current picture file object */
     private lateinit var currentPicture: File
 
     @Throws(IOException::class)
+    /** Creates image file for the taken picture to be saved */
     private fun createImageFile():File {
         // Create an image file name
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val timeStamp = df.format(Date())
         val imageFileName = "JPEG_" + timeStamp + "_"
         val storageDir = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val image = File.createTempFile(
@@ -380,7 +381,6 @@ class EditPropertyFragment : Fragment() {
         image.setReadable(true)
         image.setWritable(true)
         // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.absolutePath
         currentPicture = image
         return image
     }
@@ -392,6 +392,7 @@ class EditPropertyFragment : Fragment() {
         uploadImage(file)
     }
 
+    /** Uploads image to Firebase storage based on the uri of an image */
     private fun uploadImage(file: Uri){
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
         progressBar?.visibility = View.VISIBLE
@@ -399,16 +400,13 @@ class EditPropertyFragment : Fragment() {
         val imgRef = storage.child("images/" + file.lastPathSegment)
         // Register observers to listen for when the download is done or if it fails
         imgRef.putStream(FileInputStream(file.path)).continueWithTask {
-            if (!it.isSuccessful) {
-                throw it.exception!!
-            }
+            assert(!it.isSuccessful)
             // Continue with the task to get the download URL
             imgRef.downloadUrl
 
         }.addOnCompleteListener {
-            if(it.isSuccessful){
-                addUrlField(it.result.toString())
-            }
+            if(it.isSuccessful){ addUrlField(it.result.toString()) }
+            // Hide the loading animation
             progressBar?.visibility = View.GONE
         }
     }

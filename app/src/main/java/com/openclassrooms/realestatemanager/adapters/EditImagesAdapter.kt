@@ -25,10 +25,6 @@ open class EditImagesAdapter(context: Context, resource: Int, list: ArrayList<St
     private var mContext = context
     private var mResource = resource
     private var mList = list
-    //private var mListener = listener
-    /*interface UrlChangeListener {
-        fun onUrlChange(position: Int)
-    }*/
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
