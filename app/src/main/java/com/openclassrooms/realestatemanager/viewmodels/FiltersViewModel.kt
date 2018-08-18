@@ -2,7 +2,7 @@ package com.openclassrooms.realestatemanager.viewmodels
 
 import android.app.Application
 import android.arch.lifecycle.*
-import com.openclassrooms.realestatemanager.PropertyFilter
+import com.openclassrooms.realestatemanager.models.PropertyFilter
 
 /**
  * Created by Mickael Hernandez on 03/07/2018.

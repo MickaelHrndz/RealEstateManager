@@ -1,9 +1,6 @@
 package com.openclassrooms.realestatemanager.adapters
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,12 +9,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.openclassrooms.realestatemanager.PropertyFilter
+import com.openclassrooms.realestatemanager.models.PropertyFilter
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import com.openclassrooms.realestatemanager.models.Property
-import kotlinx.android.synthetic.main.row_property.view.*
 
 
 /**

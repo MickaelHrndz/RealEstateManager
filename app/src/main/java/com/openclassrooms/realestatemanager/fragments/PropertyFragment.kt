@@ -62,7 +62,7 @@ class PropertyFragment : Fragment() {
     private lateinit var pid: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        retainInstance = true
+        //retainInstance = true
         dateFormat = android.text.format.DateFormat.getDateFormat(context?.applicationContext)
         return inflater.inflate(R.layout.fragment_property, container, false)
     }

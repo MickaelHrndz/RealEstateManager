@@ -25,7 +25,7 @@ import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.Utils
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.adapters.EditImagesAdapter
 import com.openclassrooms.realestatemanager.models.Property
@@ -65,17 +65,11 @@ class EditPropertyFragment : Fragment() {
 
     private lateinit var dateFormat: DateFormat
 
-    /** Firestore instance */
-    private val firestore = FirebaseFirestore.getInstance()
-
     /** Firebase storage instance */
     var storage = FirebaseStorage.getInstance().reference
 
     /** DateFormat based on the pattern in Utils class */
     private val df = SimpleDateFormat(Utils.dateFormat, Locale.getDefault())
-
-    /** Firestore collection reference */
-    private var colRef = firestore.collection("properties")
 
     /** If the fragment is used to add a new property */
     private var isNew = false
@@ -94,7 +88,7 @@ class EditPropertyFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        retainInstance = true
+        //retainInstance = true
         dateFormat = android.text.format.DateFormat.getDateFormat(context?.applicationContext)
         return inflater.inflate(R.layout.fragment_editproperty, container, false)
     }
@@ -147,7 +141,6 @@ class EditPropertyFragment : Fragment() {
                     0 -> {
                         addUrlField()
                     }
-
                     // Phone
                     1 -> {
                         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -188,25 +181,22 @@ class EditPropertyFragment : Fragment() {
             }))
             builder.show()
         }
-
         // If user cancels the edit
         prop_cancel.setOnClickListener {
             if(isNew){
                 finish()
             } else {
-                (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop?.pid!!))
+                (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop.pid))
             }
         }
-
         // If user validates his edits
         prop_done.setOnClickListener {
                 try {
-                    // Data map used to update the property data
+                    // Data map to be filled with the property data
                     val data = HashMap<String, Any>()
 
-                    if(!editprop_switch.isChecked) {
-                        assert(df.parse(editprop_saleDate.text.toString()) != null)
-                    }
+                    // If the property is available, erase any sale date
+                    if(editprop_switch.isChecked) { editprop_saleDate.setText("") }
 
                     // Populate data map with user input
                     data["type"] = editprop_type.text.toString()
@@ -222,18 +212,18 @@ class EditPropertyFragment : Fragment() {
                     data["agent"] = editprop_agent.text.toString()
 
                     editImagesAdapter.notifyDataSetChanged()
-                    data["picturesList"] = imagesList.filter { it != "" }
+                    data["picturesList"] = imagesList.filter { url -> url != "" }
 
                     // If the property exists
-                    if(prop.pid != ""){
+                    if(pid != ""){
                         // Update Firestore data
-                        colRef.document(prop.pid).update(data as Map<String, Any>)
+                        MainActivity.colRef.document(prop.pid).update(data as Map<String, Any>)
                         (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop.pid))
                     } else {
                         // Create new document and set its pid as a field after it is successfully created
-                        colRef.add(data).addOnSuccessListener {
-                            colRef.document(it.id).update("pid", it.id).addOnCompleteListener {
-                                if(it.isSuccessful){
+                        MainActivity.colRef.add(data).addOnSuccessListener { doc ->
+                            MainActivity.colRef.document(doc.id).update("pid", doc.id).addOnCompleteListener { task ->
+                                if(task.isSuccessful){
                                     Toast.makeText(context, getString(R.string.property_created), Toast.LENGTH_SHORT).show()
                                     finish()
                                 }
@@ -258,12 +248,6 @@ class EditPropertyFragment : Fragment() {
 
                 }
             }
-
-            /*else {
-                Toast.makeText(context, "One or more images url are invalid. Leave it empty to delete.", Toast.LENGTH_LONG).show()
-            }
-
-        }*/
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

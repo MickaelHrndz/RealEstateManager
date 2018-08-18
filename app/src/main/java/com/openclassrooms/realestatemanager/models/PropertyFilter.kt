@@ -1,9 +1,7 @@
-package com.openclassrooms.realestatemanager
+package com.openclassrooms.realestatemanager.models
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.databinding.BaseObservable
+import com.openclassrooms.realestatemanager.R
 import java.util.*
 
 /**

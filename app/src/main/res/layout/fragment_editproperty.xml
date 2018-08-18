@@ -31,7 +31,35 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_margin="8dp">
-
+                <Switch
+                    android:id="@+id/editprop_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/unavailable"
+                    android:textColor="@android:color/holo_red_light"
+                    android:switchPadding="4dp"
+                    android:layoutDirection="rtl"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_row_text"
+                        android:textSize="16sp"
+                        android:text="@string/dollarsign"/>
+                    <com.cielyang.android.clearableedittext.ClearableEditText
+                        android:id="@+id/editprop_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_row_text"
+                        android:inputType="number"
+                        android:textColor="@color/colorPrimaryDark"/>
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/editprop_header_layout"
                     android:layout_width="match_parent"
@@ -65,35 +93,6 @@
                         android:padding="5dp"
                         android:layout_gravity="center"
                         android:textSize="18sp"/>
-                </LinearLayout>
-                <Switch
-                        android:id="@+id/editprop_switch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/unavailable"
-                        android:textColor="@android:color/holo_red_light"
-                        android:switchPadding="4dp"
-                        android:layoutDirection="rtl"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_row_text"
-                        android:textSize="16sp"
-                        android:text="@string/dollarsign"/>
-                    <com.cielyang.android.clearableedittext.ClearableEditText
-                        android:id="@+id/editprop_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_row_text"
-                        android:inputType="number"
-                        android:textColor="@color/colorPrimaryDark"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/editpictures_layout"

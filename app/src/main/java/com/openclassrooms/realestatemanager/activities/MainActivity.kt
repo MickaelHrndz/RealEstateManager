@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.activities
 
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.content.res.Configuration
 import android.os.Bundle
@@ -19,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import com.openclassrooms.realestatemanager.viewmodels.FiltersViewModel
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.Utils
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
 import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
 import com.openclassrooms.realestatemanager.fragments.PropertiesMapFragment
@@ -75,7 +74,6 @@ open class MainActivity : AppCompatActivity() {
             firebaseAuth.signInAnonymously()
         }
 
-
         mAdapter = PropertiesListAdapter(this, R.layout.row_property, propertiesList)
         val llm = LinearLayoutManager(this)
         llm.orientation = LinearLayoutManager.VERTICAL
@@ -113,7 +111,6 @@ open class MainActivity : AppCompatActivity() {
                 R.id.nav_search -> {
                     displayFragment(SearchFragment())
                     true
-
                 }
                 R.id.nav_map -> {
                     displayFragment(PropertiesMapFragment())
@@ -121,7 +118,6 @@ open class MainActivity : AppCompatActivity() {
                 }
                 else -> { false }
             }
-
         }
 
         // Floating action button listener

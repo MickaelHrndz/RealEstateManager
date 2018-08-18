@@ -14,15 +14,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import android.widget.SeekBar
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener
-import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.openclassrooms.realestatemanager.BR
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.viewmodels.FiltersViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,7 +31,7 @@ class SearchFragment : Fragment() {
     private lateinit var binding: ViewDataBinding
     private lateinit var sharedPrefs: SharedPreferences
 
-    private val df = SimpleDateFormat(EditPropertyFragment.datePattern, Locale.getDefault())
+    private val df = SimpleDateFormat(Utils.dateFormat, Locale.getDefault())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         sharedPrefs = context!!.getSharedPreferences(MainActivity.SHARED_PREFS, Context.MODE_PRIVATE)

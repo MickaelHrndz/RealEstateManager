@@ -7,21 +7,25 @@ import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.action.ViewActions.replaceText
+import android.support.test.espresso.contrib.DrawerActions
+import android.support.test.espresso.contrib.NavigationViewActions
 import android.support.test.espresso.contrib.RecyclerViewActions
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.RecyclerView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.cielyang.android.clearableedittext.ClearableEditText
 import com.google.android.gms.maps.SupportMapFragment
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
+import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
+import com.openclassrooms.realestatemanager.fragments.PropertiesMapFragment
 import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import org.hamcrest.CoreMatchers
-import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.CoreMatchers.anything
+import org.hamcrest.CoreMatchers.*
 import org.junit.After
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -48,6 +52,7 @@ class MainActivityTest {
     @Before
     fun setUp() {
         mActivity = mActivityTestRule.activity
+        Thread.sleep(softDelay)
     }
 
     /** Finishes the activity  */
@@ -60,15 +65,12 @@ class MainActivityTest {
     /** Assert that properties are shown in the list */
     @Test
     fun testPropertiesInList() {
-        Thread.sleep(softDelay)
         assertTrue(mActivity.findViewById<RecyclerView>(R.id.recyclerView).adapter.itemCount > 0)
     }
 
-    /** Tests PropertyActivity when clicking on a row */
+    /** Tests PropertyFragment when clicking on a row */
     @Test
     fun testProperty() {
-        Thread.sleep(softDelay)
-
         // Click on the first item of the list with corresponding id
         onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<PropertiesListAdapter.ViewHolder>(0, click()))
 
@@ -87,11 +89,9 @@ class MainActivityTest {
         assert(mActivity.findViewById<LinearLayout>(R.id.pictures_layout).childCount > 0)
     }
 
-    /** Tests PropertyActivity when clicking on a row and then on edit button */
+    /** Tests PropertyFragment when clicking on a row and then on edit button */
     @Test
     fun testEditProperty() {
-        Thread.sleep(softDelay)
-
         // Click on the first item of the list with corresponding id
         onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<PropertiesListAdapter.ViewHolder>(0, click()))
 
@@ -113,11 +113,9 @@ class MainActivityTest {
         assert(mActivity.findViewById<RecyclerView>(R.id.list_pictures).childCount > 0)
     }
 
-    /** Tests SearchActivity */
+    /** Tests SearchFragment */
     @Test
-    fun testSearchActivity() {
-        Thread.sleep(softDelay)
-
+    fun testSearch() {
         val itemCount = mActivity.findViewById<RecyclerView>(R.id.recyclerView).adapter.itemCount
 
         // Asserts that there's properties displayed
@@ -140,5 +138,16 @@ class MainActivityTest {
 
     }
 
+    /** Test PropertiesMapFragment */
+    @Test
+    fun testPropertiesMap() {
+        // Open the drawer
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+
+        // Click on the map action
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_map))
+
+        // TODO : Find a way to get the map, and test the markers count
+    }
 
 }
