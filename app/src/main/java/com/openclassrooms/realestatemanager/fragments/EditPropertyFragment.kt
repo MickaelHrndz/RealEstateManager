@@ -45,13 +45,15 @@ class EditPropertyFragment : Fragment() {
 
     companion object {
         /** Request code for the external storage permission */
-        const val REQUEST_READ_EXTERNAL_STORAGE = 8
+        const val REQUEST_READ_EXTERNAL_STORAGE = 7
 
         /** Request code for the camera */
-        const val REQUEST_CAMERA = 9
+        const val REQUEST_CAMERA = 8
 
         /** Request code for the image */
         const val REQUEST_IMAGE = 9
+
+        const val KEY_PICTURE_URI = "picture_uri"
 
         /** Creates a new instance of this fragment */
         fun newInstance(pid: String): EditPropertyFragment {
@@ -99,6 +101,7 @@ class EditPropertyFragment : Fragment() {
         // Get property PID from saved instance or arguments
         if(savedInstanceState != null){
             pid = savedInstanceState.getString(PropertyFragment.PID_KEY)
+            currentPicture = File(savedInstanceState.getString(KEY_PICTURE_URI))
         } else {
             pid = arguments?.getString(PropertyFragment.PID_KEY)!!
             arguments?.remove(PropertyFragment.PID_KEY)
@@ -164,15 +167,9 @@ class EditPropertyFragment : Fragment() {
                                 != PackageManager.PERMISSION_GRANTED ||
                                 ContextCompat.checkSelfPermission(context!!, Manifest.permission.CAMERA) !=
                                 PackageManager.PERMISSION_GRANTED) {
-                            // Permission is not granted
-                            if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!,
-                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                            } else {
-                                // No explanation needed; request the permissions
-                                ActivityCompat.requestPermissions(activity!!,
-                                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA),
-                                        REQUEST_CAMERA)
-                            }
+                            ActivityCompat.requestPermissions(activity!!,
+                                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA),
+                                    REQUEST_CAMERA)
                         } else {
                             startCameraIntent()
                         }
@@ -204,12 +201,12 @@ class EditPropertyFragment : Fragment() {
                     data["location"] = editprop_location.text.toString()
                     data["address"] = editprop_address.text.toString()
                     data["description"] = editprop_desc.text.toString()
+                    data["agent"] = editprop_agent.text.toString()
                     data["surface"] = Integer.parseInt(editprop_surface.text.toString())
                     data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
-                    data["entryDate"] = df.parse(editprop_entryDate.text.toString())
-                    data["saleDate"] = df.parse(editprop_saleDate.text.toString())
                     data["price"] = Integer.parseInt(editprop_price.text.toString())
-                    data["agent"] = editprop_agent.text.toString()
+                    data["entryDate"] = df.parse(editprop_entryDate.text.toString())
+                    if(!editprop_saleDate.text.isNullOrEmpty()) { data["saleDate"] = df.parse(editprop_saleDate.text.toString()) }
 
                     editImagesAdapter.notifyDataSetChanged()
                     data["picturesList"] = imagesList.filter { url -> url != "" }
@@ -253,6 +250,7 @@ class EditPropertyFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(PropertyFragment.PID_KEY, pid)
+        outState.putString(KEY_PICTURE_URI, currentPicture.absolutePath)
     }
 
     /** Update the UI based on the property data */
@@ -289,22 +287,13 @@ class EditPropertyFragment : Fragment() {
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(context?.packageManager) != null)
         {
-            // Create the File where the photo should go
-            var photoFile:File? = null
-            try
-            {
-                photoFile = createImageFile()
-            }
-            catch (ex:IOException) {}// Error occurred while creating the File
-            // Continue only if the File was successfully created
-            if (photoFile != null)
-            {
+            createImageFile()
                 val photoURI = FileProvider.getUriForFile(context!!,
                         "com.example.android.fileprovider",
-                        photoFile)
+                        currentPicture)
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                 startActivityForResult(takePictureIntent, REQUEST_CAMERA)
-            }
+
         }
     }
 
@@ -339,8 +328,8 @@ class EditPropertyFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && Utils.isExternalStorageReadable()) {
             if(requestCode == REQUEST_IMAGE){
-                val selectedMediaUri = data?.data
-                    uploadImageFromUri(selectedMediaUri!!)
+                val selectedMediaUri = data!!.data
+                uploadImageFromUri(selectedMediaUri)
             } else if(requestCode == REQUEST_CAMERA){
                 uploadImage(Uri.fromFile(currentPicture))
             }
@@ -354,7 +343,7 @@ class EditPropertyFragment : Fragment() {
     /** Creates image file for the taken picture to be saved */
     private fun createImageFile():File {
         // Create an image file name
-        val timeStamp = df.format(Date())
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "JPEG_" + timeStamp + "_"
         val storageDir = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val image = File.createTempFile(

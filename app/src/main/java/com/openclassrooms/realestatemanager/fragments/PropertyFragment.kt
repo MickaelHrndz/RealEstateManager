@@ -133,6 +133,8 @@ class PropertyFragment : Fragment() {
                 if(prop.status){
                     statusView.text = this.getString(R.string.available)
                     statusView.setTextColor(Color.parseColor("#4caf50"))
+                    property_saleDateTitle.visibility = View.GONE
+                    property_saleDate.visibility = View.GONE
                 } else {
                     statusView.text = this.getString(R.string.unavailable)
                     statusView.setTextColor(Color.RED)

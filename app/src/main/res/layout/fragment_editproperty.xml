@@ -94,25 +94,6 @@
                         android:layout_gravity="center"
                         android:textSize="18sp"/>
                 </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/editpictures_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/list_pictures"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                    </android.support.v7.widget.RecyclerView>
-                </LinearLayout>
-                <Button
-                    android:id="@+id/btn_addpicture"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_a_picture"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -195,8 +176,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
-                    android:layout_marginStart="@dimen/margin_row_text"
-                    android:layout_marginBottom="60dp"/>
+                    android:layout_marginStart="@dimen/margin_row_text"/>
+                <Button
+
+                    android:id="@+id/btn_addpicture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_a_picture"/>
+                <LinearLayout
+                    android:id="@+id/editpictures_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="60dp">
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/list_pictures"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
             </LinearLayout>
             </ScrollView>
                 <LinearLayout
