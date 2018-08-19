@@ -29,10 +29,10 @@ class PropertiesMapFragment : SupportMapFragment() {
     val cameraLatLng = LatLng(40.730610, -73.935242)
 
     // Default zoom level
-    val defaultZoom = 6f
+    val defaultZoom = 8f
 
     // Default zoom level when showing a marker
-    val markerZoom = 14f
+    val markerZoom = 16f
 
     // Markers list
     val markers = mutableMapOf<Marker, Property>()
@@ -40,16 +40,14 @@ class PropertiesMapFragment : SupportMapFragment() {
     override fun onActivityCreated(p0: Bundle?) {
         super.onActivityCreated(p0)
         if(context != null) {
+            // Get property pid from the arguments
+            val pid = arguments?.getString(PropertyFragment.PID_KEY)
+
             this.getMapAsync { map ->
-                // Get property pid from the arguments
-                val pid = arguments?.getString(PropertyFragment.PID_KEY)
-
-                // Set default
+                // Set default if no property is focused
                 if (pid == null) {
-                    map.moveCamera(CameraUpdateFactory.newLatLng(cameraLatLng))
-                    map.animateCamera(CameraUpdateFactory.zoomTo(defaultZoom))
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, defaultZoom))
                 }
-
                 // Check permissions
                 if (context != null && ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
@@ -60,38 +58,37 @@ class PropertiesMapFragment : SupportMapFragment() {
                     map.uiSettings.isMapToolbarEnabled = true
                     // Enables defaultZoom buttons
                     map.uiSettings.isZoomControlsEnabled = true
+
+                    // Download data from Firestore
+                    MainActivity.colRef.addSnapshotListener { querySnapshot, _ ->
+
+                        // For each document in properties list
+                        Utils.documentsToPropertyList(querySnapshot?.documents).forEach {
+
+                            // Marker set-up
+                            val marker = map.addMarker(MarkerOptions()
+                                    .position(Utils.geoPointToLatLng(it.geopoint))
+                                    .title(it.type + " - " + it.location)
+                                    .snippet("$" + it.price + " - " + getString(it.getStateStringId())))
+
+                            // Add marker to the list
+                            markers[marker] = it
+
+                            // If the property should be focused
+                            if (pid != null && it.pid == pid) {
+                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(Utils.geoPointToLatLng(it.geopoint), markerZoom))
+                            }
+                        }
+                    }
+                    // Markers info click listener
+                    map.setOnInfoWindowClickListener {
+                        (context as MainActivity).displayFragment(PropertyFragment.newInstance(markers[it]?.pid!!))
+                    }
                 } else {
                     // Request permission
                     ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
                 }
 
-                // Download data from Firestore
-                MainActivity.colRef.addSnapshotListener { querySnapshot, _ ->
-
-                    // For each document in properties list
-                    Utils.documentsToPropertyList(querySnapshot?.documents).forEach {
-
-                        // Marker set-up
-                        val marker = map.addMarker(MarkerOptions()
-                                .position(Utils.geoPointToLatLng(it.geopoint))
-                                .title(it.type + " - " + it.location)
-                                .snippet("$" + it.price + " - " + getString(it.getStateStringId())))
-
-                        // Add marker to the list
-                        markers[marker] = it
-
-                        // If the property should be focused
-                        if (pid != null && it.pid == pid) {
-                            map.moveCamera(CameraUpdateFactory.newLatLng(Utils.geoPointToLatLng(it.geopoint)))
-                            map.animateCamera(CameraUpdateFactory.zoomTo(markerZoom))
-                        }
-                    }
-                }
-
-                // Markers info click listener
-                map.setOnInfoWindowClickListener {
-                    (context as MainActivity).displayFragment(PropertyFragment.newInstance(markers[it]?.pid!!))
-                }
             }
         }
     }

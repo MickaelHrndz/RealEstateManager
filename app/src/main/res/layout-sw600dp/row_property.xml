@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_restaurant"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="500dp"
+    android:layout_width="@dimen/row_prop_width"
     android:layout_height="@dimen/row_prop_height"
     android:orientation="horizontal">
     <include layout="@layout/row_property_content" />

@@ -30,7 +30,7 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:minWidth="500dp"/>
+                android:minWidth="@dimen/row_prop_width"/>
             <FrameLayout
                 android:id="@+id/fab_container"
                 android:layout_width="match_parent"
