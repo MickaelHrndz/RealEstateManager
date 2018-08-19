@@ -6,6 +6,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -23,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.utils.Utils
@@ -211,11 +214,16 @@ class EditPropertyFragment : Fragment() {
                     editImagesAdapter.notifyDataSetChanged()
                     data["picturesList"] = imagesList.filter { url -> url != "" }
 
+                    // If the address has changed, update the geopoint according to it
+                    if(data["address"] != prop.location){
+                        data["geopoint"] = geopointFromAddress(data["address"].toString())
+                    }
+
                     // If the property exists
                     if(pid != ""){
                         // Update Firestore data
-                        MainActivity.colRef.document(prop.pid).update(data as Map<String, Any>)
-                        (activity as MainActivity).displayFragment(PropertyFragment.newInstance(prop.pid))
+                        MainActivity.colRef.document(pid).update(data as Map<String, Any>)
+                        (activity as MainActivity).displayFragment(PropertyFragment.newInstance(pid))
                     } else {
                         // Create new document and set its pid as a field after it is successfully created
                         MainActivity.colRef.add(data).addOnSuccessListener { doc ->
@@ -393,6 +401,14 @@ class EditPropertyFragment : Fragment() {
     /** Removes this fragment */
     private fun finish(){
         activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+    }
+
+    /** Returns a GeoPoint based on an address, using a Geocoder */
+    private fun geopointFromAddress(address: String): GeoPoint {
+        val coder = Geocoder(context)
+        val addresses: List<Address>?
+        addresses = coder.getFromLocationName(address, 1)
+        return GeoPoint(addresses[0].latitude, addresses[0].longitude)
     }
 
 }
