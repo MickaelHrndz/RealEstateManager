@@ -60,12 +60,6 @@
                 android:contentDescription="@string/close"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_close"/>
-            <!--android.support.v7.widget.Toolbar
-                android:id="@toolbar_mainlbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin" /-->
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -101,28 +95,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="#fff"/>
             </LinearLayout>
-
-            <!--<LinearLayout
-                android:id="@+id/layout_buttons"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/row_workmate_height"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button_like"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/action_like"
-                    android:drawableTop="@drawable/ic_star_rate_black"
-                    style="@style/Widget.AppCompat.Button.Borderless"/>
-            </LinearLayout>-->
-            <!--android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:cardCornerRadius="6dp"
-                app:cardElevation="6dp"
-                android:layout_margin="6dp"-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

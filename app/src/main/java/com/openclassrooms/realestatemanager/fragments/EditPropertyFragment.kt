@@ -195,8 +195,6 @@ class EditPropertyFragment : Fragment() {
                     // Data map to be filled with the property data
                     val data = HashMap<String, Any>()
 
-                    // If the property is available, erase any sale date
-                    if(editprop_switch.isChecked) { editprop_saleDate.setText("") }
 
                     // Populate data map with user input
                     data["type"] = editprop_type.text.toString()
@@ -208,8 +206,12 @@ class EditPropertyFragment : Fragment() {
                     data["surface"] = Integer.parseInt(editprop_surface.text.toString())
                     data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
                     data["price"] = Integer.parseInt(editprop_price.text.toString())
-                    data["entryDate"] = df.parse(editprop_entryDate.text.toString())
-                    if(!editprop_saleDate.text.isNullOrEmpty()) { data["saleDate"] = df.parse(editprop_saleDate.text.toString()) }
+                    if(!editprop_saleDate.text.isNullOrEmpty()){data["entryDate"] = df.parse(editprop_entryDate.text.toString())}
+
+                    // If the property is available, erase any sale date
+                    if(!editprop_switch.isChecked && !editprop_saleDate.text.isNullOrEmpty()) {
+                        data["saleDate"] = df.parse(editprop_saleDate.text.toString())
+                    }
 
                     editImagesAdapter.notifyDataSetChanged()
                     data["picturesList"] = imagesList.filter { url -> url != "" }
@@ -258,7 +260,9 @@ class EditPropertyFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(PropertyFragment.PID_KEY, pid)
-        outState.putString(KEY_PICTURE_URI, currentPicture.absolutePath)
+        if(::currentPicture.isInitialized){
+            outState.putString(KEY_PICTURE_URI, currentPicture.absolutePath)
+        }
     }
 
     /** Update the UI based on the property data */

@@ -60,11 +60,10 @@ class PropertiesMapFragment : SupportMapFragment() {
                     map.uiSettings.isZoomControlsEnabled = true
 
                     // Download data from Firestore
-                    MainActivity.colRef.addSnapshotListener { querySnapshot, _ ->
+                    MainActivity.colRef.get().addOnCompleteListener {querySnapshot ->
 
                         // For each document in properties list
-                        Utils.documentsToPropertyList(querySnapshot?.documents).forEach {
-
+                        for(it: Property in Utils.documentsToPropertyList(querySnapshot.result.documents)) {
                             // Marker set-up
                             val marker = map.addMarker(MarkerOptions()
                                     .position(Utils.geoPointToLatLng(it.geopoint))
