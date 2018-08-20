@@ -195,7 +195,6 @@ class EditPropertyFragment : Fragment() {
                     // Data map to be filled with the property data
                     val data = HashMap<String, Any>()
 
-
                     // Populate data map with user input
                     data["type"] = editprop_type.text.toString()
                     data["status"] = editprop_switch.isChecked
@@ -206,18 +205,23 @@ class EditPropertyFragment : Fragment() {
                     data["surface"] = Integer.parseInt(editprop_surface.text.toString())
                     data["roomsCount"] = Integer.parseInt(editprop_rooms.text.toString())
                     data["price"] = Integer.parseInt(editprop_price.text.toString())
-                    if(!editprop_saleDate.text.isNullOrEmpty()){data["entryDate"] = df.parse(editprop_entryDate.text.toString())}
+                    if(!editprop_entryDate.text.isNullOrEmpty()){
+                        data["entryDate"] = df.parse(editprop_entryDate.text.toString())
+                    } else if(isNew){
+                        // If new property, set today as the entry date
+                        data["entryDate"] = Date()
+                    }
 
                     // If the property is available, erase any sale date
                     if(!editprop_switch.isChecked && !editprop_saleDate.text.isNullOrEmpty()) {
                         data["saleDate"] = df.parse(editprop_saleDate.text.toString())
                     }
 
-                    editImagesAdapter.notifyDataSetChanged()
+                    //editImagesAdapter.notifyDataSetChanged()
                     data["picturesList"] = imagesList.filter { url -> url != "" }
 
-                    // If the address has changed, update the geopoint according to it
-                    if(data["address"] != prop.location){
+                    // If new prop or the address has changed, update the geopoint according to it
+                    if(isNew || (::prop.isInitialized && data["address"] != prop.location)){
                         data["geopoint"] = geopointFromAddress(data["address"].toString())
                     }
 
@@ -412,6 +416,9 @@ class EditPropertyFragment : Fragment() {
         val coder = Geocoder(context)
         val addresses: List<Address>?
         addresses = coder.getFromLocationName(address, 1)
+        if(addresses.isEmpty()){
+            Toast.makeText(context, "Please enter a valid address.", Toast.LENGTH_SHORT).show()
+        }
         return GeoPoint(addresses[0].latitude, addresses[0].longitude)
     }
 
