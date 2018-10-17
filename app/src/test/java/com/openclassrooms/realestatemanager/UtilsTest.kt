@@ -10,6 +10,7 @@ import java.util.*
  */
 class UtilsTest {
 
+    /** Tests the $/€ conversion */
     @Test
     fun testConvertDollarsToEuro(){
         assert(Utils.convertDollarToEuro(0.0) == 0.0)
@@ -17,6 +18,7 @@ class UtilsTest {
         assert(Utils.convertDollarToEuro(rndVal) == rndVal * Utils.dollarEuro)
     }
 
+    /** Tests the value of today's date */
     @Test
     fun testGetTodayDate(){
         assert(Utils.getTodayDate() == SimpleDateFormat(Utils.dateFormat).format(Date()))

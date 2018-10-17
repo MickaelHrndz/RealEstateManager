@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4278a243604f6bebeede3ed0be104eea",
+    "identityHash": "8df44562233f0ea6028dcc4cca95aeef",
     "entities": [
       {
         "tableName": "Property",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pid` TEXT NOT NULL, `type` TEXT NOT NULL, `location` TEXT NOT NULL, `geopoint` TEXT NOT NULL, `address` TEXT NOT NULL, `price` INTEGER NOT NULL, `surface` INTEGER NOT NULL, `roomsCount` INTEGER NOT NULL, `description` TEXT NOT NULL, `status` INTEGER NOT NULL, `entryDate` INTEGER NOT NULL, `saleDate` INTEGER NOT NULL, `salesmanUid` TEXT NOT NULL, PRIMARY KEY(`pid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pid` TEXT NOT NULL, `type` TEXT NOT NULL, `location` TEXT NOT NULL, `geopoint` TEXT NOT NULL, `address` TEXT NOT NULL, `price` INTEGER NOT NULL, `surface` INTEGER NOT NULL, `roomsCount` INTEGER NOT NULL, `description` TEXT NOT NULL, `picturesList` TEXT NOT NULL, `status` INTEGER NOT NULL, `entryDate` INTEGER NOT NULL, `saleDate` INTEGER NOT NULL, `agent` TEXT NOT NULL, PRIMARY KEY(`pid`))",
         "fields": [
           {
             "fieldPath": "pid",
@@ -63,6 +63,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "picturesList",
+            "columnName": "picturesList",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "status",
             "columnName": "status",
             "affinity": "INTEGER",
@@ -81,8 +87,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "salesmanUid",
-            "columnName": "salesmanUid",
+            "fieldPath": "agent",
+            "columnName": "agent",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -99,7 +105,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4278a243604f6bebeede3ed0be104eea\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8df44562233f0ea6028dcc4cca95aeef\")"
     ]
   }
 }

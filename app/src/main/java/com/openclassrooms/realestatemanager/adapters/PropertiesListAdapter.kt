@@ -14,6 +14,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.fragments.PropertyFragment
 import com.openclassrooms.realestatemanager.models.Property
+import java.lang.Exception
 
 
 /**
@@ -65,7 +66,12 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         
         // Item click listener
         holder.itemView.setOnClickListener {
-            (mContext as MainActivity).displayFragment(PropertyFragment.newInstance(item.pid))
+            try {
+                val mainActivity = mContext as MainActivity
+                mainActivity.displayFragment(PropertyFragment.newInstance(item.pid))
+            } catch (e: Exception){
+                e.printStackTrace()
+            }
         }
 
     }
@@ -75,6 +81,8 @@ open class PropertiesListAdapter(context: Context, resource: Int, list: ArrayLis
         // Resetting the filtered list as a copy of the original
         mFilteredList.clear()
         mFilteredList.addAll(originalList)
+
+        // TODO : Find a cleaner way to apply those filters
 
         // Availability filter
         if(filter.availability.value != R.id.search_radio_all){

@@ -26,6 +26,13 @@ import com.openclassrooms.realestatemanager.fragments.SearchFragment
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import com.openclassrooms.realestatemanager.database.AppDatabase
+import android.arch.persistence.room.Room
+import android.arch.persistence.room.RoomDatabase
+import com.google.firebase.firestore.SetOptions
+import com.openclassrooms.realestatemanager.fragments.OfflineListFragment
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 
 
 open class MainActivity : AppCompatActivity() {
@@ -55,9 +62,12 @@ open class MainActivity : AppCompatActivity() {
     /** FirebaseAuth instance */
     private var firebaseAuth = FirebaseAuth.getInstance()
 
+    private lateinit var db : AppDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        db = Room.databaseBuilder(applicationContext,
+                AppDatabase::class.java, getString(R.string.app_name)).build()
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
         title = ""
@@ -67,6 +77,20 @@ open class MainActivity : AppCompatActivity() {
         // Test if Internet is available
         if(!Utils.isInternetAvailable(applicationContext)){
             Toast.makeText(this, "Internet connection unavailable.", Toast.LENGTH_SHORT).show()
+            /*launch {
+                val props = db.propertyDao().all
+                props.forEach { prop ->
+                    if(prop.pid != ""){
+                        colRef.document(prop.pid).set(prop.toHashMap(), SetOptions.merge())
+                        /*colRef.document(prop.pid).get().addOnCompleteListener {
+                            if(it.isSuccessful && !it.result.exists()){
+                                colRef.add(prop.toHashMap())/*.addOnCompleteListener {
+                        Toast.makeText(ctx, "Data gathered from offline db", Toast.LENGTH_SHORT).show()*/
+                            }
+                        }*/
+                    }
+                }
+            }*/
         }
 
         // Sign in Firebase Auth anonymously (useful for Storage upload)
@@ -88,11 +112,15 @@ open class MainActivity : AppCompatActivity() {
         colRef.addSnapshotListener(object: EventListener, com.google.firebase.firestore.EventListener<QuerySnapshot> {
             override fun onEvent(result: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                 if(result != null){
-                    val properties = result.documents
+                    val properties = Utils.documentsToPropertyList(result.documents)
+                    launch {
+                        db.propertyDao().deleteAll()
+                        db.propertyDao().insertAll(properties)
+                    }
                     propertiesList.clear()
-                    propertiesList.addAll(Utils.documentsToPropertyList(properties))
+                    propertiesList.addAll(properties)
                     unfilteredList.clear()
-                    unfilteredList.addAll(Utils.documentsToPropertyList(properties))
+                    unfilteredList.addAll(properties)
                     mAdapter.filter(unfilteredList, viewModel.filter)
                 }
             }
@@ -114,6 +142,10 @@ open class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_map -> {
                     displayFragment(PropertiesMapFragment())
+                    true
+                }
+                R.id.nav_offline -> {
+                    displayFragment(OfflineListFragment())
                     true
                 }
                 else -> { false }
@@ -175,14 +207,11 @@ open class MainActivity : AppCompatActivity() {
             // Replace whatever is in the fragment_container view with this fragment
             transaction.replace(R.id.fragment_container, frag)
         }
-
         // add the transaction to the back stack so the user can navigate back
         transaction.addToBackStack(null)
 
         // Commit the transaction
         transaction.commit()
-
-
     }
 
 }

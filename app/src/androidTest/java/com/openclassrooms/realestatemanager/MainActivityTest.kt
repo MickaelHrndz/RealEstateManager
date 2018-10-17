@@ -24,6 +24,7 @@ import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
 import com.openclassrooms.realestatemanager.fragments.EditPropertyFragment
 import com.openclassrooms.realestatemanager.fragments.PropertiesMapFragment
 import com.openclassrooms.realestatemanager.fragments.PropertyFragment
+import com.openclassrooms.realestatemanager.utils.Utils
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.*
 import org.junit.After
@@ -148,6 +149,12 @@ class MainActivityTest {
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_map))
 
         // TODO : Find a way to get the map, and test the markers count
+    }
+
+    /** Test Internet connection availability */
+    @Test
+    fun testInternetConnection() {
+        assert(Utils.isInternetAvailable(mActivity))
     }
 
 }

@@ -2,6 +2,9 @@ package com.openclassrooms.realestatemanager.models
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.google.firebase.firestore.GeoPoint
 import com.openclassrooms.realestatemanager.R
@@ -13,8 +16,9 @@ import java.util.*
  * Created by Mickaël Hernandez on 09/05/2018.
  */
 @Parcelize
+@Entity
 data class Property(
-        var pid: String, // Property ID generated randomly
+        @PrimaryKey var pid: String, // Property ID generated randomly
         var type: String, // Type (apartment, loft, mansion, etc...)
         var location: String, // Location identifier (City, neighbourhood...)
         var geopoint: @RawValue GeoPoint,
@@ -36,5 +40,24 @@ data class Property(
         } else {
             R.string.unavailable
         }
+    }
+    fun getAllParams(): List<Any> {
+        return listOf(type, location, geopoint, address, price, surface, roomsCount, description, picturesList, status, entryDate, saleDate, agent)
+    }
+    fun toHashMap() : HashMap<String, Any> {
+        val map = HashMap<String, Any>()
+        map["type"] = type
+        map["location"] = location
+        map["geopoint"] = geopoint
+        map["address"] = address
+        map["price"] = price
+        map["surface"] = surface
+        map["roomsCount"] = roomsCount
+        map["description"] = description
+        map["picturesList"] = picturesList
+        map["status"] = status
+        map["entryDate"] = entryDate
+        map["saleDate"] = saleDate
+        return map
     }
 }

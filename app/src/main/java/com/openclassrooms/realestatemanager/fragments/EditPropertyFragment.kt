@@ -33,6 +33,7 @@ import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.adapters.EditImagesAdapter
 import com.openclassrooms.realestatemanager.models.Property
 import kotlinx.android.synthetic.main.fragment_editproperty.*
+import kotlinx.coroutines.experimental.launch
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -220,13 +221,13 @@ class EditPropertyFragment : Fragment() {
                     //editImagesAdapter.notifyDataSetChanged()
                     data["picturesList"] = imagesList.filter { url -> url != "" }
 
-                    // If new prop or the address has changed, update the geopoint according to it
-                    if(isNew || (::prop.isInitialized && data["address"] != prop.location)){
-                        data["geopoint"] = geopointFromAddress(data["address"].toString())
-                    }
 
                     // If the property exists
                     if(pid != ""){
+                        // If new prop or the address has changed, update the geopoint according to it
+                        if(isNew || (::prop.isInitialized && data["address"] != prop.location)){
+                            geopointFromAddress(pid, data["address"].toString())
+                        }
                         // Update Firestore data
                         MainActivity.colRef.document(pid).update(data as Map<String, Any>)
                         (activity as MainActivity).displayFragment(PropertyFragment.newInstance(pid))
@@ -411,15 +412,22 @@ class EditPropertyFragment : Fragment() {
         activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
     }
 
-    /** Returns a GeoPoint based on an address, using a Geocoder */
-    private fun geopointFromAddress(address: String): GeoPoint {
-        val coder = Geocoder(context)
-        val addresses: List<Address>?
-        addresses = coder.getFromLocationName(address, 1)
-        if(addresses.isEmpty()){
-            Toast.makeText(context, "Please enter a valid address.", Toast.LENGTH_SHORT).show()
+    /** Asynchronously updates the property's GeoPoint based on its address, using a Geocoder */
+    private fun geopointFromAddress(pid: String, address: String) {
+        val ctx = context
+        launch {
+            try {
+                val coder = Geocoder(ctx)
+                val addresses: List<Address>?
+                addresses = coder.getFromLocationName(address, 2)
+                if(addresses.isEmpty()){
+                    Toast.makeText(ctx, "Please enter a valid address.", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Update property's geopoint
+                    MainActivity.colRef.document(pid).update("geopoint", GeoPoint(addresses[0].latitude, addresses[0].longitude))
+                }
+            } catch (e: Exception) { e.printStackTrace() }
         }
-        return GeoPoint(addresses[0].latitude, addresses[0].longitude)
     }
 
 }

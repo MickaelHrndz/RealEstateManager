@@ -91,15 +91,11 @@ class SearchFragment : Fragment() {
         search_edit_sale.addTextChangedListener(textWatcherWithDateLiveData(fltr.saleDate))
 
         // Filters reset button
-        search_reset_button.setOnClickListener {
-            fltr.reset()
-        }
+        search_reset_button.setOnClickListener { fltr.reset() }
 
         // Finish fragment by clicking away
         search_overlay.setOnClickListener {}
-        search_parent.setOnClickListener {
-            finish()
-        }
+        search_parent.setOnClickListener { finish() }
     }
 
     /** Removes this fragment */
