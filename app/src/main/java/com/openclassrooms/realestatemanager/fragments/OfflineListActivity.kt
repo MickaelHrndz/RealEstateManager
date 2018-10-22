@@ -56,8 +56,10 @@ class OfflineListActivity : AppCompatActivity() {
             propertiesList.clear()
             val dataAdd = launch {
                 propertiesList.addAll(db.propertyDao().all)
+            }.join()
+            run {
+                adapter.notifyDataSetChanged()
             }
-            adapter.notifyDataSetChanged()
         }
     }
 
