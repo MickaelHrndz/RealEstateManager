@@ -27,7 +27,7 @@ public interface PropertyDao {
 
     // Upsert (update or insert)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Property> propertys);
+    void insertAll(List<Property> properties);
 
     @Delete
     void delete(Property property);

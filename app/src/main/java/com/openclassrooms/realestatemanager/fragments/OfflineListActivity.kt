@@ -3,14 +3,10 @@ package com.openclassrooms.realestatemanager.fragments
 import android.arch.persistence.room.Room
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.activities.MainActivity
 import com.openclassrooms.realestatemanager.adapters.PropertiesListAdapter
 import com.openclassrooms.realestatemanager.database.AppDatabase
 import com.openclassrooms.realestatemanager.models.Property
@@ -32,35 +28,32 @@ private lateinit var adapter : PropertiesListAdapter
 
 private lateinit var snackbar: Snackbar
 
-class OfflineListFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_offline_list, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        db = Room.databaseBuilder(context!!,
+class OfflineListActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_offline_list)
+        db = Room.databaseBuilder(this,
                 AppDatabase::class.java, getString(R.string.app_name)).build()
 
         // Adapter
-        adapter = PropertiesListAdapter(activity!!.applicationContext, R.layout.row_property, propertiesList)
+        adapter = PropertiesListAdapter(this.applicationContext, R.layout.row_property, propertiesList)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = this.findViewById<RecyclerView>(R.id.recyclerView)
 
         //Layout manager
-        val llm = LinearLayoutManager(activity?.applicationContext)
+        val llm = LinearLayoutManager(this.applicationContext)
         llm.orientation = LinearLayoutManager.VERTICAL
 
         // List
         recyclerView.layoutManager = llm
         recyclerView.adapter = adapter
 
-        snackbar = Snackbar.make(view, R.string.offline_backup, Snackbar.LENGTH_INDEFINITE)
+        snackbar = Snackbar.make(findViewById(android.R.id.content), R.string.offline_backup, Snackbar.LENGTH_INDEFINITE)
         snackbar.show()
 
         // Add all database properties to the list
         runBlocking {
+            propertiesList.clear()
             val dataAdd = launch {
                 propertiesList.addAll(db.propertyDao().all)
             }
@@ -68,9 +61,9 @@ class OfflineListFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
+    override fun onDestroy() {
         snackbar.dismiss()
-        super.onDestroyView()
+        super.onDestroy()
     }
 
 }

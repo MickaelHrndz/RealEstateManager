@@ -14,6 +14,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.getColor
 import android.support.v4.content.FileProvider
@@ -92,6 +94,8 @@ class EditPropertyFragment : Fragment() {
     /** Property */
     private lateinit var prop : Property
 
+    private lateinit var mBuilder : NotificationCompat.Builder
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //retainInstance = true
@@ -101,6 +105,12 @@ class EditPropertyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Notification builder
+        var mBuilder = NotificationCompat.Builder(context!!, MainActivity.NOTIF_CHANNEL)
+                .setSmallIcon(R.drawable.ic_add)
+                .setContentTitle(getString(R.string.property_created))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         // Get property PID from saved instance or arguments
         if(savedInstanceState != null){
@@ -236,7 +246,9 @@ class EditPropertyFragment : Fragment() {
                         MainActivity.colRef.add(data).addOnSuccessListener { doc ->
                             MainActivity.colRef.document(doc.id).update("pid", doc.id).addOnCompleteListener { task ->
                                 if(task.isSuccessful){
-                                    Toast.makeText(context, getString(R.string.property_created), Toast.LENGTH_SHORT).show()
+                                    with(NotificationManagerCompat.from(context!!)) {
+                                        notify(1, mBuilder.build())
+                                    }
                                     finish()
                                 }
                             }

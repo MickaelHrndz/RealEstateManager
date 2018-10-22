@@ -28,10 +28,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import com.openclassrooms.realestatemanager.database.AppDatabase
 import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
-import com.google.firebase.firestore.SetOptions
-import com.openclassrooms.realestatemanager.fragments.OfflineListFragment
-import kotlinx.coroutines.experimental.android.UI
+import android.content.Intent
+import com.openclassrooms.realestatemanager.fragments.OfflineListActivity
 import kotlinx.coroutines.experimental.launch
 
 
@@ -40,9 +38,12 @@ open class MainActivity : AppCompatActivity() {
     companion object {
         //lateinit var instance: AppDatabase
         var colRef = FirebaseFirestore.getInstance().collection("properties")
-        const val SEARCH_CODE = 123
+
+        // Shared preferences reference
         const val SHARED_PREFS = "SHARED_PREFS"
-        const val PREVIOUS_PID = "PREVIOUS_PID"
+
+        // Notification channel name
+        const val NOTIF_CHANNEL = "CREATE_PROP"
     }
 
     /** List of workmates */
@@ -57,6 +58,7 @@ open class MainActivity : AppCompatActivity() {
     /** RecyclerView */
     private lateinit var mRecyclerView: RecyclerView
 
+    /** ViewModel instance */
     private lateinit var viewModel : FiltersViewModel
 
     /** FirebaseAuth instance */
@@ -77,20 +79,6 @@ open class MainActivity : AppCompatActivity() {
         // Test if Internet is available
         if(!Utils.isInternetAvailable(applicationContext)){
             Toast.makeText(this, "Internet connection unavailable.", Toast.LENGTH_SHORT).show()
-            /*launch {
-                val props = db.propertyDao().all
-                props.forEach { prop ->
-                    if(prop.pid != ""){
-                        colRef.document(prop.pid).set(prop.toHashMap(), SetOptions.merge())
-                        /*colRef.document(prop.pid).get().addOnCompleteListener {
-                            if(it.isSuccessful && !it.result.exists()){
-                                colRef.add(prop.toHashMap())/*.addOnCompleteListener {
-                        Toast.makeText(ctx, "Data gathered from offline db", Toast.LENGTH_SHORT).show()*/
-                            }
-                        }*/
-                    }
-                }
-            }*/
         }
 
         // Sign in Firebase Auth anonymously (useful for Storage upload)
@@ -145,7 +133,7 @@ open class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_offline -> {
-                    displayFragment(OfflineListFragment())
+                    startActivity(Intent(this, OfflineListActivity::class.java))
                     true
                 }
                 else -> { false }
